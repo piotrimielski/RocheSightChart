@@ -1,0 +1,4 @@
+#Thu Oct 24 15:16:33 BST 2019
+base.0=E\:\\StudioProjects\\RocheSightChart\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
