@@ -52,14 +52,15 @@ public  class SpriteRight {
 		float transXR=0.0f;
 		if(transX>0){
 			transXL=transX;
+			transXR=transX;
 		}else{
 			transXR=transX;
 		}
 		float spriteCoords[] = {
 				0.0f-transXR, -0.65f, // bottom right
-				-1.0f+transXL, -0.65f, // bottom left
+				-1.0f-transXL, -0.65f, // bottom left
 				0.0f-transXR, 0.65f, // top right
-				-1.0f+transXL, 0.65f //top left
+				-1.0f-transXL, 0.65f //top left
 		};
 	    //Initialize Vertex Byte Buffer for Shape Coordinates / # of coordinate values * 4 bytes per float
 	    ByteBuffer bb = ByteBuffer.allocateDirect(spriteCoords.length * 4); 
@@ -78,10 +79,11 @@ public  class SpriteRight {
 	    // OpenGL has a Y axis pointing upward, we adjust for that here by flipping the Y axis.
 	    // What's more is that the texture coordinates are the same for every face.
 	    final float[] textureCoordinateData =	 {
-	    		0, 0,
-				1, 0,
 				0, 1,
-				1, 1 } ;
+				1, 1,
+	    		0, 0,
+				1, 0
+	    } ;
 
 
 	    mTextureCoordinates = ByteBuffer.allocateDirect(textureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();

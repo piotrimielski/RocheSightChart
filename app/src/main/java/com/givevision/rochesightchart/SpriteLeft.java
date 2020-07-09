@@ -53,6 +53,7 @@ public  class SpriteLeft {
         float transXR=0.0f;
         if(transX>0){
             transXL=transX;
+            transXR=transX;
         }else{
             transXR=transX;
         }
@@ -79,8 +80,13 @@ public  class SpriteLeft {
         // Because images have a Y axis pointing downward (values increase as you move down the image) while
         // OpenGL has a Y axis pointing upward, we adjust for that here by flipping the Y axis.
         // What's more is that the texture coordinates are the same for every face.
-        final float[] textureCoordinateData =	 { 0, 0, 1, 0, 0, 1, 1, 1 } ;
-
+//        final float[] textureCoordinateData =	 { 0, 0, 1, 0, 0, 1, 1, 1 } ;
+        final float[] textureCoordinateData =	 {
+                0, 1,
+                1, 1,
+                0, 0,
+                1, 0
+        } ;
 
         mTextureCoordinates = ByteBuffer.allocateDirect(textureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         mTextureCoordinates.put(textureCoordinateData).position(0);

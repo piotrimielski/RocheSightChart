@@ -28,9 +28,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer{
     private float ratio;
     private float mTransX;
     private static int pos=-1;
+    private static int eyeToShow=0;
 
     public MyGLRenderer(Context ctx) {
         this.context = ctx;
+
         final Handler handler=new Handler();
 //        handler.postDelayed(new Runnable() {
 //            @Override
@@ -44,20 +46,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer{
 //        },5000);
     }
 
-    public  void setChart(int chart) {
+    public  void setChart(int chart, int eye) {
         pos=chart;
+        eyeToShow = eye;
     }
 
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         // Set the background frame color
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        GLES20.glClearColor(0f, 0f, 0f, 1.0f);
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_RENDERING, "onSurfaceCreated init sprite");
         }
-        sprite1 = new SpriteLeft(context, 0);
-        sprite2 = new SpriteRight(context, 0);
+        sprite1 = new SpriteLeft(context, 0.15f);
+        sprite2 = new SpriteRight(context, 0.15f);
     }
 
     @Override
@@ -66,9 +69,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer{
         // such as screen rotation
         GLES20.glViewport(0, 0, width, height);
 
-        ratio = (float) width / height;
 
+
+        ratio = (float) width / height;
+        if(ratio<1){
+            ratio = (float) height / width;
+        }
         if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_RENDERING, "onSurfaceChanged width= "+width+" height="+height);
             Log.i(Util.LOG_TAG_RENDERING, "onSurfaceChanged init mProjectionMatrix ratio= "+ratio);
         }
         // this projection matrix is applied to object coordinates
@@ -77,6 +85,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer{
             Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 2, 7);
         }else{
             switch (pos){
+                case  -1:
+                    Matrix.frustumM(mProjectionMatrix, 0, -ratio*0.5f, ratio*0.5f, -2f, 2f, 2, 7);
+                    break;
                 case  0:
                     Matrix.frustumM(mProjectionMatrix, 0, -ratio*0.5f, ratio*0.5f, -2f, 2f, 2, 7);
                     break;
@@ -114,15 +125,19 @@ public class MyGLRenderer implements GLSurfaceView.Renderer{
         }
     }
 
-    int posOld=-1;
+    int posOld=-2;
     private void drawPicTexture(Bitmap bmp) {
         if (pos!=posOld){
 //            sprite1 = new SpriteLeft(context,mTransX);
 //            sprite2 = new SpriteRight(context,mTransX);
             if (ratio < 1) {
-                Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -3, 3, 2, 7);
+                Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 2, 7);
             } else {
-                if (pos == 0) {
+                if (pos == -1) {
+                    Matrix.frustumM(mProjectionMatrix, 0, -ratio * 0.5f, ratio * 0.5f, -0.7f, 0.7f, 2, 7);
+                    sprite1.setTexture(R.drawable.testimg);
+                    sprite2.setTexture(R.drawable.testimg);
+                } else if (pos == 0) {
                     Matrix.frustumM(mProjectionMatrix, 0, -ratio * 0.5f, ratio * 0.5f, -2f, 2f, 2, 7);
                     sprite1.setTexture(R.drawable.chart1);
                     sprite2.setTexture(R.drawable.chart1);
@@ -144,8 +159,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer{
                     sprite2.setTexture(R.drawable.chart5);
                 } else {
                     Matrix.frustumM(mProjectionMatrix, 0, -ratio * 0.5f, ratio * 0.5f, -2f, 2f, 2, 7);
-                    sprite1.setTexture(R.drawable.chart1);
-                    sprite2.setTexture(R.drawable.chart1);
+                    if(eyeToShow==0){
+                        sprite1.Draw(mMVPMatrix);
+                    }else if(eyeToShow==1){
+                        sprite2.Draw(mMVPMatrix);
+                    }else {
+                        sprite1.Draw(mMVPMatrix);
+                        sprite2.Draw(mMVPMatrix);
+                    }
                 }
             }
 
@@ -163,9 +184,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer{
             posOld=pos;
         }else{
             glClear(GL_COLOR_BUFFER_BIT);
-            sprite1.Draw(mMVPMatrix);
-            sprite2.Draw(mMVPMatrix);
-
+            if(eyeToShow==0){
+                sprite1.Draw(mMVPMatrix);
+            }else if(eyeToShow==1){
+                sprite2.Draw(mMVPMatrix);
+            }else {
+                sprite1.Draw(mMVPMatrix);
+                sprite2.Draw(mMVPMatrix);
+            }
         }
 
     }

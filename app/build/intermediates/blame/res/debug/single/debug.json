@@ -20,6 +20,10 @@
         "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
     },
     {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_testimg.png.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\testimg.png"
+    },
+    {
         "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_chart3.png.flat",
         "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\chart3.png"
     },
