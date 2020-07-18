@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -12,27 +13,44 @@ public class LearnMachine {
 
     private ArrayList<String[]> charts = new ArrayList<>();
     private ArrayList<int[]> results = new ArrayList<>();
-    private int totPos=0;
 
     /**
      *
      */
     public LearnMachine(){
+        Random r = new Random();
+        String[] array=new String [] {"down", "up", "left", "right"};
+        for(int j=0; j<5;j++){
+            String[] chart=new String []{"","","",""};
+            for(int i=0; i<chart.length; i++){
+                int p = r.nextInt(4);
+                boolean exist=false;
+                for(int k=0; k<4; k++){
+                    if(chart[k].contains(array[p])){
+                        exist=true;
+                    }
+                }
+                while(exist){
+                    p = r.nextInt(4);
+                    exist=false;
+                    for(int k=0; k<4; k++){
+                        if(chart[k].contains(array[p])){
+                            exist=true;
+                        }
+                    }
+                }
+                chart[i]=array[p];
+            }
+            charts.add(j,chart);
+        }
+        for(int j=0; j<5;j++){
+            String[] chart=charts.get(j);
+            Log.i(Util.LOG_TAG_LEARN, "chart= "+j);
+            for(int i=0; i<4; i++){
+                if (Util.DEBUG) {
+                    Log.i(Util.LOG_TAG_LEARN, "chart= value= "+chart[i]);        }
+            }
 
-        charts.add(new String [] {"right", "down"});
-        charts.add(new String [] {"up", "right", "left"});
-        charts.add(new String [] {"down", "up", "left", "right"});
-        charts.add(new String [] {"right","down", "left","down", "up"});
-        charts.add(new String [] {"down","up","down", "right","left", "up"});
-        results.add(new int[]{0,0});
-        results.add(new int[]{0,0});
-        results.add(new int[]{0,0});
-        results.add(new int[]{0,0});
-        results.add(new int[]{0,0});
-
-        for (int p=0; p<charts.size(); p++){
-            String [] array= (String[]) charts.get(p);
-            totPos=totPos+array.length;
         }
     }
 
@@ -42,7 +60,7 @@ public class LearnMachine {
      * @return
      */
     public int getSizeChartsPos(int chart){
-        String [] array=(String [])charts.get(chart);
+        String [] array=charts.get(chart);
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_LEARN, "getSizeChartsPos= "+array.length);        }
         return array.length;
@@ -114,5 +132,12 @@ public class LearnMachine {
         results.add(new int[]{0,0});
         results.add(new int[]{0,0});
         results.add(new int[]{0,0});
+    }
+
+    public String getChart(int chart, int chartPos) {
+        if(charts.size()>chart && charts.get(chart).length>chartPos) {
+            return charts.get(chart)[chartPos];
+        }
+        return "";
     }
 }

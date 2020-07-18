@@ -9,7 +9,6 @@ import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.net.wifi.WifiManager;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +44,6 @@ public class MainActivity extends Activity implements  RecognitionListener  {
     private static final String KWS_SEARCH = "wakeup";
     private static final String CHARTS_SEARCH = "charts";
     private static final String NEXT_SEARCH = "next";
-    private static final String START_SEARCH = "start";
     private static final String STOP_SEARCH = "stop";
     private static final String UP_SEARCH = "up";
     private static final String DOWN_SEARCH = "down";
@@ -86,12 +85,12 @@ public class MainActivity extends Activity implements  RecognitionListener  {
     private final int ACT_CHECK_TTS_DATA = 1000;
     private boolean isTTS=false;
 
-    private MyGLRenderer myGLRenderer;
+    private GLCircleRenderer myGLRenderer;
     private LearnMachine learn;
     private int totalLengthCharts=0;
     private int totalLengthStringArray=0;
     private int chart=0;
-    private int chartPos=0;
+    private int chartPos=-1;
     private boolean learning=false;
     private boolean isDone=false;
     private int eye=-1; //0-left 1-right -1-double
@@ -146,7 +145,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
             mGLView = new GLSurfaceView(this);
             mGLView.setEGLContextClientVersion(2);
             mGLView.setPreserveEGLContextOnPause(true);
-            myGLRenderer=new MyGLRenderer(this);
+            myGLRenderer=new GLCircleRenderer(this);
             mGLView.setRenderer(myGLRenderer);
         } else {
             // Time to get a new phone, OpenGL ES 2.0 not
@@ -169,7 +168,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
         mTextInfo1= new TextView(this);
         mTextInfo1.setId(AndroidUtils.generateViewId());
         mTextInfo1.setText("nothing");
-        mTextInfo1.setTextColor(Color.WHITE);
+        mTextInfo1.setTextColor(Color.DKGRAY);
         mTextInfo1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(width/2, 50);
         params1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -180,7 +179,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
         mTextInfo2= new TextView(this);
         mTextInfo2.setId(AndroidUtils.generateViewId());
         mTextInfo2.setText("nothing");
-        mTextInfo2.setTextColor(Color.WHITE);
+        mTextInfo2.setTextColor(Color.DKGRAY);
         mTextInfo2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(width/2, 50);
         params2.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -190,7 +189,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
 
         mTextInfo3 = new TextView(this);
         mTextInfo3.setId(AndroidUtils.generateViewId());
-        mTextInfo3.setTextColor(Color.WHITE);
+        mTextInfo3.setTextColor(Color.DKGRAY);
         mTextInfo3.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(width/2, 50);
         params3.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -200,7 +199,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
 
         mTextInfo4 = new TextView(this);
         mTextInfo4.setId(AndroidUtils.generateViewId());
-        mTextInfo4.setTextColor(Color.WHITE);
+        mTextInfo4.setTextColor(Color.DKGRAY);
         mTextInfo4.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         RelativeLayout.LayoutParams params4 = new RelativeLayout.LayoutParams(width/2, 50);
         params4.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -210,7 +209,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
 
         mTextInfo5 = new TextView(this);
         mTextInfo5.setId(AndroidUtils.generateViewId());
-        mTextInfo5.setTextColor(Color.WHITE);
+        mTextInfo5.setTextColor(Color.DKGRAY);
         mTextInfo5.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         RelativeLayout.LayoutParams params5 = new RelativeLayout.LayoutParams(width/2, 50);
         params5.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -220,7 +219,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
 
         mTextInfo6 = new TextView(this);
         mTextInfo6.setId(AndroidUtils.generateViewId());
-        mTextInfo6.setTextColor(Color.WHITE);
+        mTextInfo6.setTextColor(Color.DKGRAY);
         mTextInfo6.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         RelativeLayout.LayoutParams params6 = new RelativeLayout.LayoutParams(width/2, 50);
         params6.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -278,7 +277,12 @@ public class MainActivity extends Activity implements  RecognitionListener  {
         learn =new LearnMachine();
         totalLengthCharts=learn.getSizeCharts();
         totalLengthStringArray=learn.getSizeChartsPos(chart);
-        myGLRenderer.setChart(-1, eye);
+        if(chartPos==-1){
+            myGLRenderer.setChart(-1, eye, "");
+        }else{
+            myGLRenderer.setChart(-1, eye, learn.getChart(chart, chartPos));
+        }
+
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_LEARN, "chart= "+chart);
         }
@@ -345,12 +349,19 @@ public class MainActivity extends Activity implements  RecognitionListener  {
      */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        if(isProcessing){
+            return true;
+        }
+        int keyCode=event.getKeyCode();
+        int keyEvent=event.getAction();
+        if(keyEvent == KeyEvent.ACTION_UP){
+            isProcessing=true;
+        }
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_MAIN, "keyCode: select: "+event.getKeyCode()+" action: "+event.getAction());
             Log.i(Util.LOG_TAG_MAIN, "keyCode: isProcessing: "+isProcessing+" isBluetooth: "+isBluetooth);
         }
-        int keyCode=event.getKeyCode();
-        int keyEvent=event.getAction();
+
         if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP){
             if(!isBluetooth){
                 return true;
@@ -421,21 +432,27 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 learn.clearResult();
             }
         }
-//        new Handler().postDelayed(new Runnable() {
-//            public void run() {
-//                isProcessing = false;
-//            }}, 1000);
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                isProcessing = false;
+            }}, 1000);
         return true;
     }
 
     private void nextChart() {
         if(eye==-1){
             eye=0;
+            chart=0;
             say("eye left",false);
             learn.clearResult();
+        }else{
+            chart++;
         }
         chartPos = 0;
-        chart++;
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_LEARN, "totalLengthCharts= " + totalLengthCharts +
+                    " chart=" + chart + " totalLengthStringArray=" + totalLengthStringArray + " pos= " + chartPos);
+        }
         setInfo("test started");
         if(chart>=totalLengthCharts){
             if(eye<1){
@@ -443,7 +460,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 chartPos=0;
                 eye=1;
                 totalLengthStringArray=learn.getSizeChartsPos(chart);
-                myGLRenderer.setChart(chart,eye);
+                myGLRenderer.setChart(chart,eye,learn.getChart(chart,chartPos));
                 setText("","");
                 say("eye right",false);
                 new Handler().postDelayed(new Runnable() {
@@ -458,16 +475,16 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 endOfTest();
             }
         }else{
-            setText("","");
             if(chart!=0){say("next chart",false);}
             totalLengthStringArray=learn.getSizeChartsPos(chart);
-            myGLRenderer.setChart(chart, eye);
+            myGLRenderer.setChart(chart, eye, learn.getChart(chart, chartPos));
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if(mSpeechRecognizer!=null) {
                         mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                     }
+                    setText("","");
                 }
             }, 1000);
         }
@@ -490,14 +507,27 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 }
                 learn.setResult(chart, chartPos, result,eye);
                 chartPos++;
+                if(chartPos==totalLengthStringArray){
+                    nextChart();
+                }else{
+                    say("next",false);
+                }
+                if(chartPos==-1){
+                    myGLRenderer.setChart(-1, eye, "");
+                }else{
+                    myGLRenderer.setChart(chart, eye, learn.getChart(chart, chartPos));
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if(mSpeechRecognizer!=null) {
                             mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                         }
+                        setText("","");
                     }
                 }, 1000);
+            }else{
+                nextChart();
             }
         }
     }
@@ -505,9 +535,13 @@ public class MainActivity extends Activity implements  RecognitionListener  {
     private void endOfTest() {
         isStarting=false;
         chart=-1;
-        chartPos=0;
+        chartPos=-1;
         eye=-1;
-        myGLRenderer.setChart(chart,eye);
+        if(chartPos==-1){
+            myGLRenderer.setChart(-1, eye, "");
+        }else{
+            myGLRenderer.setChart(-1, eye, learn.getChart(chart, chartPos));
+        }
         say("end of test",false);
         say("for the left eye result is "+learn.getResult(0) + " %",false);
         say("for the right eye result is "+learn.getResult(1) + " %",false);
@@ -571,9 +605,9 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 mTTS.speak(toSpeak, TextToSpeech.QUEUE_ADD, null, utteranceId);
             else
                 mTTS.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
-        }
-        while (mTTS.isSpeaking()){
-            new SleepThread(100).start();
+            while (mTTS.isSpeaking()){
+                new SleepThread(100).start();
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.givevision.rochesightchart;
+package com.givevision.rochesightchart.old;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
+
+import com.givevision.rochesightchart.Util;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -17,13 +19,13 @@ public class Shaders {
 
     static final String vertexShaderCode =
             "attribute vec2 a_TexCoordinate;" +
-                    "varying vec2 v_TexCoordinate;" +
-                    "uniform mat4 uMVPMatrix;" +
-                    "attribute vec4 vPosition;" +
-                    "void main() {" +
-                    "  gl_Position = vPosition * uMVPMatrix;" +
-                    "v_TexCoordinate = a_TexCoordinate;" +
-                    "}";
+            "varying vec2 v_TexCoordinate;" +
+            "uniform mat4 uMVPMatrix;" +
+            "attribute vec4 vPosition;" +
+            "void main() {" +
+            "  gl_Position = vPosition * uMVPMatrix;" +
+            "  v_TexCoordinate = a_TexCoordinate;" +
+            "}";
 
     static final String fragmentShaderCode =
             "precision mediump float;" +

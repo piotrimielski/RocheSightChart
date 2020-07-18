@@ -1,21 +1,20 @@
-package com.givevision.rochesightchart;
+package com.givevision.rochesightchart.old;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
-import android.opengl.GLUtils;
 import android.util.Log;
+
+import com.givevision.rochesightchart.Util;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-import static com.givevision.rochesightchart.Shaders.checkGlError;
-import static com.givevision.rochesightchart.Shaders.fragmentShaderCode;
-import static com.givevision.rochesightchart.Shaders.loadTexture;
-import static com.givevision.rochesightchart.Shaders.vertexShaderCode;
+import static com.givevision.rochesightchart.old.Shaders.checkGlError;
+import static com.givevision.rochesightchart.old.Shaders.fragmentShaderCode;
+import static com.givevision.rochesightchart.old.Shaders.loadTexture;
+import static com.givevision.rochesightchart.old.Shaders.vertexShaderCode;
 
 public  class SpriteLeft {
 	//Reference to Activity Context

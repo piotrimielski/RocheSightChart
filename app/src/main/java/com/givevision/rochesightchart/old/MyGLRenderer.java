@@ -1,4 +1,4 @@
-package com.givevision.rochesightchart;
+package com.givevision.rochesightchart.old;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,13 +8,17 @@ import android.opengl.Matrix;
 import android.os.Handler;
 import android.util.Log;
 
+import com.givevision.rochesightchart.R;
+import com.givevision.rochesightchart.Util;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES20.glClear;
 
-public class MyGLRenderer implements GLSurfaceView.Renderer{
+public class
+MyGLRenderer implements GLSurfaceView.Renderer{
     private Context context;
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"

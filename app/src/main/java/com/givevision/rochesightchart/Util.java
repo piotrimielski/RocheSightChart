@@ -14,6 +14,7 @@ public class Util {
     public static final String LOG_TAG_RECOGNITION = "Recognition";
     public static final String LOG_TAG_RENDERING = "Rendering";
     public static final String LOG_TAG_LEARN = "Learn";
+    public static final String LOG_TAG_SPRITE = "Sprite";
 
     public static final int KEY_POWER = 100;
     public static final int KEY_TRIGGER = 96;
@@ -22,5 +23,6 @@ public class Util {
     public static final int KEY_LEFT = 21;
     public static final int KEY_RIGHT = 22;
     public static final int KEY_BACK = 97;
+
 
 }

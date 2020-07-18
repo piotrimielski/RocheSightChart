@@ -9,6 +9,9 @@
         android:minSdkVersion="24"
         android:targetSdkVersion="26" />
 
+    <!-- ver 1 - generate chart with picture -->
+    <!-- ver 2 - generate cirlce into texture -->
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
