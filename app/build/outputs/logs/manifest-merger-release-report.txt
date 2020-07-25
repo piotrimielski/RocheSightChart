@@ -41,13 +41,13 @@ INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-3
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 	android:versionName
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:5:5-28
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:5:5-30
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:11-69
 	android:versionCode
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:4:5-28
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:4:5-30
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 uses-feature#0x00020000

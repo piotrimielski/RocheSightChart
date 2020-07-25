@@ -12,9 +12,9 @@ public class GLCircleRenderer implements GLSurfaceView.Renderer{
     private static final float X_POSITION_LEFT = 0.30f;
     private static final float X_POSITION_RIGHT = 0.70f;
     private static final float Y_POSITION = 0.5f;
-    private static final int RADIUS=200;
-    private static final int STEP=40;
-
+    private static final int ORG_RADIUS = 200;
+    private static final int CORRECTION = 2;
+    private int radius;
     private static float YELLOW_COLOR[] = {0.976f, 0.694f, 0.015f, 1f};
     private static float BLACK_COLOR[] = {0f, 0f, 0f, 1f};
     private GLCircleSprite mSprite;
@@ -28,6 +28,7 @@ public class GLCircleRenderer implements GLSurfaceView.Renderer{
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_RENDERING, "constructor");
         }
+        radius=ORG_RADIUS;
     }
 
     @Override
@@ -55,13 +56,13 @@ public class GLCircleRenderer implements GLSurfaceView.Renderer{
 
         mSprite.setCenterX(mainBlobX);
         mSprite.setCenterY(mainBlobY);
-        mSprite.setRadius(RADIUS);
+        mSprite.setRadius(radius);
         mSpriteLeft.setCenterX(leftBlobX);
         mSpriteLeft.setCenterY(mainBlobY);
-        mSpriteLeft.setRadius(RADIUS);
+        mSpriteLeft.setRadius(radius);
         mSpriteRight.setCenterX(rightBlobX);
         mSpriteRight.setCenterY(mainBlobY);
-        mSpriteRight.setRadius(RADIUS);
+        mSpriteRight.setRadius(radius);
         mSpriteLeft.setChart(chart);
         mSpriteRight.setChart(chart);
     }
@@ -80,7 +81,7 @@ public class GLCircleRenderer implements GLSurfaceView.Renderer{
         }
     }
 
-    public void setChart(int chart, int eye, String learnChart) {
+    public void setChart(int chart, int eye, String learnChart, float optotypeOuterDiameter) {
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_RENDERING, "setChart chart= "+
                     chart + " eye= " + eye + " learnChart= "+learnChart);
@@ -95,17 +96,19 @@ public class GLCircleRenderer implements GLSurfaceView.Renderer{
             pos=3;
         }else if(learnChart.contains("left")){
             pos=4;
+        }else if(learnChart.contains("all")){
+            pos=5;
         }else{
             pos=-1;
         }
+        if(chart>-1){
+            radius = (int) optotypeOuterDiameter / 2 * CORRECTION;
+        }else{
+            radius=ORG_RADIUS;
+        }
         if(mSpriteLeft!=null && mSpriteRight!=null){
-            if(chart>=0){
-                mSpriteLeft.setRadius(RADIUS-STEP*chart);
-                mSpriteRight.setRadius(RADIUS-STEP*chart);
-            }else{
-                mSpriteLeft.setRadius(RADIUS);
-                mSpriteRight.setRadius(RADIUS);
-            }
+            mSpriteLeft.setRadius(radius);
+            mSpriteRight.setRadius(radius);
             mSpriteLeft.setChart(chart);
             mSpriteRight.setChart(chart);
         }

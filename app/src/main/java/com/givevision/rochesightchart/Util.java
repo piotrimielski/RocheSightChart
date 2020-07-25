@@ -10,8 +10,9 @@ public class Util {
 
     public static final boolean DEBUG = true ;
     public static final String LOG_TAG_MAIN = "MainActivity";
-    public static final String LOG_TAG_KEY = "Controller";
+    public static final String LOG_TAG_KEY = "keyAction";
     public static final String LOG_TAG_RECOGNITION = "Recognition";
+    public static final String LOG_TAG_VOICE = "Voice Command";
     public static final String LOG_TAG_RENDERING = "Rendering";
     public static final String LOG_TAG_LEARN = "Learn";
     public static final String LOG_TAG_SPRITE = "Sprite";

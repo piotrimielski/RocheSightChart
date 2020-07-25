@@ -65,35 +65,46 @@ public class GLCircleSprite {
                 "uniform int aChartPos; \n" +
                 "uniform float aChart; \n" +
                 "const float threshold = 0.005;\n" +
-                "const float delta = 60.;\n" +
                 "void main() \n" +
                 "{ \n" +
-                "   float d, dist, pos_y, pos_x, hole;\n" +
+                "   float d, dist, pos_y, pos_x, hole, gape;\n" +
                 "   dist = distance(aCirclePosition, gl_FragCoord.xy);\n" +
                 "   pos_y = aCirclePosition.y - gl_FragCoord.y;\n" +
                 "   pos_x = aCirclePosition.x - gl_FragCoord.x;\n" +
+                "   gape = 2. * aRadius / 5.; \n" +
                 "   if(dist == 0.){\n" +
                 "       dist = 1.;\n" +
                 "   }\n"+
                 "   d = aRadius / dist;\n" +
-                "   hole=delta - 12. * aChart ;\n" +
-                "   if(d >= 0.99){\n" +
-                "      if(d >= 1.8){\n" +
+                "   if(dist < aRadius - gape){\n" +
+                "     gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "   }else if(dist <= aRadius){\n" +
+                "      if(aChart == -1.){\n" +
+                "        gl_FragColor = vec4(0.5, 0.5, 0.5, 1.); \n" +
+                "      }else if(aChartPos==2 && pos_y<gape/2. && pos_y>-gape/2. && pos_x<0.){\n" +
                 "        gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
-                "      }else if(aChartPos==2 && pos_y<hole && pos_y>-hole && pos_x<0.){\n" +
+                "      }else if(aChartPos==4 && pos_y<gape/2. && pos_y>-gape/2. && pos_x>0.){\n" +
                 "        gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
-                "      }else if(aChartPos==4 && pos_y<hole && pos_y>-hole && pos_x>0.){\n" +
+                "      }else if(aChartPos==1 && pos_x<gape/2. && pos_x>-gape/2. && pos_y<0.){\n" +
                 "        gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
-                "      }else if(aChartPos==1 && pos_x<hole && pos_x>-hole && pos_y<0.){\n" +
+                "      }else if(aChartPos==3 && pos_x<gape/2. && pos_x>-gape/2. && pos_y>0.){\n" +
                 "        gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
-                "      }else if(aChartPos==3 && pos_x<hole && pos_x>-hole && pos_y>0.){\n" +
-                "        gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "      }else if(aChartPos==5){\n" +
+                "           if( pos_y<gape/5. && pos_y>-gape/5. && pos_x<0.){\n" +
+                "               gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "           }else if( pos_y<gape/5. && pos_y>-gape/5. && pos_x>0.){\n" +
+                "               gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "           }else if( pos_x<gape/5. && pos_x>-gape/5. && pos_y<0.){\n" +
+                "               gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "           }else if( pos_x<gape/5. && pos_x>-gape/5. && pos_y>0.){\n" +
+                "               gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "           }\n"+
                 "      }else{\n"+
                 "        gl_FragColor = aColor;\n" +
                 "      }\n"+
-                "   }else if(d >= 1. - threshold) {\n" +
-                "        float a = (d - (1. - threshold)) / threshold;\n" +
-                "        gl_FragColor = vec4(aColor.r, aColor.g, aColor.b, a); \n" +
+//                "   }else if(d >= 1. - threshold) {\n" +
+//                "        float a = (d - (1. - threshold)) / threshold;\n" +
+//                "        gl_FragColor = vec4(aColor.r, aColor.g, aColor.b, a); \n" +
                 "    }else{\n" +
                 "        gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +//vec4(0.79, 0.81, 0.6, 0.)
                 "    }\n"+
