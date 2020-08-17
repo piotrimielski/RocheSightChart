@@ -379,14 +379,14 @@
     <string name="action_calibration_check">Do you see the circle with all 4 gaps?</string>
     <string name="action_controller">"you will use the controller without the voice command"</string>
     <string name="action_controller_calibration_info1">please move joystick left/right
-        and
-        validate with trigger button the position where you see only one circle</string>
+       and
+       validate with trigger button the position where you see the circle on the centre</string>
     <string name="action_controller_calibration_info2">please move joystick up/down
-        and
-        validate with trigger button the position where you see the smallest circle with 4 gaps</string>
-    <string name="action_controller_test_info">"With joystick you choice the gap position you see.
-        You will hear this bip when answer is recorded.
-        Click the back button for hard end the test."</string>
+       and
+       validate with trigger button the position where you see the smallest circle with 4 gaps</string>
+    <string name="action_controller_test_info">"With joystick you choose the gap position you see.
+       You will hear the beep when the answer is recorded.
+       Click the back button for hard end the test."</string>
     <string name="action_test">test is starting</string>
     <string name="action_voice">you will use the voice command without the controller</string>
     <string name="action_voice_calibration_info">please say up/down
@@ -398,14 +398,16 @@
         Click the trigger button to get to the next image sizes, or say 'stop' for ending of test"</string>
     <string name="app_name">Roche Sight Chart</string>
     <string name="charts">"This is an eye test.
-        It won't take few minutes.
-        Click on the power button of your controller to start."</string>
+       It won't take few minutes.
+       Click on the power button of your controller to start."</string>
     <string name="digits_caption">To try recognition of digits: say something like one, two, three, four, five.</string>
     <string name="forecast_caption">To try recognition of a weather forecast like sunny spells on Wednesday</string>
     <string name="kws_caption">To start demonstration say, check</string>
     <string name="menu_caption">Say up, down, left  or right to indicate position of black space
 in the yellow circle, start by left side. You have 2 seconds for each circle.</string>
     <string name="phone_caption">To try phonetic recognition say anything.</string>
+    <string name="result_left_info">"for the left eye result is"</string>
+    <string name="result_right_info">"for the right eye result is"</string>
     <string name="search_menu_title">Search</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>

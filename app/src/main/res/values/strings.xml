@@ -11,16 +11,6 @@ in the yellow circle, start by left side. You have 2 seconds for each circle.</s
 <!--        Tell us if the opening of C is up, down, right or left-->
 <!--        by voice command or using the joystick of your remote control.-->
 <!--        Click on the power button of your controller to select voice or controller."</string>-->
-    <string name="charts">"This is an eye test.
-        It won't take few minutes.
-        Click on the power button of your controller to start."</string>
-    <string name="action_calibration" >start with calibration of device</string>
-    <string name="action_controller_calibration_info1">please move joystick left/right
-        and
-        validate with trigger button the position where you see only one circle</string>
-    <string name="action_controller_calibration_info2">please move joystick up/down
-        and
-        validate with trigger button the position where you see the smallest circle with 4 gaps</string>
     <string name="action_voice_calibration_info">please say up/down
         or
         say accept
@@ -29,10 +19,24 @@ in the yellow circle, start by left side. You have 2 seconds for each circle.</s
     <string name="action_controller" >"you will use the controller without the voice command"</string>
     <string name="action_voice" >you will use the voice command without the controller</string>
     <string name="action_test" >test is starting</string>
-    <string name="action_controller_test_info" >"With joystick you choice the gap position you see.
-        You will hear this bip when answer is recorded.
-        Click the back button for hard end the test."</string>
     <string name="action_voice_test_info" >"you can say your answer after a bip.
         You will hear this voice 'next' if answer is recorded.
         Click the trigger button to get to the next image sizes, or say 'stop' for ending of test"</string>
+
+    <string name="charts">"This is an eye test.
+       It won't take few minutes.
+       Click on the power button of your controller to start."</string>
+    <string name="action_calibration" >start with calibration of device</string>
+    <string name="action_controller_calibration_info1">please move joystick left/right
+       and
+       validate with trigger button the position where you see the circle on the centre</string>
+    <string name="action_controller_calibration_info2">please move joystick up/down
+       and
+       validate with trigger button the position where you see the smallest circle with 4 gaps</string>
+    <string name="action_controller_test_info" >"With joystick you choose the gap position you see.
+       You will hear the beep when the answer is recorded.
+       Click the back button for hard end the test."</string>
+    <string name="result_left_info" >"for the left eye result is"</string>
+    <string name="result_right_info" >"for the right eye result is"</string>
+
 </resources>

@@ -901,6 +901,8 @@ string forecast_caption
 string kws_caption
 string menu_caption
 string phone_caption
+string result_left_info
+string result_right_info
 string search_menu_title
 string status_bar_notification_info_overflow
 style AlertDialog_AppCompat

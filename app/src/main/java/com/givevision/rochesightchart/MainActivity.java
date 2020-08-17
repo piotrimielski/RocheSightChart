@@ -56,6 +56,8 @@ public class MainActivity extends Activity {
     private static final String ACTION_VOICE_CALIBRATION_INFO = "voice calibration info";
     private static final String ACTION_CALIBRATION_CHECK = "calibration check";
     private static final String ACTION_TEST = "test";
+    private static final String ACTION_RESULT_LEFT = "result left";
+    private static final String ACTION_RESULT_RIGHT = "result left";
     private static final String ACTION_CONTROLLER_TEST_INFO = "controller test info";
     private static final String ACTION_VOICE_TEST_INFO = "voice test info";
     private static final String ACTION_CONTROLLER = "controller";
@@ -97,6 +99,8 @@ public class MainActivity extends Activity {
     private int totalLengthStringArray=0;
     private  static int FIRST_CHART_LEFT_EYE=0;
     private  static int FIRST_CHART_RIGHT_EYE=0;
+    private static final String PREF_LEFT_CALIBRATION = "left eye calibration";
+    private static final String PREF_RIGHT_CALIBRATION = "right eye calibration";
     private static final String PREF_LEFT_START = "left eye chart start";
     private static final String PREF_RIGHT_START = "right eye chart start";
     private int chart=0;
@@ -108,6 +112,7 @@ public class MainActivity extends Activity {
     private boolean isProcessing;
     private boolean isKeyAction=false;
     private boolean isTimerStart;
+    private int eyeCalibration=-1;
     private ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
     private PowerManager pm;
     private PowerManager.WakeLock wl;
@@ -284,6 +289,8 @@ public class MainActivity extends Activity {
         captions.put(ACTION_TEST, R.string.action_test);
         captions.put(ACTION_CONTROLLER_TEST_INFO, R.string.action_controller_test_info);
         captions.put(ACTION_VOICE_TEST_INFO, R.string.action_voice_test_info);
+        captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
+        captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
         // Check if user has given permission to record audio
         int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.RECORD_AUDIO);
@@ -411,17 +418,16 @@ public class MainActivity extends Activity {
 //            public void run() {
 //                isProcessing=false;
 //            }}, 1000);
-        int keyCode=event.getKeyCode();
-        int keyEvent=event.getAction();
-        if(keyEvent == KeyEvent.ACTION_UP){
-
-        }
-
-
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_MAIN, "keyCode: select: "+event.getKeyCode()+" action: "+event.getAction());
         }
-        if(keyCode==Util.KEY_POWER  && keyEvent == KeyEvent.ACTION_UP){
+        int keyCode=event.getKeyCode();
+        int keyEvent=event.getAction();
+        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP && (!step1 && !step2 && !test)){
+            isProcessing=true;
+            say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
+            isProcessing=false;
+        }else if(keyCode==Util.KEY_POWER  && keyEvent == KeyEvent.ACTION_UP){
             if(step1 || step2 ||test){
                 return true;
             }
@@ -432,17 +438,20 @@ public class MainActivity extends Activity {
             myGLRenderer.setChart(-1, -2, "", 0);
             learn.clearResult();
             myGLRenderer.resetPosition();
-            myGLRenderer.setCalibrationImage(1);
+            myGLRenderer.setCalibrationImage(2);
             myGLRenderer.setCharacter(1);
             setText("", "");
             setInfo("Goggle calibration");
+            eyeCalibration=0;
             say(getResources().getString(captions.get(ACTION_CALIBRATION)), false);
             say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO1)), true);
-            myGLRenderer.setChart(-1, -1, "", learn.getOptotypeOuterDiameter(0));
+            myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypeOuterDiameter(1));
+            say("left eye", true);
             step1=true;
             step2=false;
             test=false;
             isProcessing=false;
+
         }else if(step1){
             isProcessing=true;
             calibration1(keyCode, keyEvent);
@@ -465,15 +474,26 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
             }
-            step1=false;
-            step2=true;
-            myGLRenderer.setChart(-1, -2, "", 0);
-            setInfo("Chart calibration");
-            say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true);
-            myGLRenderer.setCalibrationImage(1);
-            eye=-1;
-            chart=totalLengthCharts-4;
-            myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
+            if(eyeCalibration==0){
+                learn.upDatePref(PREF_LEFT_CALIBRATION,myGLRenderer.getLeftPosition());
+                eyeCalibration=1;
+                myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypeOuterDiameter(1));
+                say("right eye", true);
+            }else{
+                step1=false;
+                step2=true;
+                learn.upDatePref(PREF_RIGHT_CALIBRATION,myGLRenderer.getRightPosition());
+                eyeCalibration=0;
+                myGLRenderer.setChart(-1, -2, "", 0);
+                setInfo("Chart calibration");
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true);
+                myGLRenderer.setCalibrationImage(1);
+                eye=-1;
+                chart=totalLengthCharts-4;
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+                say("left eye", true);
+            }
+
         }else if(keyCode==Util.KEY_UP  && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_UP");
@@ -488,12 +508,26 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_LEFT");
             }
-            myGLRenderer.setDelta(-5f);
+            if(eyeCalibration==0){
+                myGLRenderer.setLeftPosition(5f);
+            }else if(eyeCalibration==1){
+                myGLRenderer.setRightPosition(-5f);
+            }else{
+                myGLRenderer.setLeftPosition(-5f);
+                myGLRenderer.setRightPosition(-5f);
+            }
         }else if(keyCode==Util.KEY_RIGHT){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_RIGHT");
             }
-            myGLRenderer.setDelta(5f);
+            if(eyeCalibration==0){
+                myGLRenderer.setLeftPosition(-5f);
+            }else if(eyeCalibration==1){
+                myGLRenderer.setRightPosition(5f);
+            }else{
+                myGLRenderer.setLeftPosition(5f);
+                myGLRenderer.setRightPosition(5f);
+            }
         }else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
@@ -507,25 +541,33 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
             }
-            step2=false;
-            test=true;
-            myGLRenderer.setChart(-1, -2, "", 0);
-            setInfo("Test running");
-            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), true);
-            myGLRenderer.setCharacter(2);
-            if(chart>0 && chart<totalLengthCharts-1){
-                chart=chart-1;
-            }else if(chart>=totalLengthCharts-1){
-                chart=totalLengthCharts-2;
+            if(eyeCalibration==0){
+                learn.upDatePref(PREF_LEFT_START,chart);
+                eyeCalibration=1;
+                chart=totalLengthCharts-4;
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+                say("right eye", true);
             }else{
-                chart=0;
+                step2=false;
+                test=true;
+                eyeCalibration=-1;
+                myGLRenderer.setChart(-1, -2, "", 0);
+                setInfo("Test running");
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), true);
+                myGLRenderer.setCharacter(2);
+                if(chart>0 && chart<totalLengthCharts-1){
+                    chart=chart-1;
+                }else if(chart>=totalLengthCharts-1){
+                    chart=totalLengthCharts-2;
+                }else{
+                    chart=0;
+                }
+                learn.upDatePref(PREF_RIGHT_START,chart);
+                eye=-1;
+                myGLRenderer.setCalibrationImage(3);
+                nextChart();
+                restardTask();
             }
-            learn.upDatePref(PREF_LEFT_START,chart);
-            learn.upDatePref(PREF_RIGHT_START,chart);
-            eye=-1;
-            myGLRenderer.setCalibrationImage(3);
-            nextChart();
-            restardTask();
         }else if(keyCode==Util.KEY_UP  && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_UP");
@@ -534,7 +576,13 @@ public class MainActivity extends Activity {
             if(chart <0){
                 chart=0;
             }
-            myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
+            if(eyeCalibration==0){
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+            }else if(eyeCalibration==1){
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+            }else{
+                myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
+            }
 //            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
         }else if(keyCode==Util.KEY_DOWN  && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
@@ -544,7 +592,13 @@ public class MainActivity extends Activity {
             if(chart > totalLengthCharts-1){
                 chart=totalLengthCharts-1;
             }
-            myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
+            if(eyeCalibration==0){
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+            }else if(eyeCalibration==1){
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+            }else{
+                myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
+            }
 //            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
         }else if(keyCode==Util.KEY_LEFT  && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
@@ -704,8 +758,8 @@ public class MainActivity extends Activity {
         if(test){
             setText("left eye "+learn.getResult(0),"right eye "+learn.getResult(1));
             say("end of test",false);
-            say("for the left eye result is "+learn.getResult(0) ,false);
-            say("for the right eye result is "+learn.getResult(1),false);
+            say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+learn.getResult(0), true);
+            say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+learn.getResult(1), true);
         }else{
             setText("","");
             setInfo("Preparing the test");

@@ -30,7 +30,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
     private static int chart=-1;
     private static int eye=0;
     private int pos=-1;
-    private int character=1;
+    private int mCharacter=1;
 
     public GLERenderer(MainActivity mainActivity) {
         if (Util.DEBUG) {
@@ -80,12 +80,12 @@ public class GLERenderer implements GLSurfaceView.Renderer{
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 //        mSprite.draw();
         if(eye==0){
-            mSpriteLeft.draw(pos, character);
+            mSpriteLeft.draw(pos, mCharacter);
         }else if(eye==1){
-            mSpriteRight.draw(pos, character);
+            mSpriteRight.draw(pos, mCharacter);
         }else if(eye==-1){
-            mSpriteLeft.draw(pos, character);
-            mSpriteRight.draw(pos, character);
+            mSpriteLeft.draw(pos, mCharacter);
+            mSpriteRight.draw(pos, mCharacter);
         }else {
 
         }
@@ -124,8 +124,11 @@ public class GLERenderer implements GLSurfaceView.Renderer{
         }
     }
 
-    public void setDelta(float delta) {
+    public void setLeftPosition(float delta) {
         mSpriteLeft.setCenterX(mSpriteLeft.getCenterX()-delta);
+    }
+
+    public void setRightPosition(float delta) {
         mSpriteRight.setCenterX(mSpriteRight.getCenterX()+delta);
     }
 
@@ -151,6 +154,13 @@ public class GLERenderer implements GLSurfaceView.Renderer{
     }
 
     public void setCharacter(int i) {
-        character=i;
+        mCharacter=i;
+    }
+
+    public float getLeftPosition() {
+        return mSpriteLeft.getCenterX();
+    }
+    public float getRightPosition() {
+        return mSpriteRight.getCenterX();
     }
 }
