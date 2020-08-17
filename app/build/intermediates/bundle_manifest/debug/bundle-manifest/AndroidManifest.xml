@@ -10,7 +10,10 @@
 
     <!-- ver 1 - generate chart with picture -->
     <!-- ver 2 - generate C into texture -->
-    <!-- ver 3 - generate E into texture, remove voice command, add 1 step, modify controller responses -->
+    <!--
+       ver 3 - generate E into texture, remove voice command, add 1 step, modify controller responses,
+                add bip, auto-play each 3s
+    -->
 
     <uses-feature
         android:glEsVersion="0x00020000"

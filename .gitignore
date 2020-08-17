@@ -14,3 +14,5 @@
 .cxx
 /app/build
 /aars/build
+/app/release/release/output.json
+/app/release/release/output-metadata.json
