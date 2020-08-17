@@ -19,10 +19,10 @@ public class LearnMachine {
     private ArrayList<int[]> results_right = new ArrayList<>();
     //represent optotypes series: Visual Angle(min), LogMAR, Approximate M-units, Gap (mm),Outer diameter (mm)
     private ArrayList<float[]> optotypes =new ArrayList<>();
-
+    private static final int NBR_OF_CHARACTERS=4;
     private static final String MyPREFERENCES = "my preferences";
     private static final String PREF_M = "M-Unit";
-    private static final String PREF_RESULT_OF_5 = "result of 5";
+    private static final String PREF_RESULT_OF_4 = "result of 4";
     private static SharedPreferences sharedpreferences;
     /**
      *
@@ -62,34 +62,19 @@ public class LearnMachine {
         Random r = new Random();
         String[] array=new String [] {"down", "up", "left", "right"};
         for(int j=0; j<optotypes.size();j++){
-            String[] chart=new String []{"","","","",""};
-            for(int i=0; i<chart.length; i++){
+            String[] chart=new String []{"","","",""};
+            for(int i=0; i<NBR_OF_CHARACTERS; i++) {
                 int p = r.nextInt(4);
-                boolean exist=false;
-                for(int k=0; k<4; k++){
-                    if(chart[k].contains(array[p])){
-                        exist=true;
-                    }
-                }
-                while(exist && i<chart.length-1){
-                    p = r.nextInt(4);
-                    exist=false;
-                    for(int k=0; k<4; k++){
-                        if(chart[k].contains(array[p])){
-                            exist=true;
-                        }
-                    }
-                }
-                chart[i]=array[p];
+                chart[i] = array[p];
             }
-            charts.add(j,chart);
+            charts.add(j, chart);
         }
-        for(int j=0; j<5;j++){
+        for(int j=0; j<optotypes.size();j++){
             String[] chart=charts.get(j);
             Log.i(Util.LOG_TAG_LEARN, "chart= "+j);
-            for(int i=0; i<4; i++){
+            for(int i=0; i<NBR_OF_CHARACTERS; i++){
                 if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "chart= value= "+chart[i]);        }
+                    Log.i(Util.LOG_TAG_LEARN, "serie= "+j+" chart= "+i+" value= "+chart[i]);        }
             }
 
         }
@@ -200,24 +185,50 @@ public class LearnMachine {
             }
         }
         //find next series result
-        if(resultOkPos>-1 && resultOkPos<results_left.size()-1){
-            float[] array=  optotypes.get(resultOkPos);
-            int[]  resultNoArray=  results_left.get(resultOkPos+1);
-            for (int p=0; p<resultNoArray.length; p++){
-                total=total+resultNoArray[p];
+        if(eye==0){
+            if(resultOkPos>-1 && resultOkPos<results_left.size()-1){
+                float[] array=  optotypes.get(resultOkPos);
+                int[]  resultNoArray=  results_left.get(resultOkPos+1);
+                for (int p=0; p<resultNoArray.length; p++){
+                    total=total+resultNoArray[p];
+                }
+                upDatePref(PREF_M,array[2]);
+                upDatePref(PREF_RESULT_OF_4,total);
+                if(array[2]-(int)array[2]>0){
+                    return "4/"+String.format("%.1f", array[2]);
+//                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 5";
+                }
+//            return "4/"+(int)array[2]+" and "+total +" of 5";
+                return "4/"+(int)array[2];
+            }else if(resultOkPos==results_left.size()-1) {
+                upDatePref(PREF_M,4);
+                upDatePref(PREF_RESULT_OF_4,0);
+                return "4/4";
+            }else{
+                return "error of reading";
             }
-            upDatePref(PREF_M,array[2]);
-            upDatePref(PREF_RESULT_OF_5,total);
-            if(array[2]-(int)array[2]>0){
-                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 5";
-            }
-            return "4/"+(int)array[2]+" and "+total +" of 5";
-        }else if(resultOkPos==results_left.size()-1) {
-            upDatePref(PREF_M,4);
-            upDatePref(PREF_RESULT_OF_5,0);
-            return "4/4";
         }else{
-            return "error of reading";
+            if(resultOkPos>-1 && resultOkPos<results_right.size()-1){
+                float[] array=  optotypes.get(resultOkPos);
+                int[]  resultNoArray=  results_right.get(resultOkPos+1);
+                for (int p=0; p<resultNoArray.length; p++){
+                    total=total+resultNoArray[p];
+                }
+                upDatePref(PREF_M,array[2]);
+                upDatePref(PREF_RESULT_OF_4,total);
+                if(array[2]-(int)array[2]>0){
+                    return "4/"+String.format("%.1f", array[2]);
+//                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 5";
+                }
+//            return "4/"+(int)array[2]+" and "+total +" of 5";
+                return "4/"+(int)array[2];
+            }else if(resultOkPos==results_right.size()-1) {
+                upDatePref(PREF_M,4);
+                upDatePref(PREF_RESULT_OF_4,0);
+                return "4/4";
+            }else{
+                return "error of reading";
+            }
         }
     }
 
@@ -228,11 +239,11 @@ public class LearnMachine {
     public void clearResult(){
         results_left.clear();
         for(int j=0; j<optotypes.size();j++){
-            results_left.add(new int[]{0,0,0,0,0});
+            results_left.add(new int[]{0, 0, 0, 0});
         }
         results_right.clear();
         for(int j=0; j<optotypes.size();j++){
-            results_right.add(new int[]{0,0,0,0,0});
+            results_right.add(new int[]{0,0,0,0});
         }
     }
 
@@ -242,6 +253,9 @@ public class LearnMachine {
      * @return chartPosition
      */
     public String getChartPosString(int chart, int chartPos) {
+        if(chart==-1 || chartPos==-1){
+            return "";
+        }
         if(charts.size()>chart && charts.get(chart).length>chartPos) {
             return charts.get(chart)[chartPos];
         }

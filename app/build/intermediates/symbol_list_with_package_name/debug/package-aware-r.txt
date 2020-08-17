@@ -887,7 +887,8 @@ string abc_toolbar_collapse_description
 string action_calibration
 string action_calibration_check
 string action_controller
-string action_controller_calibration_info
+string action_controller_calibration_info1
+string action_controller_calibration_info2
 string action_controller_test_info
 string action_test
 string action_voice

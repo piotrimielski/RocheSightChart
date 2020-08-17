@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
-    android:versionCode="200"
-    android:versionName="200" >
+    android:versionCode="300"
+    android:versionName="300" >
 
     <uses-sdk
         android:minSdkVersion="24"
         android:targetSdkVersion="26" />
 
     <!-- ver 1 - generate chart with picture -->
-    <!-- ver 2 - generate cirlce into texture -->
+    <!-- ver 2 - generate C into texture -->
+    <!-- ver 3 - generate E into texture, remove voice command, add 1 step, modify controller responses -->
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -18,6 +19,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -28,11 +30,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:screenOrientation="fullSensor"
+        android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:testOnly="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name="com.givevision.rochesightchart.MainActivity" >
+        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        <activity
+            android:name="com.givevision.rochesightchart.MainActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

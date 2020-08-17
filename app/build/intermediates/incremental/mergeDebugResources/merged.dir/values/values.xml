@@ -378,12 +378,15 @@
     <string name="action_calibration">start with calibration of device</string>
     <string name="action_calibration_check">Do you see the circle with all 4 gaps?</string>
     <string name="action_controller">"you will use the controller without the voice command"</string>
-    <string name="action_controller_calibration_info">please move joystick up/down
-        or
+    <string name="action_controller_calibration_info1">please move joystick left/right
+        and
+        validate with trigger button the position where you see only one circle</string>
+    <string name="action_controller_calibration_info2">please move joystick up/down
+        and
         validate with trigger button the position where you see the smallest circle with 4 gaps</string>
-    <string name="action_controller_test_info">"with joystick you choice the gap position you see.
-        You will hear this voice 'next' if answer is recorded.
-        Click the trigger button to get to the next image sizes, or the back button for end the test."</string>
+    <string name="action_controller_test_info">"With joystick you choice the gap position you see.
+        You will hear this bip when answer is recorded.
+        Click the back button for hard end the test."</string>
     <string name="action_test">test is starting</string>
     <string name="action_voice">you will use the voice command without the controller</string>
     <string name="action_voice_calibration_info">please say up/down
@@ -396,9 +399,7 @@
     <string name="app_name">Roche Sight Chart</string>
     <string name="charts">"This is an eye test.
         It won't take few minutes.
-        Tell us if the opening of C is up, down, right or left
-        by voice command or using the joystick of your remote control.
-        Click on the power button of your controller to select voice or controller."</string>
+        Click on the power button of your controller to start."</string>
     <string name="digits_caption">To try recognition of digits: say something like one, two, three, four, five.</string>
     <string name="forecast_caption">To try recognition of a weather forecast like sunny spells on Wednesday</string>
     <string name="kws_caption">To start demonstration say, check</string>

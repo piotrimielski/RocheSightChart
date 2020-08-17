@@ -4,8 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -13,11 +11,9 @@ import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.opengl.GLSurfaceView;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.speech.RecognitionListener;
-import android.speech.RecognizerIntent;
+import android.os.PowerManager;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -34,16 +30,15 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
+
+import static android.os.SystemClock.sleep;
 
 
 //https://cmusphinx.github.io/wiki/tutorialandroid/
 
-public class MainActivity extends Activity implements  RecognitionListener  {
+public class MainActivity extends Activity {
     /* Named searches allow to quickly reconfigure the decoder */
     private static final String KWS_SEARCH = "wakeup";
     private static final String CHARTS_SEARCH = "charts";
@@ -56,7 +51,8 @@ public class MainActivity extends Activity implements  RecognitionListener  {
     private static final String RIGHT_SEARCH = "right";
     private static final String ACCEPT_CALIBRATION_SEARCH = "accept";
     private static final String ACTION_CALIBRATION = "calibration";
-    private static final String ACTION_CONTROLLER_CALIBRATION_INFO = "controller calibration info";
+    private static final String ACTION_CONTROLLER_CALIBRATION_INFO1 = "controller calibration info1";
+    private static final String ACTION_CONTROLLER_CALIBRATION_INFO2 = "controller calibration info2";
     private static final String ACTION_VOICE_CALIBRATION_INFO = "voice calibration info";
     private static final String ACTION_CALIBRATION_CHECK = "calibration check";
     private static final String ACTION_TEST = "test";
@@ -67,6 +63,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
 
     private boolean step1=false;
     private boolean step2=false;
+    private boolean test=false;
     private RelativeLayout   relativeLayout  ;
     private boolean isReadyForSpeech;
     /* Used to handle permission request */
@@ -94,7 +91,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
     private final int ACT_CHECK_TTS_DATA = 1000;
     private boolean isTTS=false;
 
-    private GLCircleRenderer myGLRenderer;
+    private GLERenderer myGLRenderer;
     private LearnMachine learn;
     private int totalLengthCharts=0;
     private int totalLengthStringArray=0;
@@ -105,28 +102,39 @@ public class MainActivity extends Activity implements  RecognitionListener  {
     private int chart=0;
     private int chartPos=-1;
     private boolean learning=false;
-    private boolean isDone=false;
     private int eye=-1; //0-left 1-right -1-double
-    private SpeechRecognizer mSpeechRecognizer;
-    private Intent mSpeechRecognizerIntent;
+//    private SpeechRecognizer mSpeechRecognizer;
+//    private Intent mSpeechRecognizerIntent;
     private boolean isProcessing;
-    private boolean isVoiceProcessing;
-    private boolean isBluetooth;
+    private boolean isKeyAction=false;
+    private boolean isTimerStart;
+    private ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+    private PowerManager pm;
+    private PowerManager.WakeLock wl;
 
-    // Create the Handler object (on the main thread by default)
+//    // Create the Handler object (on the main thread by default)
     private Handler handler = new Handler();
-    // Define the code block to be executed
+//    // Define the code block to be executed
     private Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
-            if(isDone) {
-                startSpeechRecognizer();
-            }else{
-                handler.postDelayed(this, 1000);
+            resultChart("error");
+            if(!isTimerStart) {
+                handler.postDelayed(this, 3000);
             }
         }
     };
 
+    void resetTask() {
+        isTimerStart=false;
+        handler.removeCallbacks(runnableCode);
+    }
+    void restardTask() {
+        isTimerStart=false;
+        handler.removeCallbacks(runnableCode);
+        handler.postDelayed(runnableCode, 3000);
+        isTimerStart=true;
+    }
 
     /**
      *
@@ -140,7 +148,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
             Log.i(Util.LOG_TAG_MAIN, "onCreate");
         }
 
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //full screen definition
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(
@@ -175,7 +183,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
             mGLView = new GLSurfaceView(this);
             mGLView.setEGLContextClientVersion(2);
             mGLView.setPreserveEGLContextOnPause(true);
-            myGLRenderer=new GLCircleRenderer(this);
+            myGLRenderer=new GLERenderer(this);
             mGLView.setRenderer(myGLRenderer);
         } else {
             // Time to get a new phone, OpenGL ES 2.0 not
@@ -261,13 +269,14 @@ public class MainActivity extends Activity implements  RecognitionListener  {
 //        setContentView(mGLView);
         relativeLayout.addView(mGLView);
 
-        setInfo("Preparing the recognizer");
+        setInfo("Preparing the test");
         // Prepare the data for UI
         captions = new HashMap<>();
         captions.put(KWS_SEARCH, R.string.kws_caption);
         captions.put(CHARTS_SEARCH, R.string.charts);
         captions.put(ACTION_CALIBRATION, R.string.action_calibration);
-        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO, R.string.action_controller_calibration_info);
+        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO1, R.string.action_controller_calibration_info1);
+        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO2, R.string.action_controller_calibration_info2);
         captions.put(ACTION_VOICE_CALIBRATION_INFO, R.string.action_voice_calibration_info);
         captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
         captions.put(ACTION_CONTROLLER, R.string.action_controller);
@@ -291,15 +300,29 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                     PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
             return;
         }
-
-        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(getBaseContext());
-        mSpeechRecognizer.setRecognitionListener(this);
-        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getBaseContext().getPackageName());
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
+        if(!isTTS) {
+            isTTS=true;
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    mTTS = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+                        @Override
+                        public void onInit(int status) {
+                            if (Util.DEBUG) {
+                                Log.i(Util.LOG_TAG_MAIN, "TextToSpeech status= " + status);
+                            }
+                            if (status != TextToSpeech.ERROR) {
+                                mTTS.setLanguage(Locale.UK);
+                                say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
+                            }else{
+                                isTTS=false;
+                            }
+                        }
+                    });
+                }}, 500);
+        }
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "RocheSightChart:tracker");
+        wl.acquire();
     }
 
 
@@ -322,57 +345,16 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 Log.i(Util.LOG_TAG_MAIN, "onResume mGLView.onResume done");
             }
         }
-
+        myGLRenderer.setChart(-1, -2, "", 0);
         learn =new LearnMachine(this);
         totalLengthCharts=learn.getSizeCharts();
         chart=-1;
         chartPos=-1;
         eye=-1;
-        myGLRenderer.setChart(chart, eye, "", learn.getOptotypeOuterDiameter(0));
-//        if(chartPos==-1){
-//            myGLRenderer.setChart(-1, eye, "", learn.getOptotypeOuterDiameter(0));
-//        }else{
-//            totalLengthStringArray=learn.getSizeChartsPos(chart);
-//            myGLRenderer.setChart(-1, eye, learn.getChartPosString(chart, chartPos),
-//                    learn.getOptotypeOuterDiameter(chart));
-//        }
-
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_LEARN, "chart= "+chart);
+            Log.i(Util.LOG_TAG_LEARN, "chart= "+chart+ " totalLengthCharts= "+totalLengthCharts);
         }
-        if(!isDone) {
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    mTTS = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-                        @Override
-                        public void onInit(int status) {
-                            if (Util.DEBUG) {
-                                Log.i(Util.LOG_TAG_MAIN, "TextToSpeech status= " + status);
-                            }
-                            if (status != TextToSpeech.ERROR) {
-                                mTTS.setLanguage(Locale.UK);
-                                isTTS = true;
 
-                                say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
-                                say(getResources().getString(captions.get(KWS_SEARCH)), true);
-                                //        startListeningWithoutDialog();
-                                isDone=true;
-                                startSpeechRecognizer();
-                            }
-                        }
-                    });
-                }}, 500);
-            // Create the Handler object (on the main thread by default)
-//            Handler handler = new Handler();
-//
-//            // Start the initial runnable task by posting through the handler
-//            handler.post(runnableCode);
-//            new Handler().postDelayed(new Runnable() {
-//                public void run() {
-//                    startSpeechRecognizer();
-//                }}, 5000);
-
-        }
     }
 
     /**
@@ -407,9 +389,11 @@ public class MainActivity extends Activity implements  RecognitionListener  {
             mTTS.shutdown();
             mTTS=null;
             isTTS=false;
-            isDone=false;
         }
-        stopSpeechRecognizer();
+        step1=false;
+        step2=false;
+        test=false;
+        wl.release();
     }
     /**
      *
@@ -421,111 +405,127 @@ public class MainActivity extends Activity implements  RecognitionListener  {
         if(isProcessing){
             return true;
         }
+
+
+//        new Handler().postDelayed(new Runnable() {
+//            public void run() {
+//                isProcessing=false;
+//            }}, 1000);
         int keyCode=event.getKeyCode();
         int keyEvent=event.getAction();
         if(keyEvent == KeyEvent.ACTION_UP){
-            isProcessing=true;
+
         }
+
 
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_MAIN, "keyCode: select: "+event.getKeyCode()+" action: "+event.getAction());
-            Log.i(Util.LOG_TAG_MAIN, "keyCode: isProcessing: "+isProcessing+" isBluetooth: "+isBluetooth);
         }
         if(keyCode==Util.KEY_POWER  && keyEvent == KeyEvent.ACTION_UP){
+            if(step1 || step2 ||test){
+                return true;
+            }
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_POWER");
             }
-            if(!isBluetooth){
-                isBluetooth=true;
-                stopSpeechRecognizer();
-                learn.clearResult();
-                setText("", "");
-                myGLRenderer.setChart(-1, -1, "", learn.getOptotypeOuterDiameter(0));
-                say(getResources().getString(captions.get(ACTION_CONTROLLER)), false);
-                say(getResources().getString(captions.get(ACTION_CALIBRATION)), true);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO)), true);
-                say("left eye",true);
-                chart=0;
-                eye=0;
-                myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
-                step1=true;
-                step2=false;
-            }else{
-                //voice command
-                isBluetooth=false;
-                isVoiceProcessing=false;
-                setText("", "");
-                myGLRenderer.setChart(-1, -1, "", learn.getOptotypeOuterDiameter(0));
-                startSpeechRecognizer();
-                say(getResources().getString(captions.get(ACTION_VOICE)), false);
-                say(getResources().getString(captions.get(KWS_SEARCH)), true);
-                step1=false;
-                step2=false;
-                chart=-1;
-                eye=-1;
-                learn.clearResult();
-            }
-        }
-        if(!isBluetooth){
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    isProcessing = false;
-                }}, 2000);
-            return true;
-        }else{
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    isVoiceProcessing = false;
-                }}, 2000);
-        }
-        if(step1){
-            calibration(keyCode, keyEvent);
+            isProcessing=true;
+            myGLRenderer.setChart(-1, -2, "", 0);
+            learn.clearResult();
+            myGLRenderer.resetPosition();
+            myGLRenderer.setCalibrationImage(1);
+            myGLRenderer.setCharacter(1);
+            setText("", "");
+            setInfo("Goggle calibration");
+            say(getResources().getString(captions.get(ACTION_CALIBRATION)), false);
+            say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO1)), true);
+            myGLRenderer.setChart(-1, -1, "", learn.getOptotypeOuterDiameter(0));
+            step1=true;
+            step2=false;
+            test=false;
+            isProcessing=false;
+        }else if(step1){
+            isProcessing=true;
+            calibration1(keyCode, keyEvent);
+            isProcessing=false;
         }else if(step2){
+            isProcessing=true;
+            calibration2(keyCode, keyEvent);
+            isProcessing=false;
+        }else if(test){
+            isProcessing=true;
             test(keyCode, keyEvent);
+            isProcessing=false;
+
         }
         return true;
     }
 
-    private void calibration(int keyCode, int keyEvent){
+    private void calibration1(int keyCode, int keyEvent){
         if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
             }
-            if(eye==0){
-                if(chart>0 && chart<totalLengthCharts-1){
-                    learn.upDatePref(PREF_LEFT_START,chart-1);
-                }else if(chart>=totalLengthCharts-1){
-                    learn.upDatePref(PREF_LEFT_START,chart-2);
-                }else{
-                    learn.upDatePref(PREF_LEFT_START,chart);
-                }
-                eye=1;
-                chart=0;
-                say("right eye",false);
-                myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
-            }else if(eye==1){
-                if(chart>0 && chart<totalLengthCharts-1){
-                    learn.upDatePref(PREF_RIGHT_START,chart-1);
-                }else if(chart>=totalLengthCharts-1){
-                    learn.upDatePref(PREF_RIGHT_START,chart-2);
-                }else{
-                    learn.upDatePref(PREF_RIGHT_START,chart);
-                }
-                eye=-1;
-                step1=false;
-                myGLRenderer.setChart(-1, eye, "", learn.getOptotypeOuterDiameter(0));
-                say(getResources().getString(captions.get(ACTION_TEST)), true);
-                if(isBluetooth){
-                    say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), true);
-                }else{
-                    say(getResources().getString(captions.get(ACTION_VOICE_TEST_INFO)), true);
-                }
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        step2=true;
-                        nextChart();
-                    }}, 2000);
+            step1=false;
+            step2=true;
+            myGLRenderer.setChart(-1, -2, "", 0);
+            setInfo("Chart calibration");
+            say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true);
+            myGLRenderer.setCalibrationImage(1);
+            eye=-1;
+            chart=totalLengthCharts-4;
+            myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
+        }else if(keyCode==Util.KEY_UP  && keyEvent == KeyEvent.ACTION_UP){
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_UP");
             }
+
+        }else if(keyCode==Util.KEY_DOWN  && keyEvent == KeyEvent.ACTION_UP){
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_DOWN");
+            }
+
+        }else if(keyCode==Util.KEY_LEFT){
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_LEFT");
+            }
+            myGLRenderer.setDelta(-5f);
+        }else if(keyCode==Util.KEY_RIGHT){
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_RIGHT");
+            }
+            myGLRenderer.setDelta(5f);
+        }else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP){
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
+            }
+            endOfTest();
+        }
+    }
+
+    private void calibration2(int keyCode, int keyEvent){
+        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP){
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
+            }
+            step2=false;
+            test=true;
+            myGLRenderer.setChart(-1, -2, "", 0);
+            setInfo("Test running");
+            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), true);
+            myGLRenderer.setCharacter(2);
+            if(chart>0 && chart<totalLengthCharts-1){
+                chart=chart-1;
+            }else if(chart>=totalLengthCharts-1){
+                chart=totalLengthCharts-2;
+            }else{
+                chart=0;
+            }
+            learn.upDatePref(PREF_LEFT_START,chart);
+            learn.upDatePref(PREF_RIGHT_START,chart);
+            eye=-1;
+            myGLRenderer.setCalibrationImage(3);
+            nextChart();
+            restardTask();
         }else if(keyCode==Util.KEY_UP  && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_UP");
@@ -535,7 +535,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 chart=0;
             }
             myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
-            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
+//            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
         }else if(keyCode==Util.KEY_DOWN  && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_DOWN");
@@ -545,7 +545,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 chart=totalLengthCharts-1;
             }
             myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
-            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
+//            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
         }else if(keyCode==Util.KEY_LEFT  && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_LEFT");
@@ -560,17 +560,8 @@ public class MainActivity extends Activity implements  RecognitionListener  {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
             }
-
+            endOfTest();
         }
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                isProcessing=false;
-                isVoiceProcessing=false;
-                if(mSpeechRecognizer!=null && !isBluetooth) {
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                }
-            }}, 2000);
-
     }
 
     private void test(int keyCode, int keyEvent){
@@ -579,7 +570,7 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
             }
             //start checking or next chart
-            nextChart();
+//            nextChart();
         }else if(keyCode==Util.KEY_UP  && keyEvent == KeyEvent.ACTION_UP){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_UP");
@@ -606,14 +597,6 @@ public class MainActivity extends Activity implements  RecognitionListener  {
             }
             endOfTest();
         }
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                isProcessing=false;
-                isVoiceProcessing=false;
-                if(mSpeechRecognizer!=null && !isBluetooth) {
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                }
-            }}, 2000);
     }
 
     private void nextChart() {
@@ -645,43 +628,30 @@ public class MainActivity extends Activity implements  RecognitionListener  {
                 chart=learn.getSharedPreferences().getInt(PREF_RIGHT_START,FIRST_CHART_RIGHT_EYE);
                 chartPos=0;
                 eye=1;
+                setText("","");
+                say("right eye ",false);
                 totalLengthStringArray=learn.getSizeChartsPos(chart);
                 myGLRenderer.setChart(chart,eye,learn.getChartPosString(chart,chartPos),
                         learn.getOptotypeOuterDiameter(chart) );
-
-                say("right eye ",false);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-//                        if(mSpeechRecognizer!=null && !isBluetooth && !isReadyForSpeech) {
-//                            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-//                        }
-//                        setText("","");
-                    }
-                }, 2000);
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
             }else {
+                setText("","");
                 endOfTest();
             }
         }else{
-            if((chart==learn.getSharedPreferences().getInt(PREF_LEFT_START,FIRST_CHART_LEFT_EYE) && eye==0)||
-                    (chart==learn.getSharedPreferences().getInt(PREF_LEFT_START,FIRST_CHART_RIGHT_EYE) && eye==1)){
-//                say("",false);
-            }else{
-                say("next chart",false);
-            }
+//            if((chart==learn.getSharedPreferences().getInt(PREF_LEFT_START,FIRST_CHART_LEFT_EYE) && eye==0)||
+//                    (chart==learn.getSharedPreferences().getInt(PREF_LEFT_START,FIRST_CHART_RIGHT_EYE) && eye==1)){
+////                say("",false);
+//            }else{
+//                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+//                setText("","");
+//            }
+            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+            setText("","");
 
             totalLengthStringArray=learn.getSizeChartsPos(chart);
             myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos),
                     learn.getOptotypeOuterDiameter(chart));
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-//                    if(mSpeechRecognizer!=null && !isBluetooth && !isReadyForSpeech) {
-//                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-//                    }
-//                    setText("","");
-                }
-            }, 2000);
         }
     }
 
@@ -689,92 +659,61 @@ public class MainActivity extends Activity implements  RecognitionListener  {
         if(chart==-1){
             return;
         }
-        setText(result,"");
+        resetTask();
+//        setText(result,"");
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_LEARN, "totalLengthCharts= " + totalLengthCharts +
                     " chart=" + chart + " totalLengthStringArray=" + totalLengthStringArray + " pos= " + chartPos);
         }
-        if(chart<=totalLengthCharts-1){
+        if(chart>-1 && chart<=totalLengthCharts-1){
             if(chartPos<=totalLengthStringArray-1){
                 if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "setResult= "+result);
+                    Log.i(Util.LOG_TAG_LEARN, "setResult= "+result+" chart= "+chart+
+                            " chartPos= "+chartPos+" totalLengthStringArray= "+totalLengthStringArray);
                 }
                 learn.setResult(chart, chartPos, result,eye);
                 chartPos++;
-                if(chartPos==totalLengthStringArray){
+                if(chartPos>totalLengthStringArray){
                     nextChart();
                 }else{
-                    say("next",false);
+                    toneG.startTone(ToneGenerator.TONE_CDMA_CONFIRM,200);
+                    myGLRenderer.setChart(-1, -2, "", 0);
+                    sleep(1000);
                 }
                 if(chartPos==-1){
                     myGLRenderer.setChart(-1, eye, "", learn.getOptotypeOuterDiameter(0));
                 }else{
                     myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypeOuterDiameter(chart));
                 }
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-//                        if(mSpeechRecognizer!=null && !isBluetooth && !isReadyForSpeech) {
-//                            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-//                        }
-                        setText("","");
-                    }
-                }, 1000);
             }else{
                 nextChart();
             }
         }
+        restardTask();
     }
 
     private void endOfTest() {
+        resetTask();
+        setText("","");
+        isTimerStart=false;
         chart=-1;
         chartPos=-1;
-        eye=-1;
-        myGLRenderer.setChart(chart, eye, "", learn.getOptotypeOuterDiameter(0));
-        say("end of test",false);
-        say("for the left eye result is "+learn.getResult(0) ,false);
-
-        say("for the right eye result is "+learn.getResult(1),false);
+        eye=-2;
+        myGLRenderer.setChart(chart, eye, "", 0);
         setInfo("end of test");
-        setText("left eye "+learn.getResult(0),"right eye "+learn.getResult(1));
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(mSpeechRecognizer!=null && !isBluetooth && !isReadyForSpeech) {
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                }
-            }
-        }, 4000);
-    }
-
-    /**
-     *
-     */
-    private void startSpeechRecognizer(){
-//        stopSpeechRecognizer();
-        if(mSpeechRecognizer ==null) {
-            mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(getBaseContext());
-            mSpeechRecognizer.setRecognitionListener(this);
-            mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getBaseContext().getPackageName());
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
+        if(test){
+            setText("left eye "+learn.getResult(0),"right eye "+learn.getResult(1));
+            say("end of test",false);
+            say("for the left eye result is "+learn.getResult(0) ,false);
+            say("for the right eye result is "+learn.getResult(1),false);
+        }else{
+            setText("","");
+            setInfo("Preparing the test");
         }
-        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-        chart=-1;
-        eye=-1;
-    }
 
-    /**
-     *
-     */
-    private void stopSpeechRecognizer(){
-        if(mSpeechRecognizer !=null) {
-            mSpeechRecognizer.stopListening();
-            mSpeechRecognizer = null;
-        }
+        step2=false;
+        step1=false;
+        test=false;
     }
 
     /**
@@ -825,316 +764,6 @@ public class MainActivity extends Activity implements  RecognitionListener  {
         mTextInfo2.setText(txt);
         mTextInfo2.bringToFront();
     }
-
-    public static boolean stringContainsItemFromList(String inputStr, ArrayList<String> items) {
-        for(int i=0; i<items.size();i++){
-            if(items.get(i).contains(inputStr)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    @Override
-    public void onReadyForSpeech(Bundle params) {
-        if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_VOICE, " onReadyForSpeech");        }
-        isReadyForSpeech=true;
-    }
-
-    @Override
-    public void onBeginningOfSpeech() {
-        if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_VOICE, " onBeginningOfSpeech");        }
-
-    }
-
-    @Override
-    public void onRmsChanged(float rmsdB) {
-//        if (Util.DEBUG) {
-//            Log.i(Util.LOG_TAG_MAIN, " onRmsChanged");        }
-
-    }
-
-    @Override
-    public void onBufferReceived(byte[] buffer) {
-        if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_VOICE, " onBufferReceived");        }
-
-    }
-
-    @Override
-    public void onEndOfSpeech() {
-        if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_VOICE, " onEndOfSpeech");        }
-        isReadyForSpeech=false;
-    }
-
-    @Override
-    public void onError(int errorCode) {
-        isReadyForSpeech=false;
-        switch (errorCode) {
-            case SpeechRecognizer.ERROR_AUDIO:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " ERROR_AUDIO");        }
-                say("ERROR AUDIO",false);
-                break;
-
-            case SpeechRecognizer.ERROR_CLIENT:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " ERROR_CLIENT");        }
-//                say("ERROR CLIENT",false);
-                break;
-
-            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " ERROR_INSUFFICIENT_PERMISSIONS");        }
-                say("ERROR PERMISSIONS",false);
-                break;
-
-            case SpeechRecognizer.ERROR_NETWORK:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " ERROR_NETWORK");        }
-//                say("ERROR NETWORK",false);
-                if(mSpeechRecognizer!=null && !isBluetooth) {
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                }
-                break;
-
-            case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " ERROR_NETWORK_TIMEOUT");        }
-//                say("ERROR NETWORK TIMEOUT",false);
-                if(mSpeechRecognizer!=null && !isBluetooth) {
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                }
-                break;
-
-            case SpeechRecognizer.ERROR_NO_MATCH:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " ERROR_NO_MATCH");        }
-//                say("NO MATCH try again",false);
-                if(mSpeechRecognizer!=null && !isBluetooth) {
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                }
-                break;
-
-            case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " ERROR_RECOGNIZER_BUSY");        }
-//                say("I'm busy wait",false);
-                break;
-
-            case SpeechRecognizer.ERROR_SERVER:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " ERROR_SERVER");        }
-//                say("ERROR SERVER",false);
-                if(mSpeechRecognizer!=null && !isBluetooth) {
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                }
-                break;
-
-            case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " ERROR_SPEECH_TIMEOUT");        }
-                if(mSpeechRecognizer!=null && !isBluetooth) {
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                }
-                break;
-
-            default:
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_VOICE, " unknown");        }
-                say("ERROR unknown",false);
-                break;
-        }
-
-    }
-
-    @Override
-    public void onResults(Bundle results) {
-        String result="";
-        ArrayList<String> matches = results
-                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_VOICE, " onResults "+matches.toString());
-            Log.i(Util.LOG_TAG_VOICE, " onResults steap1= "+step1+ " step2= "+step2);
-            Log.i(Util.LOG_TAG_VOICE, " onResults isVoiceProcessing= "+isVoiceProcessing+
-                    " chart= "+chart+ " eye= "+eye);
-        }
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                isProcessing=false;
-                isVoiceProcessing=false;
-            }}, 2000);
-        if(isVoiceProcessing){
-            return;
-        }
-        isVoiceProcessing=true;
-        if(stringContainsItemFromList(KEYPHRASE_KWS,matches)){
-            chart=-1;
-            eye=-1;
-            learn.clearResult();
-            setText("", "");
-            myGLRenderer.setChart(-1, -1, "", learn.getOptotypeOuterDiameter(0));
-            say(getResources().getString(captions.get(ACTION_CALIBRATION)), false);
-            say(getResources().getString(captions.get(ACTION_VOICE_CALIBRATION_INFO)), true);
-            say("left eye",true);
-            chart=0;
-            eye=0;
-            myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
-            step1=true;
-            step2=false;
-        }
-        if(step1){
-            if(stringContainsItemFromList(ACCEPT_CALIBRATION_SEARCH,matches)){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "onResult "+ACCEPT_CALIBRATION_SEARCH);
-                }
-                calibration(Util.KEY_TRIGGER, KeyEvent.ACTION_UP);
-            }else if(stringContainsItemFromList(UP_SEARCH,matches)){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "onResult "+UP_SEARCH);
-                }
-                calibration(Util.KEY_UP, KeyEvent.ACTION_UP);
-            }else if(stringContainsItemFromList(DOWN_SEARCH,matches)){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "onResult "+DOWN_SEARCH);
-                }
-                calibration(Util.KEY_DOWN, KeyEvent.ACTION_UP);
-            }else{
-//                setText("","");
-//                say("try again",false);
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        if(mSpeechRecognizer!=null && !isBluetooth) {
-                            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                        }
-                    }}, 1000);
-            }
-
-        }else if(step2){
-            if(stringContainsItemFromList(UP_SEARCH,matches)){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "onResult "+UP_SEARCH);
-                }
-                test(Util.KEY_UP, KeyEvent.ACTION_UP);
-            }else if(stringContainsItemFromList(DOWN_SEARCH,matches)){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "onResult "+DOWN_SEARCH);
-                }
-                test(Util.KEY_DOWN, KeyEvent.ACTION_UP);
-            }else if(stringContainsItemFromList(LEFT_SEARCH,matches)){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "onResult "+LEFT_SEARCH);
-                }
-                test(Util.KEY_LEFT, KeyEvent.ACTION_UP);
-            }else if(stringContainsItemFromList(RIGHT_SEARCH,matches)){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "onResult "+RIGHT_SEARCH);
-                }
-                test(Util.KEY_RIGHT, KeyEvent.ACTION_UP);
-            }else if(stringContainsItemFromList(NEXT_SEARCH,matches)){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "onResult "+NEXT_SEARCH);
-                }
-                test(Util.KEY_TRIGGER, KeyEvent.ACTION_UP);
-            }else if(stringContainsItemFromList(STOP_SEARCH,matches)){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "onResult "+STOP_SEARCH);
-                }
-                test(Util.KEY_BACK, KeyEvent.ACTION_UP);
-            }else{
-//                setText("","");
-//                say("try again",false);
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        if(mSpeechRecognizer!=null && !isBluetooth) {
-                            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                        }
-                    }}, 1000);
-            }
-
-        }else{
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    if(mSpeechRecognizer!=null && !isBluetooth) {
-                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                    }
-                }}, 2000);
-        }
-
-
-
-    }
-
-    @Override
-    public void onPartialResults(Bundle partialResults) {
-        ArrayList<String> matches = partialResults
-                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_VOICE, " onPartialResults "+matches.toString());
-        }
-    }
-
-    @Override
-    public void onEvent(int eventType, Bundle params) {
-        if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_VOICE, " onEvent");        }
-
-    }
-
-
-    /**
-     *
-     */
-    private class SetupTask extends AsyncTask<Void, Void, Exception> {
-        WeakReference<MainActivity> activityReference;
-
-        SetupTask(MainActivity activity) {
-            if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_RECOGNITION, "SetupTask");
-            }
-            this.activityReference = new WeakReference<>(activity);
-        }
-
-        /**
-         *
-         * @param params
-         * @return exception
-         */
-        @Override
-        protected Exception doInBackground(Void... params) {
-            if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_RECOGNITION, "doInBackground");
-            }
-
-
-            return null;
-        }
-
-        /**
-         *
-         * @param result
-         */
-        @Override
-        protected void onPostExecute(Exception result) {
-            if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_RECOGNITION, "onPostExecute result= "+result );
-            }
-            if (result != null) {
-                activityReference.get().setText("Failed to init recognizer " + result,"");
-            } else {
-
-            }
-        }
-    }
-
-
-
-
-
     /**
      *
      * @return gleVersion
