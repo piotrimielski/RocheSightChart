@@ -42,18 +42,10 @@ public class MainActivity extends Activity {
     /* Named searches allow to quickly reconfigure the decoder */
     private static final String KWS_SEARCH = "wakeup";
     private static final String CHARTS_SEARCH = "charts";
-    private static final String KEYPHRASE_KWS = "check";
-    private static final String NEXT_SEARCH = "next";
-    private static final String STOP_SEARCH = "stop";
-    private static final String UP_SEARCH = "up";
-    private static final String DOWN_SEARCH = "down";
-    private static final String LEFT_SEARCH = "left";
-    private static final String RIGHT_SEARCH = "right";
-    private static final String ACCEPT_CALIBRATION_SEARCH = "accept";
-    private static final String ACTION_CALIBRATION = "calibration";
+    private static final String ACTION_CALIBRATION1 = "calibration";
+    private static final String ACTION_CALIBRATION2 = "sizes";
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO1 = "controller calibration info1";
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO2 = "controller calibration info2";
-    private static final String ACTION_VOICE_CALIBRATION_INFO = "voice calibration info";
     private static final String ACTION_CALIBRATION_CHECK = "calibration check";
     private static final String ACTION_TEST = "test";
     private static final String ACTION_RESULT_LEFT = "result left";
@@ -279,10 +271,10 @@ public class MainActivity extends Activity {
         captions = new HashMap<>();
         captions.put(KWS_SEARCH, R.string.kws_caption);
         captions.put(CHARTS_SEARCH, R.string.charts);
-        captions.put(ACTION_CALIBRATION, R.string.action_calibration);
+        captions.put(ACTION_CALIBRATION1, R.string.action_calibration);
+        captions.put(ACTION_CALIBRATION2, R.string.action_controller_size);
         captions.put(ACTION_CONTROLLER_CALIBRATION_INFO1, R.string.action_controller_calibration_info1);
-        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO2, R.string.action_controller_calibration_info2);
-        captions.put(ACTION_VOICE_CALIBRATION_INFO, R.string.action_voice_calibration_info);
+        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO2, R.string.action_controller_size_info2);
         captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
         captions.put(ACTION_CONTROLLER, R.string.action_controller);
         captions.put(ACTION_VOICE, R.string.action_voice);
@@ -443,7 +435,7 @@ public class MainActivity extends Activity {
             setText("", "");
             setInfo("Goggle calibration");
             eyeCalibration=0;
-            say(getResources().getString(captions.get(ACTION_CALIBRATION)), false);
+            say(getResources().getString(captions.get(ACTION_CALIBRATION1)), false);
             say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO1)), true);
             myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypeOuterDiameter(1));
             say("left eye", true);
@@ -486,6 +478,7 @@ public class MainActivity extends Activity {
                 eyeCalibration=0;
                 myGLRenderer.setChart(-1, -2, "", 0);
                 setInfo("Chart calibration");
+                say(getResources().getString(captions.get(ACTION_CALIBRATION2)), false);
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true);
                 myGLRenderer.setCalibrationImage(1);
                 eye=-1;

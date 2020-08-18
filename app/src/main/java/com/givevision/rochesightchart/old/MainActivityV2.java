@@ -269,7 +269,7 @@ public class MainActivityV2 extends Activity implements  RecognitionListener  {
         captions.put(KWS_SEARCH, R.string.kws_caption);
         captions.put(CHARTS_SEARCH, R.string.charts);
         captions.put(ACTION_CALIBRATION, R.string.action_calibration);
-        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO, R.string.action_controller_calibration_info2);
+        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO, R.string.action_controller_size_info2);
         captions.put(ACTION_VOICE_CALIBRATION_INFO, R.string.action_voice_calibration_info);
         captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
         captions.put(ACTION_CONTROLLER, R.string.action_controller);

@@ -10,8 +10,8 @@
       "apkData": {
         "type": "MAIN",
         "splits": [],
-        "versionCode": 301,
-        "versionName": "301",
+        "versionCode": 302,
+        "versionName": "302",
         "outputFile": "app-debug.apk",
         "fullName": "debug",
         "baseName": "debug",
