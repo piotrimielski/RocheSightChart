@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "properties": [],
-      "versionCode": 300,
-      "versionName": "300",
+      "versionCode": 301,
+      "versionName": "301",
       "enabled": true,
       "outputFile": "app-release.apk"
     }

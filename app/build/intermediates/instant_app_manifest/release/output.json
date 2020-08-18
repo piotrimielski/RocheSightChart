@@ -10,8 +10,8 @@
       "apkData": {
         "type": "MAIN",
         "splits": [],
-        "versionCode": 300,
-        "versionName": "300",
+        "versionCode": 301,
+        "versionName": "301",
         "outputFile": "app-release.apk",
         "fullName": "release",
         "baseName": "release",
