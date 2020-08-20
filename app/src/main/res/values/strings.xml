@@ -27,7 +27,7 @@ in the yellow circle, start by left side. You have 2 seconds for each circle.</s
 It will take a few minutes.
 Click on the power button of your controller to start."</string>
     <string name="action_calibration" >”calibrate your central vision for each eye”</string>
-    <string name="action_controller_calibration_info1">”move joystick left or right to calibrate
+    <string name="action_controller_calibration_info1">”move joystick left, right, up or down to calibrate
  And click on trigger button to validate”</string>
     <string name="action_calibration_left">”left eye”</string>
     <string name="action_calibration_right">”right eye”</string>
@@ -37,8 +37,10 @@ Click on the power button of your controller to start."</string>
     <string name="action_size_right">”right eye”</string>
     <string name="action_controller_test_info" >"The test is starting. Push the joystick in the same direction than the gap position you see. A beep will confirm that your answer is recorded.
 Press the middle button to stop the test."</string>
+    <string name="action_reset_user">”data has been cleared, user reset”</string>
     <string name="end_test" >"All done! Results recorded on your profile."</string>
     <string name="result_left_info" >"for the left eye result is"</string>
     <string name="result_right_info" >"for the right eye result is"</string>
+    <string name="action_test_reminder">" use the joystick to make decision"</string>
 
 </resources>

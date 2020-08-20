@@ -2675,14 +2675,10 @@ in the yellow circle, start by left side. You have 2 seconds for each circle.</s
         to validate the position where you see the smallest circle with 4 gaps</string><string name="action_calibration_check">Do you see the circle with all 4 gaps?</string><string name="action_controller">"you will use the controller without the voice command"</string><string name="action_voice">you will use the voice command without the controller</string><string name="action_test">test is starting</string><string name="action_voice_test_info">"you can say your answer after a bip.
         You will hear this voice 'next' if answer is recorded.
         Click the trigger button to get to the next image sizes, or say 'stop' for ending of test"</string><string name="charts">"This is an eye test.
-       It won't take few minutes.
-       Click on the power button of your controller to start."</string><string name="action_calibration">start with calibration of device</string><string name="action_controller_calibration_info1">please move joystick left/right
-       and
-       validate with trigger button the position where you see the circle on the centre</string><string name="action_controller_calibration_info2">please move joystick up/down
-       and
-       validate with trigger button the position where you see the smallest circle with 4 gaps</string><string name="action_controller_test_info">"With joystick you choose the gap position you see.
-       You will hear the beep when the answer is recorded.
-       Click the back button for hard end the test."</string><string name="result_left_info">"for the left eye result is"</string><string name="result_right_info">"for the right eye result is"</string></file><file path="C:\projects\RocheSightChart\app\src\main\res\values\styles.xml" qualifiers=""><style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+It will take a few minutes.
+Click on the power button of your controller to start."</string><string name="action_calibration">”calibrate your central vision for each eye”</string><string name="action_controller_calibration_info1">”move joystick left or right to calibrate
+ And click on trigger button to validate”</string><string name="action_controller_test_info">"The test is starting. Push the joystick in the same direction than the gap position you see. A beep will confirm that your answer is recorded.
+Press the middle button to stop the test."</string><string name="result_left_info">"for the left eye result is"</string><string name="result_right_info">"for the right eye result is"</string><string name="action_controller_size">”Select the minimum size”</string><string name="action_size_right">”right eye”</string><string name="action_controller_size_info2">”move joystick up or down to find the smallest circle you can see and validate with trigger”</string><string name="action_calibration_right">”right eye”</string><string name="end_test">"All done! Results recorded on your profile."</string><string name="action_calibration_left">”left eye”</string><string name="action_size_left">”left eye”</string></file><file path="C:\projects\RocheSightChart\app\src\main\res\values\styles.xml" qualifiers=""><style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

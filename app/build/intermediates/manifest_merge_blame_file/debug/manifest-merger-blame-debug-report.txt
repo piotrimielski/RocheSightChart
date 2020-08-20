@@ -1,15 +1,15 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="com.givevision.rochesightchart"
-4    android:versionCode="302"
-5    android:versionName="302" >
+4    android:versionCode="303"
+5    android:versionName="303" >
 6
 7    <uses-sdk
 8        android:minSdkVersion="24"
 8-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 9        android:targetSdkVersion="26" />
 9-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
-10
+10    <!-- https://docs.google.com/document/d/1AkM6-cOKtRr1uyR1m7HLclhdrWvQFJRwb73fYn5sx3A/edit?usp=sharing -->
 11    <!-- ver 100 - generate chart with picture -->
 12    <!-- ver 200 - generate C into texture -->
 13    <!--
@@ -18,67 +18,75 @@
 16    -->
 17    <!-- ver 301 - Calibration for each eye separately, Step 1: gray circle -->
 18    <!-- ver 302 - text modification -->
-19
-20    <uses-feature
-20-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:14:5-15:35
-21        android:glEsVersion="0x00020000"
-21-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:14:19-51
-22        android:required="true" />
-22-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:15:9-32
-23
-24    <uses-permission android:name="android.permission.BLUETOOTH" />
-24-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:17:5-68
-24-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:17:22-65
-25    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-25-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:18:5-81
-25-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:18:22-78
-26    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-26-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:19:5-71
-26-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:19:22-68
-27    <uses-permission android:name="android.permission.WAKE_LOCK" />
-27-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:20:5-68
-27-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:20:22-65
-28
-29    <application
-29-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:22:5-40:19
-30        android:allowBackup="true"
-30-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:25:9-35
-31        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-31-->[androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e46cd076a917583a64b85f84aa2271dc\core-1.0.2\AndroidManifest.xml:22:18-86
-32        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation"
-32-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:30:9-91
-33        android:debuggable="true"
-34        android:extractNativeLibs="false"
-35        android:icon="@mipmap/ic_launcher"
-35-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:26:9-43
-36        android:label="@string/app_name"
-36-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:27:9-41
-37        android:roundIcon="@mipmap/ic_launcher_round"
-37-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:28:9-54
-38        android:screenOrientation="landscape"
-38-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:23:9-46
-39        android:supportsRtl="true"
-39-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:29:9-35
-40        android:testOnly="true"
-41        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-41-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:24:9-73
-42        <activity
-42-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:33:9-39:20
-43            android:name="com.givevision.rochesightchart.MainActivity"
-43-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:33:19-47
-44            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation" >
-44-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:34:13-95
-45            <intent-filter>
-45-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:35:13-38:29
-46                <action android:name="android.intent.action.MAIN" />
-46-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:36:17-69
-46-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:36:25-66
-47
-48                <category android:name="android.intent.category.LAUNCHER" />
-48-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:37:17-77
-48-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:37:27-74
-49            </intent-filter>
-50        </activity>
-51    </application>
-52
-53</manifest>
+19    <!--
+20       ver 303 - Calibration step 1: position of circles in horizontal bit further,
+21                 allow the circles to move up or down a bit,
+22                 add the maximum deviation possible from the original position,
+23                 to start  the circle a few sizes higher (on the middle of charts),
+24                 a high pitch beep if right and low pitch beep if wrong response,
+25                 if the user gets two wrong , it would be impossible for them to get 3/4 so you can stop the test there,
+26    -->
+27
+28    <uses-feature
+28-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:24:5-25:35
+29        android:glEsVersion="0x00020000"
+29-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:24:19-51
+30        android:required="true" />
+30-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:25:9-32
+31
+32    <uses-permission android:name="android.permission.BLUETOOTH" />
+32-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:27:5-68
+32-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:27:22-65
+33    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+33-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:28:5-81
+33-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:28:22-78
+34    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+34-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:29:5-71
+34-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:29:22-68
+35    <uses-permission android:name="android.permission.WAKE_LOCK" />
+35-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:30:5-68
+35-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:30:22-65
+36
+37    <application
+37-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:32:5-50:19
+38        android:allowBackup="true"
+38-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:35:9-35
+39        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+39-->[androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e46cd076a917583a64b85f84aa2271dc\core-1.0.2\AndroidManifest.xml:22:18-86
+40        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation"
+40-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:40:9-91
+41        android:debuggable="true"
+42        android:extractNativeLibs="false"
+43        android:icon="@mipmap/ic_launcher"
+43-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:36:9-43
+44        android:label="@string/app_name"
+44-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:37:9-41
+45        android:roundIcon="@mipmap/ic_launcher_round"
+45-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:38:9-54
+46        android:screenOrientation="landscape"
+46-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:33:9-46
+47        android:supportsRtl="true"
+47-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:39:9-35
+48        android:testOnly="true"
+49        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+49-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:34:9-73
+50        <activity
+50-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:43:9-49:20
+51            android:name="com.givevision.rochesightchart.MainActivity"
+51-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:43:19-47
+52            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation" >
+52-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:44:13-95
+53            <intent-filter>
+53-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:45:13-48:29
+54                <action android:name="android.intent.action.MAIN" />
+54-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:46:17-69
+54-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:46:25-66
+55
+56                <category android:name="android.intent.category.LAUNCHER" />
+56-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:47:17-77
+56-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:47:27-74
+57            </intent-filter>
+58        </activity>
+59    </application>
+60
+61</manifest>

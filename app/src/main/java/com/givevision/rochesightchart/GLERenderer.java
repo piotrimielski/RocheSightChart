@@ -9,22 +9,25 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GLERenderer implements GLSurfaceView.Renderer{
     private static final float X_POSITION = 0.5f;
-    private static final float X_POSITION_LEFT = 0.30f;
-    private static final float X_POSITION_RIGHT = 0.70f;
+    private static final float X_POSITION_LEFT = 0.28f;//was 30
+    private static final float X_POSITION_RIGHT = 0.72f;//was 70
+    private static final int MAX_XY_DELTA = 100;//in pixel
     private static final float Y_POSITION = 0.5f;
-    private static final int ORG_RADIUS = 200;
-    private static final int CORRECTION = 2;
+    private static final int ORG_RADIUS = 150;
+    private static final float CORRECTION = 1.875f; //pixels /mm if phone 25mm from lens 1.875
     private int radius;
     private static float YELLOW_COLOR[] = {0.976f, 0.694f, 0.015f, 1f};
     private static float GREEN_COLOR[] = {0.0f, 1f, 0.0f, 1f};
     private static float BlEU_COLOR[] = {0.0f, 0.0f, 1f, 1f};
     private static float GREY_COLOR[] = {0.5f, 0.5f, 0.5f, 1f};
     private static float BLACK_COLOR[] = {0f, 0f, 0f, 1f};
-    private float mainBlobX;
+//    private float mainBlobX;
     private float leftBlobX;
     private float rightBlobX;
-    private float mainBlobY;
-    private GLESprite mSprite;
+    private float leftBlobY;
+    private float rightBlobY;
+//    private float mainBlobY;
+//    private GLESprite mSprite;
     private GLESprite mSpriteRight;
     private GLESprite mSpriteLeft;
     private static int chart=-1;
@@ -45,7 +48,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
             Log.i(Util.LOG_TAG_RENDERING, "onSurfaceCreated");
         }
         GLES20.glClearColor(.1f, .1f, .1f, 1);
-        mSprite = new GLESprite(YELLOW_COLOR,-1, 0f);
+//        mSprite = new GLESprite(YELLOW_COLOR,-1, 0f);
         mSpriteLeft = new GLESprite(GREEN_COLOR,0,0f);
         mSpriteRight = new GLESprite(BlEU_COLOR,1,0f);
     }
@@ -57,19 +60,20 @@ public class GLERenderer implements GLSurfaceView.Renderer{
         }
         GLES20.glViewport(0, 0, width, height);
 
-        mainBlobX = width * X_POSITION;
+//        mainBlobX = width * X_POSITION;
         leftBlobX = width * X_POSITION_LEFT;
         rightBlobX = width * X_POSITION_RIGHT;
-        mainBlobY = height * Y_POSITION;
+        leftBlobY = height * Y_POSITION;
+        rightBlobY = height * Y_POSITION;
 
-        mSprite.setCenterX(mainBlobX);
-        mSprite.setCenterY(mainBlobY);
-        mSprite.setRadius(radius);
+//        mSprite.setCenterX(mainBlobX);
+//        mSprite.setCenterY(mainBlobY);
+//        mSprite.setRadius(radius);
         mSpriteLeft.setCenterX(leftBlobX);
-        mSpriteLeft.setCenterY(mainBlobY);
+        mSpriteLeft.setCenterY(leftBlobY);
         mSpriteLeft.setRadius(radius);
         mSpriteRight.setCenterX(rightBlobX);
-        mSpriteRight.setCenterY(mainBlobY);
+        mSpriteRight.setCenterY(rightBlobY);
         mSpriteRight.setRadius(radius);
         mSpriteLeft.setChart(chart);
         mSpriteRight.setChart(chart);
@@ -112,7 +116,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
             pos=-1;
         }
         if(chart>-1){
-            radius = (int) optotypeOuterDiameter / 2 * CORRECTION;
+            radius = (int) (optotypeOuterDiameter / 2f * CORRECTION);
         }else{
             radius=ORG_RADIUS;
         }
@@ -124,19 +128,78 @@ public class GLERenderer implements GLSurfaceView.Renderer{
         }
     }
 
-    public void setLeftPosition(float delta) {
-        mSpriteLeft.setCenterX(mSpriteLeft.getCenterX()-delta);
+    public void setLeftPositionX(float delta) {
+        int d= (int) (leftBlobX-mSpriteLeft.getCenterX());
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_RENDERING, "setLeftPositionX d= "+d+" delta= "+delta);
+        }
+        if(delta>0){
+            if(d<MAX_XY_DELTA) {
+                mSpriteLeft.setCenterX(mSpriteLeft.getCenterX() - delta);
+            }
+        }else{
+            if(d>=-MAX_XY_DELTA && d<=MAX_XY_DELTA) {
+                mSpriteLeft.setCenterX(mSpriteLeft.getCenterX() - delta);
+            }
+        }
+
     }
 
-    public void setRightPosition(float delta) {
-        mSpriteRight.setCenterX(mSpriteRight.getCenterX()+delta);
+    public void setRightPositionX(float delta) {
+        int d= (int) (rightBlobX-mSpriteRight.getCenterX());
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_RENDERING, "setRightPositionX d= "+d+" delta= "+delta);
+        }
+        if(delta<0){
+            if(d<MAX_XY_DELTA) {
+                mSpriteRight.setCenterX(mSpriteRight.getCenterX() + delta);
+            }
+        }else{
+            if(d>=-MAX_XY_DELTA && d<=MAX_XY_DELTA) {
+                mSpriteRight.setCenterX(mSpriteRight.getCenterX() + delta);
+            }
+        }
     }
 
-    public void resetPosition() {
-        mSpriteLeft.setCenterX(leftBlobX);
-        mSpriteLeft.setCenterY(mainBlobY);
-        mSpriteRight.setCenterX(rightBlobX);
-        mSpriteRight.setCenterY(mainBlobY);
+    public void setLeftPositionY(float delta) {
+        int d= (int) (leftBlobY-mSpriteLeft.getCenterY());
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_RENDERING, "setLeftPositionY d= "+d+" delta= "+delta);
+        }
+        if(delta>0){
+            if(d<MAX_XY_DELTA) {
+                mSpriteLeft.setCenterY(mSpriteLeft.getCenterY() - delta);
+            }
+        }else{
+            if(d>=-MAX_XY_DELTA && d<=MAX_XY_DELTA) {
+                mSpriteLeft.setCenterY(mSpriteLeft.getCenterY() - delta);
+            }
+        }
+    }
+
+    public void setRightPositionY(float delta) {
+        int d= (int) (rightBlobY-mSpriteRight.getCenterY());
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_RENDERING, "setRightPositionY d= "+d+" delta= "+delta);
+        }
+        if(delta<0){
+            if(d<MAX_XY_DELTA) {
+                mSpriteRight.setCenterY(mSpriteRight.getCenterY() + delta);
+            }
+        }else{
+            if(d>=-MAX_XY_DELTA && d<=MAX_XY_DELTA) {
+                mSpriteRight.setCenterY(mSpriteRight.getCenterY() + delta);
+            }
+        }
+    }
+
+    public void resetUser(boolean newUser) {
+        if(newUser){
+            mSpriteLeft.setCenterX(leftBlobX);
+            mSpriteLeft.setCenterY(leftBlobY);
+            mSpriteRight.setCenterX(rightBlobX);
+            mSpriteRight.setCenterY(rightBlobY);
+        }
     }
 
     public void setCalibrationImage(int i) {
@@ -157,10 +220,30 @@ public class GLERenderer implements GLSurfaceView.Renderer{
         mCharacter=i;
     }
 
-    public float getLeftPosition() {
+    public float getLeftPositionX() {
         return mSpriteLeft.getCenterX();
     }
-    public float getRightPosition() {
+    public float getRightPositionX() {
         return mSpriteRight.getCenterX();
+    }
+
+    public float getLeftPositionY() {
+        return mSpriteLeft.getCenterY();
+    }
+    public float getRightPositionY() {
+        return mSpriteRight.getCenterY();
+    }
+    public void setLeftCenterX(float x) {
+        mSpriteLeft.setCenterX(x);
+    }
+    public void setRightCenterX(float x) {
+        mSpriteRight.setCenterX(x);
+    }
+
+    public void setLeftCenterY(float y) {
+        mSpriteLeft.setCenterY(y);
+    }
+    public void setRightCenterY(float y) {
+        mSpriteRight.setCenterY(y);
     }
 }

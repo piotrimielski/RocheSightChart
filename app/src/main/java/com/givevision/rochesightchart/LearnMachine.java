@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -107,35 +106,47 @@ public class LearnMachine {
     }
 
     /**
-     *
      * @param chart
      * @param pos
      * @param said
      * @param eye
+     * @return result
      */
-    public void setResult(int chart, int pos, String said, int eye){
+    public int setResult(int chart, int pos, String said, int eye){
         String [] arrayChart = (String[]) charts.get(chart);
+        int result;
         if(arrayChart[pos].equals(said)){
             if(eye==0){
                 int[] array= results_left.get(chart);
                 array[pos]=1;
                 results_left.set(chart,array);
                 array= results_left.get(chart);
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "left eye chart= "+chart + " said= "+said +" result= "+array[pos]);
-                }
-            }else{
+                result=array[pos];
+            }else if(eye==1){
                 int[] array= results_right.get(chart);
                 array[pos]=1;
                 results_right.set(chart,array);
                 array= results_right.get(chart);
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "right eye chart= "+chart + " said= "+said +" result= "+array[eye]);
-                }
+                result=array[pos];
+            }else{
+                result=-1;
             }
-
-
+        }else{
+            if(eye==0) {
+                int[] array = results_left.get(chart);
+                result=array[pos];
+            }else if(eye==1){
+                int[] array= results_right.get(chart);
+                result=array[pos];
+            }else{
+                result=-1;
+            }
         }
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_LEARN, "eye= "+eye+" chart= "+chart + " pos= "+pos+
+                    " value= "+arrayChart[pos]+" said= "+said +" result= "+result);
+        }
+        return result;
     }
 
     /**
@@ -205,7 +216,7 @@ public class LearnMachine {
                 upDatePref(PREF_RESULT_OF_4,0);
                 return "4/4";
             }else{
-                return "error of reading";
+                return "null reading";
             }
         }else{
             if(resultOkPos>-1 && resultOkPos<results_right.size()-1){
@@ -227,7 +238,7 @@ public class LearnMachine {
                 upDatePref(PREF_RESULT_OF_4,0);
                 return "4/4";
             }else{
-                return "error of reading";
+                return "null reading";
             }
         }
     }
@@ -245,6 +256,8 @@ public class LearnMachine {
         for(int j=0; j<optotypes.size();j++){
             results_right.add(new int[]{0,0,0,0});
         }
+        upDatePref(PREF_M,0);
+        upDatePref(PREF_RESULT_OF_4,0);
     }
 
     /**

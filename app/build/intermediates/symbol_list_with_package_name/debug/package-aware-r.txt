@@ -893,9 +893,11 @@ string action_controller_calibration_info1
 string action_controller_size
 string action_controller_size_info2
 string action_controller_test_info
+string action_reset_user
 string action_size_left
 string action_size_right
 string action_test
+string action_test_reminder
 string action_voice
 string action_voice_calibration_info
 string action_voice_test_info
