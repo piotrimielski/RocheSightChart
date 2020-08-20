@@ -380,15 +380,17 @@
     <string name="action_calibration_left">”left eye”</string>
     <string name="action_calibration_right">”right eye”</string>
     <string name="action_controller">"you will use the controller without the voice command"</string>
-    <string name="action_controller_calibration_info1">”move joystick left or right to calibrate
+    <string name="action_controller_calibration_info1">”move joystick left, right, up or down to calibrate
  And click on trigger button to validate”</string>
     <string name="action_controller_size">”Select the minimum size”</string>
     <string name="action_controller_size_info2">”move joystick up or down to find the smallest circle you can see and validate with trigger”</string>
     <string name="action_controller_test_info">"The test is starting. Push the joystick in the same direction than the gap position you see. A beep will confirm that your answer is recorded.
 Press the middle button to stop the test."</string>
+    <string name="action_reset_user">”data has been cleared, user reset”</string>
     <string name="action_size_left">”left eye”</string>
     <string name="action_size_right">”right eye”</string>
     <string name="action_test">test is starting</string>
+    <string name="action_test_reminder">" use the joystick to make decision"</string>
     <string name="action_voice">you will use the voice command without the controller</string>
     <string name="action_voice_calibration_info">please say up/down
         or
