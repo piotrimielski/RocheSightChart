@@ -47,7 +47,6 @@ public class MainActivity extends Activity {
     private static final String ACTION_CALIBRATION2 = "sizes";
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO1 = "controller calibration info1";
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO2 = "controller calibration info2";
-    private static final String ACTION_CALIBRATION_CHECK = "calibration check";
     private static final String ACTION_TEST = "test";
     private static final String ACTION_TEST_REMINDER = "test reminder";
     private static final String ACTION_RESET_USER = "reset user";
@@ -55,6 +54,11 @@ public class MainActivity extends Activity {
     private static final String ACTION_RESULT_RIGHT = "result right";
     private static final String ACTION_CONTROLLER_TEST_INFO = "controller test info";
     private static final String ACTION_VOICE_TEST_INFO = "voice test info";
+    private static final String ACTION_CONTROLLER_CALIBRATION_INFO11 = "controller calibration info11";
+    private static final String ACTION_CONTROLLER_CALIBRATION_INFO21 = "controller calibration info21";
+    private static final String ACTION_CONTROLLER_TEST_INFO1 = "controller test info1";
+    private static final String ACTION_CONTROLLER_TEST_INFO2 = "controller test info2";
+    private static final String ACTION_CALIBRATION_CHECK = "calibration check";
     private static final String ACTION_CONTROLLER = "controller";
     private static final String ACTION_VOICE = "voice";
 
@@ -110,7 +114,7 @@ public class MainActivity extends Activity {
 //    private Intent mSpeechRecognizerIntent;
     private boolean isProcessing;
     private boolean isReady=true;
-    private boolean isKeyAction=false;
+    private boolean isAppStarted=false;
     private boolean isTimerStart;
     private boolean isSecondPeriod;
     private int eyeCalibration=-1;
@@ -120,6 +124,7 @@ public class MainActivity extends Activity {
     private PowerManager.WakeLock wl;
     private boolean newUser=true;
 //    // Create the Handler object (on the main thread by default)
+    private Handler handler = new Handler();
     private Handler handler1 = new Handler();
     private Handler handler2 = new Handler();
 //    // Define the code block to be executed
@@ -142,6 +147,19 @@ public class MainActivity extends Activity {
             if(isSecondPeriod){
                 resetTask();
                 resultChart("error");
+            }
+        }
+    };
+
+    private Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            if(!isAppStarted){
+                say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
+                handler.removeCallbacks(runnableCode);
+                handler.postDelayed(runnableCode, LONG_DELAY);
+            }else{
+                handler.removeCallbacks(runnableCode);
             }
         }
     };
@@ -301,17 +319,21 @@ public class MainActivity extends Activity {
         captions.put(ACTION_CALIBRATION1, R.string.action_calibration);
         captions.put(ACTION_CALIBRATION2, R.string.action_controller_size);
         captions.put(ACTION_CONTROLLER_CALIBRATION_INFO1, R.string.action_controller_calibration_info1);
+        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO11, R.string.action_controller_calibration_info11);
         captions.put(ACTION_CONTROLLER_CALIBRATION_INFO2, R.string.action_controller_size_info2);
-        captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
-        captions.put(ACTION_CONTROLLER, R.string.action_controller);
-        captions.put(ACTION_VOICE, R.string.action_voice);
+        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO21, R.string.action_controller_size_info21);
         captions.put(ACTION_TEST, R.string.action_test);
         captions.put(ACTION_TEST_REMINDER, R.string.action_test_reminder);
         captions.put(ACTION_CONTROLLER_TEST_INFO, R.string.action_controller_test_info);
+        captions.put(ACTION_CONTROLLER_TEST_INFO1, R.string.action_controller_test_info1);
+        captions.put(ACTION_CONTROLLER_TEST_INFO2, R.string.action_controller_test_info2);
         captions.put(ACTION_VOICE_TEST_INFO, R.string.action_voice_test_info);
         captions.put(ACTION_RESET_USER, R.string.action_reset_user);
         captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
         captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
+//        captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
+//        captions.put(ACTION_CONTROLLER, R.string.action_controller);
+//        captions.put(ACTION_VOICE, R.string.action_voice);
         // Check if user has given permission to record audio
         int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.RECORD_AUDIO);
@@ -341,6 +363,9 @@ public class MainActivity extends Activity {
                             if (status != TextToSpeech.ERROR) {
                                 mTTS.setLanguage(Locale.UK);
                                 say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
+                                handler.removeCallbacks(runnableCode);
+                                handler.postDelayed(runnableCode, LONG_DELAY);
+                                isAppStarted=false;
                             }else{
                                 isTTS=false;
                             }
@@ -417,6 +442,8 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_MAIN, "onDestroy");
         }
+        handler1.removeCallbacks(runnableCode1);
+        handler2.removeCallbacks(runnableCode2);
         if(mTTS !=null){
             mTTS.stop();
             mTTS.shutdown();
@@ -460,6 +487,7 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_POWER");
             }
+            isAppStarted=true;
             isProcessing=true;
             myGLRenderer.setChart(-1, -2, "", 0);
             learn.clearResult();
@@ -553,7 +581,7 @@ public class MainActivity extends Activity {
                 learn.upDatePref(PREF_LEFT_CALIBRATION_Y,myGLRenderer.getLeftPositionY());
                 eyeCalibration=1;
                 myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypeOuterDiameter(1));
-                say("right eye", true);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO11)), true);
             }else{
                 step1=false;
                 step2=true;
@@ -644,7 +672,7 @@ public class MainActivity extends Activity {
                 eyeCalibration=1;
                 chart=totalLengthCharts/2;
                 myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
-                say("right eye", true);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO21)), true);
             }else{
                 step2=false;
                 test=true;
@@ -783,7 +811,7 @@ public class MainActivity extends Activity {
             eye=0;
             chart=learn.getSharedPreferences().getInt(PREF_LEFT_START,FIRST_CHART_LEFT_EYE);
             totalLengthStringArray=learn.getSizeChartsPos(chart);
-            say("left eye",false);
+            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true);
             learn.clearResult();
         }else{
             if(learn.isResultOk(chart,eye)){
@@ -809,7 +837,7 @@ public class MainActivity extends Activity {
                 chartPos=0;
                 eye=1;
                 setText("","");
-                say("right eye ",false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true);
                 totalLengthStringArray=learn.getSizeChartsPos(chart);
                 myGLRenderer.setChart(chart,eye,learn.getChartPosString(chart,chartPos),
                         learn.getOptotypeOuterDiameter(chart) );
@@ -909,7 +937,9 @@ public class MainActivity extends Activity {
             setText("","");
             setInfo("Preparing the test");
         }
-
+        handler.removeCallbacks(runnableCode);
+        handler.postDelayed(runnableCode, LONG_DELAY);
+        isAppStarted=false;
         step2=false;
         step1=false;
         test=false;

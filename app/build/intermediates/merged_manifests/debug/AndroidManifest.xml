@@ -17,12 +17,18 @@
     <!-- ver 301 - Calibration for each eye separately, Step 1: gray circle -->
     <!-- ver 302 - text modification -->
     <!--
-       ver 303 - Calibration step 1: position of circles in horizontal bit further,
+       ver 303 - step 1: position of circles in horizontal bit further,
                  allow the circles to move up or down a bit,
                  add the maximum deviation possible from the original position,
-                 to start  the circle a few sizes higher (on the middle of charts),
-                 a high pitch beep if right and low pitch beep if wrong response,
+                 step2: to start  the circle a few sizes higher (on the middle of charts),
+                 test: a high pitch beep if right and low pitch beep if wrong response,
                  if the user gets two wrong , it would be impossible for them to get 3/4 so you can stop the test there,
+                 make delay on key detection
+    -->
+    <!--
+       ver 304 - Verbales instruction modification
+                Added timer on the app start and of the test to recall to the user the app waiting
+                Center the circles step1 of calibration
     -->
 
     <uses-feature

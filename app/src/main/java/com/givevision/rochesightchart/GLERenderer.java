@@ -9,9 +9,9 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GLERenderer implements GLSurfaceView.Renderer{
     private static final float X_POSITION = 0.5f;
-    private static final float X_POSITION_LEFT = 0.28f;//was 30
-    private static final float X_POSITION_RIGHT = 0.72f;//was 70
-    private static final int MAX_XY_DELTA = 100;//in pixel
+    private static final float X_POSITION_LEFT = 0.25f;//was 30
+    private static final float X_POSITION_RIGHT = 0.75f;//was 70
+    private static final int MAX_XY_DELTA = 200;//in pixel
     private static final float Y_POSITION = 0.5f;
     private static final int ORG_RADIUS = 150;
     private static final float CORRECTION = 1.875f; //pixels /mm if phone 25mm from lens 1.875

@@ -216,7 +216,7 @@ public class LearnMachine {
                 upDatePref(PREF_RESULT_OF_4,0);
                 return "4/4";
             }else{
-                return "null reading";
+                return "no reading";
             }
         }else{
             if(resultOkPos>-1 && resultOkPos<results_right.size()-1){
@@ -238,7 +238,7 @@ public class LearnMachine {
                 upDatePref(PREF_RESULT_OF_4,0);
                 return "4/4";
             }else{
-                return "null reading";
+                return "no reading";
             }
         }
     }

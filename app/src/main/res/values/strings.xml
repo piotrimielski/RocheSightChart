@@ -22,25 +22,29 @@ in the yellow circle, start by left side. You have 2 seconds for each circle.</s
     <string name="action_voice_test_info" >"you can say your answer after a bip.
         You will hear this voice 'next' if answer is recorded.
         Click the trigger button to get to the next image sizes, or say 'stop' for ending of test"</string>
-
-    <string name="charts">"This is an eye test.
-It will take a few minutes.
+    <string name="action_calibration_left">"left eye"</string>
+    <string name="action_calibration_right">"right eye"</string>
+    <string name="action_size_left">"left eye"</string>
+    <string name="action_size_right">"right eye"</string>
+    <string name="action_test_reminder">"use the joystick to make decision"</string>
+<!-- ver 304-->
+    <string name="charts">"This is a vision test.
+It will just take a few minutes.
 Click on the power button of your controller to start."</string>
-    <string name="action_calibration" >”calibrate your central vision for each eye”</string>
-    <string name="action_controller_calibration_info1">”move joystick left, right, up or down to calibrate
- And click on trigger button to validate”</string>
-    <string name="action_calibration_left">”left eye”</string>
-    <string name="action_calibration_right">”right eye”</string>
-    <string name="action_controller_size">”Select the minimum size”</string>
-    <string name="action_controller_size_info2">”move joystick up or down to find the smallest circle you can see and validate with trigger”</string>
-    <string name="action_size_left">”left eye”</string>
-    <string name="action_size_right">”right eye”</string>
-    <string name="action_controller_test_info" >"The test is starting. Push the joystick in the same direction than the gap position you see. A beep will confirm that your answer is recorded.
-Press the middle button to stop the test."</string>
-    <string name="action_reset_user">”data has been cleared, user reset”</string>
-    <string name="end_test" >"All done! Results recorded on your profile."</string>
-    <string name="result_left_info" >"for the left eye result is"</string>
-    <string name="result_right_info" >"for the right eye result is"</string>
-    <string name="action_test_reminder">" use the joystick to make decision"</string>
-
+    <string name="action_calibration" >"moving the objects to the center of your vision."</string>
+    <string name="action_controller_calibration_info1">"first left eye, move the joystick left, right, up or down until the object is in the center of your vision then click on the trigger button."</string>
+    <string name="action_controller_calibration_info11">"Well done, now right eye; move the joystick left, right up or down until the object is in the center of your vision  then click on the trigger button"</string>
+    <string name="action_controller_size">"Finding the smallest size you can see."</string>
+    <string name="action_controller_size_info2">"First left eye, move the joystick up or down to make the circle as small as you can still see including the hole at its center
+        then press the trigger."</string>
+    <string name="action_controller_size_info21">"Well done, Now right eye; move the joystick up or down to make the circle as small as you can still see including the hole at its center
+        then press the trigger."</string>
+    <string name="action_controller_test_info">"The final test is starting now"</string>
+    <string name="action_controller_test_info1" >"First left eye ; Push the joystick in the same direction as the E is facing, up, down, left or right."</string>
+    <string name="action_controller_test_info2" >"Well done, now the right eye, push the joystick in the same direction as the E is facing, up, down, left or right."</string>
+    <string name="action_reset_user">"data has been cleared, user reset"</string>
+    <string name="end_test" >"All done! Your results have been recorded."</string>
+    <string name="result_left_info" >"for the left eye vision is"</string>
+    <string name="result_right_info" >"for the right eye vision is"</string>
+    <string name="no_result" >"no reading"</string>
 </resources>
