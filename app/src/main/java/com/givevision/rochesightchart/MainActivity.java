@@ -7,14 +7,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.opengl.GLSurfaceView;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -28,10 +35,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresPermission;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.givevision.rochesightchart.db.Acuity;
+import com.givevision.rochesightchart.db.AcuityRepository;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import static android.os.SystemClock.sleep;
@@ -40,6 +54,7 @@ import static android.os.SystemClock.sleep;
 //https://cmusphinx.github.io/wiki/tutorialandroid/
 
 public class MainActivity extends Activity {
+    Context ctx;
     /* Named searches allow to quickly reconfigure the decoder */
     private static final String KWS_SEARCH = "wakeup";
     private static final String CHARTS_SEARCH = "charts";
@@ -118,16 +133,23 @@ public class MainActivity extends Activity {
     private boolean isTimerStart;
     private boolean isSecondPeriod;
     private int eyeCalibration=-1;
-    private ToneGenerator toneH = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-    private ToneGenerator toneL = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+    private ToneGenerator toneH = new ToneGenerator(AudioManager.STREAM_DTMF, 100);
+    private ToneGenerator toneL = new ToneGenerator(AudioManager.STREAM_DTMF, 80);
     private PowerManager pm;
     private PowerManager.WakeLock wl;
+    private boolean isOnline;
     private boolean newUser=true;
+    private int err=0;
+    private int good=0;
 //    // Create the Handler object (on the main thread by default)
     private Handler handler = new Handler();
+    private Handler handler0 = new Handler();
     private Handler handler1 = new Handler();
     private Handler handler2 = new Handler();
-//    // Define the code block to be executed
+
+    private AcuityRepository acuityRepository;
+
+//   test reminder
     private Runnable runnableCode1 = new Runnable() {
         @Override
         public void run() {
@@ -140,17 +162,18 @@ public class MainActivity extends Activity {
             }
         }
     };
-
+//   test reminder and go next
     private Runnable runnableCode2 = new Runnable() {
         @Override
         public void run() {
             if(isSecondPeriod){
-                resetTask();
-                resultChart("error");
+                stopTask();
+                nextChart();
+//                resultChart("error");
             }
         }
     };
-
+//   first massage reminder
     private Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
@@ -163,19 +186,46 @@ public class MainActivity extends Activity {
             }
         }
     };
+//   internet connaction test
+    private Runnable runnableCode0 = new Runnable() {
+        @Override
+        public void run() {
+            isOnline=isInternetAvailable(ctx);
+            handler0.removeCallbacks(runnableCode0);
+            if(!isOnline){
+                handler0.postDelayed(runnableCode0, SHORT_DELAY);
+            }
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_MAIN, " isOnline= "+isOnline);
+            }
+        }
+    };
 
-    void resetTask() {
+    void stopTask() {
+        handler.removeCallbacks(runnableCode);
+        handler0.removeCallbacks(runnableCode0);
         isTimerStart=false;
         handler1.removeCallbacks(runnableCode1);
         isSecondPeriod=false;
         handler2.removeCallbacks(runnableCode2);
     }
     void restardTask(int delay) {
+        handler.removeCallbacks(runnableCode);
+        handler0.removeCallbacks(runnableCode0);
         isTimerStart=false;
         isSecondPeriod=false;
         handler1.removeCallbacks(runnableCode1);
         handler1.postDelayed(runnableCode1, delay);
         isTimerStart=true;
+    }
+
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_MAIN, "onConfigurationChanged newConfig "+newConfig.toString());
+        }
     }
 
     /**
@@ -185,7 +235,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ctx=this;
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_MAIN, "onCreate");
         }
@@ -366,6 +416,34 @@ public class MainActivity extends Activity {
                                 handler.removeCallbacks(runnableCode);
                                 handler.postDelayed(runnableCode, LONG_DELAY);
                                 isAppStarted=false;
+                                if(newUser){
+                                    AsyncTask.execute( new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            acuityRepository.newInstallation();
+                                        }
+                                    });
+                                }else{
+                                    AsyncTask.execute( new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            List<Acuity> acuities=acuityRepository.getAllAcuities();
+                                            for(int i=0; i<acuities.size();i++){
+                                                Acuity acuity=acuities.get(i);
+                                                if (Util.DEBUG) {
+                                                    Log.i(Util.LOG_TAG_MAIN, "acuity: "
+                                                            +" id=  "+ acuity.getId()
+                                                            +" userId=  "+ acuity.getUserId()
+                                                            +" leftEye=  "+ acuity.getLeftEye()
+                                                            +" rightEye=  "+ acuity.getRightEye()
+                                                            +" createdAt=  "+ acuity.getCreatedAt()
+                                                            +" modifiedAt=  "+ acuity.getModifiedAt()
+                                                            +" inServer=  "+ acuity.getInServer());
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
                             }else{
                                 isTTS=false;
                             }
@@ -376,6 +454,8 @@ public class MainActivity extends Activity {
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "RocheSightChart:tracker");
         wl.acquire();
+
+        acuityRepository = new AcuityRepository(ctx);
     }
 
 
@@ -409,9 +489,16 @@ public class MainActivity extends Activity {
         }else{
             newUser=false;
         }
+
+        boolean isWifi=connectWiFi(this,Util.SSID,Util.SSIDPW);
+        handler0.removeCallbacks(runnableCode0);
+        handler0.postDelayed(runnableCode0, SHORT_DELAY);
+
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_MAIN, "chart= "+chart+ " totalLengthCharts= "+totalLengthCharts);
+            Log.i(Util.LOG_TAG_MAIN, "chart= "+chart+ " totalLengthCharts= "+totalLengthCharts+
+                    " isWifi= "+isWifi);
         }
+
 
     }
 
@@ -431,6 +518,7 @@ public class MainActivity extends Activity {
         if (mGLView != null) {
             mGLView.onPause();
         }
+        say("",false);
     }
 
     /**
@@ -442,8 +530,15 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_MAIN, "onDestroy");
         }
+        WifiManager wifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(false);
+        }
+        handler.removeCallbacks(runnableCode);
+        handler0.removeCallbacks(runnableCode0);
         handler1.removeCallbacks(runnableCode1);
         handler2.removeCallbacks(runnableCode2);
+
         if(mTTS !=null){
             mTTS.stop();
             mTTS.shutdown();
@@ -476,17 +571,22 @@ public class MainActivity extends Activity {
         }
         int keyCode=event.getKeyCode();
         int keyEvent=event.getAction();
-        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP && (!step1 && !step2 && !test)){
-            isProcessing=true;
-            say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
-            isProcessing=false;
-        }else if(keyCode==Util.KEY_POWER  && keyEvent == KeyEvent.ACTION_UP){
+//        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP && (!step1 && !step2 && !test)){
+//            isProcessing=true;
+//            say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
+//            isProcessing=false;
+//        }else
+        if(keyCode==Util.KEY_POWER  && keyEvent == KeyEvent.ACTION_UP){
+            //start app
             if(step1 || step2 ||test){
                 return true;
             }
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_POWER");
             }
+            handler.removeCallbacks(runnableCode);
+            err=0;
+            good=0;
             isAppStarted=true;
             isProcessing=true;
             myGLRenderer.setChart(-1, -2, "", 0);
@@ -500,7 +600,7 @@ public class MainActivity extends Activity {
                 eyeCalibration=-1;
                 myGLRenderer.setChart(-1, -2, "", 0);
                 setInfo("Test running");
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), true);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false);
                 myGLRenderer.setCharacter(2);
                 float x= learn.getSharedPreferences().getFloat(PREF_LEFT_CALIBRATION_X,0f );
                 float y= learn.getSharedPreferences().getFloat(PREF_LEFT_CALIBRATION_Y,0f );
@@ -534,6 +634,7 @@ public class MainActivity extends Activity {
                 && (step1==false && step2==false && test==false)){
             isProcessing=true;
             newUser=true;
+            acuityRepository.newInstallation();
             say(getResources().getString(captions.get(ACTION_RESET_USER)), false);
             myGLRenderer.setChart(-1, -2, "", 0);
             resetPreferences(newUser);
@@ -679,7 +780,7 @@ public class MainActivity extends Activity {
                 eyeCalibration=-1;
                 myGLRenderer.setChart(-1, -2, "", 0);
                 setInfo("Test running");
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), true);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false);
                 myGLRenderer.setCharacter(2);
                 if(chart>0 && chart<totalLengthCharts-1){
                     chart=chart-1;
@@ -807,7 +908,11 @@ public class MainActivity extends Activity {
     }
 
     private void nextChart() {
+        chartPos=0;
+        err=0;
+        good=0;
         if(eye==-1){
+            //start new test with left eye
             eye=0;
             chart=learn.getSharedPreferences().getInt(PREF_LEFT_START,FIRST_CHART_LEFT_EYE);
             totalLengthStringArray=learn.getSizeChartsPos(chart);
@@ -825,23 +930,23 @@ public class MainActivity extends Activity {
                 }
             }
         }
-        chartPos = 0;
+
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_KEY, "eye= " + eye +" totalLengthCharts= " + totalLengthCharts +
-                    " chart=" + chart + " totalLengthStringArray=" + totalLengthStringArray + " pos= " + chartPos);
+                    " chart=" + chart + " totalLengthStringArray=" + totalLengthStringArray );
         }
         setInfo("test started");
-        if(chart>=totalLengthCharts){ //next eye
+        if(chart>=totalLengthCharts){
             if(eye<1){
+                //right eye
                 chart=learn.getSharedPreferences().getInt(PREF_RIGHT_START,FIRST_CHART_RIGHT_EYE);
-                chartPos=0;
                 eye=1;
                 setText("","");
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true);
                 totalLengthStringArray=learn.getSizeChartsPos(chart);
                 myGLRenderer.setChart(chart,eye,learn.getChartPosString(chart,chartPos),
                         learn.getOptotypeOuterDiameter(chart) );
-                toneL.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200); //new chart
+//                toneL.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200); //new chart
                 if(test){
                     restardTask(LONG_DELAY);
                 }
@@ -851,13 +956,13 @@ public class MainActivity extends Activity {
                 return;
             }
         }else{
-            toneL.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200); //new chart
+            //new chart
+//            toneL.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
             setText("","");
             totalLengthStringArray=learn.getSizeChartsPos(chart);
             if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_KEY, "eye= " + eye +" chart=" + chart  + " pos= " + chartPos);
+                Log.i(Util.LOG_TAG_KEY, "eye= " + eye +" chart=" + chart);
             }
-            chartPos=0;
             myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos),
                     learn.getOptotypeOuterDiameter(chart));
             if(test){
@@ -866,50 +971,62 @@ public class MainActivity extends Activity {
         }
     }
 
-    private int err=0;
+
     private void resultChart(String result) {
         if(chart==-1){
             return;
         }
-        resetTask();
+        stopTask();
 //        setText(result,"");
         if(chart>-1 && chart<=totalLengthCharts-1){
             if(chartPos<=totalLengthStringArray-1){
+                //test in the position
 //                int r=learn.setResult(chart, chartPos, result,eye);
                 if (Util.DEBUG) {
                     Log.i(Util.LOG_TAG_KEY, "result= "+result+" chart= "+chart+
                             " chartPos= "+chartPos+" totalLengthStringArray= "+totalLengthStringArray);
                 }
-                //result caracter
+                //result card
                 if(learn.setResult(chart, chartPos, result,eye)<1){
+                    //if error (-1 or 0)
                     err=err+1;
-                    toneL.startTone(ToneGenerator.TONE_SUP_ERROR,200);
+                    toneL.startTone(ToneGenerator.TONE_DTMF_0,200);
                 }else{
-                    toneH.startTone(ToneGenerator.TONE_CDMA_CONFIRM,200);
+                    //if good answer
+                    good=good+1;
+                    toneH.startTone(ToneGenerator.TONE_DTMF_1,200);
                 }
                 if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_KEY, "err= "+err+" result= "+result+" chart= "+chart+
+                    Log.i(Util.LOG_TAG_KEY, "good= "+good+"err= "+err+" result= "+result+" chart= "+chart+
                             " chartPos= "+chartPos+" totalLengthStringArray= "+totalLengthStringArray);
                 }
-                if(err>=2 && chartPos>=totalLengthStringArray-3){
-                    err=0;
+                if(err>=2 || good>=3){
+                    myGLRenderer.setChart(-1, -2, "", 0);
+                    sleep(1000);
                     nextChart();
                     return;
                 }else{
                     chartPos++;
                     myGLRenderer.setChart(-1, -2, "", 0);
                     sleep(1000);
+                    //end of card in this sizes
                     if(chartPos>totalLengthStringArray-1){
                         nextChart();
                         return;
                     }
+                    //chartPos was -2 before this procedure
                     if(chartPos==-1){
+                        //no test
                         myGLRenderer.setChart(-1, eye, "", learn.getOptotypeOuterDiameter(0));
                     }else{
+                        //test
                         myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypeOuterDiameter(chart));
                     }
                 }
             }else{
+                //go next level the chart or stop
+                myGLRenderer.setChart(-1, -2, "", 0);
+                sleep(1000);
                 nextChart();
                 return;
             }
@@ -920,12 +1037,14 @@ public class MainActivity extends Activity {
     }
 
     private void endOfTest() {
-        resetTask();
+        stopTask();
         setText("","");
         isTimerStart=false;
         chart=-1;
         chartPos=-1;
         eye=-2;
+        err=0;
+        good=0;
         myGLRenderer.setChart(chart, eye, "", 0);
         setInfo("end of test");
         say("end of test",false);
@@ -933,6 +1052,12 @@ public class MainActivity extends Activity {
             setText("left eye: "+learn.getResult(0),"right eye: "+learn.getResult(1));
             say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+" "+learn.getResult(0), true);
             say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+learn.getResult(1), true);
+            AsyncTask.execute( new Runnable() {
+                @Override
+                public void run() {
+                    acuityRepository.insertAcuity(0,learn.getEyeResult(0),learn.getEyeResult(1));
+                }
+            });
         }else{
             setText("","");
             setInfo("Preparing the test");
@@ -1003,5 +1128,89 @@ public class MainActivity extends Activity {
         ConfigurationInfo info = am.getDeviceConfigurationInfo();
         return info.reqGlEsVersion >= 0x20000;
     }
+
+    public static boolean connectWiFi(Context context, String ssid, String ssidPassword) {
+        WifiConfiguration conf = new WifiConfiguration();
+        conf.SSID = "\"" + ssid + "\"";   // Please note the quotes. String should contain ssid in quotes
+        conf.status = WifiConfiguration.Status.ENABLED;
+        conf.priority = 40;
+//  WPA network you need to add passphrase like this:
+        conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+        conf.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+        conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+        conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+        conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+        conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+        conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+        conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+        conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+        conf.preSharedKey = "\"" + ssidPassword + "\"";
+
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        int networkId = wifiManager.addNetwork(conf);
+        if (Util.DEBUG) {
+            Log.v(Util.LOG_TAG_MAIN, "networkId " + networkId);   }
+
+        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+        for( WifiConfiguration i : list ) {
+            if(i.SSID != null && i.SSID.equals("\"" + ssid + "\"")) {
+                wifiManager.disconnect();
+                wifiManager.enableNetwork(i.networkId, true);
+                wifiManager.reconnect();
+                if (!wifiManager.isWifiEnabled()) {
+                    wifiManager.setWifiEnabled(true);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isInternetAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        if (activeNetwork == null) return false;
+
+        if (Util.DEBUG) {
+            Log.d(Util.LOG_TAG_MAIN, "activeNetwork= " + activeNetwork.getExtraInfo() +
+                    " state= "+ activeNetwork.getState()+ " type= "+ activeNetwork.getType());
+        }
+
+        switch (activeNetwork.getType()) {
+            case ConnectivityManager.TYPE_WIFI:
+                if ((activeNetwork.getState() == NetworkInfo.State.CONNECTED ||
+                        activeNetwork.getState() == NetworkInfo.State.CONNECTING) &&
+                        isInternet())
+                    return true;
+                break;
+            case ConnectivityManager.TYPE_MOBILE:
+                if ((activeNetwork.getState() == NetworkInfo.State.CONNECTED ||
+                        activeNetwork.getState() == NetworkInfo.State.CONNECTING) &&
+                        isInternet())
+                    return true;
+                break;
+            default:
+                return false;
+        }
+        return false;
+    }
+
+    private static boolean isInternet() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            if (Util.DEBUG) {
+                Log.d(Util.LOG_TAG_MAIN, "exitValue " + exitValue);}
+            return(exitValue==0);
+        } catch (IOException e)          {
+            Log.e(Util.LOG_TAG_MAIN, "IOException " + e.getCause());
+        } catch (InterruptedException e) {
+            Log.e(Util.LOG_TAG_MAIN, "IOException " + e.getCause());
+        }
+        return false;
+    }
+
 }
 

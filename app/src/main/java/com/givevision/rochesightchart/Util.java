@@ -13,6 +13,7 @@ public class Util {
     public static final String LOG_TAG_KEY = "keyAction";
     public static final String LOG_TAG_RECOGNITION = "Recognition";
     public static final String LOG_TAG_VOICE = "Voice Command";
+    public static final String LOG_TAG_DB = "Database";
     public static final String LOG_TAG_RENDERING = "Rendering";
     public static final String LOG_TAG_LEARN = "Learn";
     public static final String LOG_TAG_SPRITE = "Sprite";
@@ -25,5 +26,6 @@ public class Util {
     public static final int KEY_RIGHT = 22;
     public static final int KEY_BACK = 97;
 
-
+    public static final String SSID="givevision";
+    public static final String SSIDPW="!GV-vat-00";
 }

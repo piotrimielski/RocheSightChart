@@ -11,7 +11,7 @@ import java.util.Random;
  *
  */
 public class LearnMachine {
-    //represent charts series: random "down", "up", "left", "right" string in array of 5 by series
+    //represent charts series: random "down", "up", "left", "right" string in array of 4 by series
     private ArrayList<String[]> charts = new ArrayList<>();
     //represent results by eye: chart,series result
     private ArrayList<int[]> results_left = new ArrayList<>();
@@ -20,14 +20,16 @@ public class LearnMachine {
     private ArrayList<float[]> optotypes =new ArrayList<>();
     private static final int NBR_OF_CHARACTERS=4;
     private static final String MyPREFERENCES = "my preferences";
-    private static final String PREF_M = "M-Unit";
-    private static final String PREF_RESULT_OF_4 = "result of 4";
+    private static final String PREF_M_LEFT = "M-Unit left";
+    private static final String PREF_M_RIGHT = "M-Unit right";
+    private static final String PREF_RESULT_OF_4_LEFT = "result of 4 left";
+    private static final String PREF_RESULT_OF_4_RIGHT = "result of 4 right";
     private static SharedPreferences sharedpreferences;
     /**
      *
      */
     public LearnMachine(Context ctx){
-
+    //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm), Image Outer diameter (mm)
         float[] optotype=new float [] {20f,1.3f,80f,23.08f,116.18f};
         optotypes.add(optotype);
         optotype=new float [] {16f,1.2f,63f,18.33f,92.20f};
@@ -189,57 +191,106 @@ public class LearnMachine {
     public String getResult(int eye){
         int resultOkPos=-1;
         int total=0;
-        //find last good series
-        for (int p=0; p<results_left.size(); p++){
-            if(isResultOk(p,eye)){
-                resultOkPos=p;
-            }
-        }
+
         //find next series result
         if(eye==0){
+            //find last good series
+            for (int p=0; p<results_left.size(); p++){
+                if(isResultOk(p,eye)){
+                    resultOkPos=p;
+                }
+            }
             if(resultOkPos>-1 && resultOkPos<results_left.size()-1){
                 float[] array=  optotypes.get(resultOkPos);
                 int[]  resultNoArray=  results_left.get(resultOkPos+1);
                 for (int p=0; p<resultNoArray.length; p++){
                     total=total+resultNoArray[p];
                 }
-                upDatePref(PREF_M,array[2]);
-                upDatePref(PREF_RESULT_OF_4,total);
+                upDatePref(PREF_M_LEFT,array[2]);
+                upDatePref(PREF_RESULT_OF_4_LEFT,total);
                 if(array[2]-(int)array[2]>0){
                     return "4/"+String.format("%.1f", array[2]);
-//                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 5";
+//                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
                 }
 //            return "4/"+(int)array[2]+" and "+total +" of 5";
                 return "4/"+(int)array[2];
             }else if(resultOkPos==results_left.size()-1) {
-                upDatePref(PREF_M,4);
-                upDatePref(PREF_RESULT_OF_4,0);
+                upDatePref(PREF_M_LEFT,4);
+                upDatePref(PREF_RESULT_OF_4_LEFT,0);
                 return "4/4";
             }else{
                 return "no reading";
             }
         }else{
+            //find last good series
+            for (int p=0; p<results_right.size(); p++){
+                if(isResultOk(p,eye)){
+                    resultOkPos=p;
+                }
+            }
             if(resultOkPos>-1 && resultOkPos<results_right.size()-1){
                 float[] array=  optotypes.get(resultOkPos);
                 int[]  resultNoArray=  results_right.get(resultOkPos+1);
                 for (int p=0; p<resultNoArray.length; p++){
                     total=total+resultNoArray[p];
                 }
-                upDatePref(PREF_M,array[2]);
-                upDatePref(PREF_RESULT_OF_4,total);
+                upDatePref(PREF_M_RIGHT,array[2]);
+                upDatePref(PREF_RESULT_OF_4_RIGHT,total);
                 if(array[2]-(int)array[2]>0){
                     return "4/"+String.format("%.1f", array[2]);
-//                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 5";
+//                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
                 }
-//            return "4/"+(int)array[2]+" and "+total +" of 5";
+//            return "4/"+(int)array[2]+" and "+total +" of 4";
                 return "4/"+(int)array[2];
             }else if(resultOkPos==results_right.size()-1) {
-                upDatePref(PREF_M,4);
-                upDatePref(PREF_RESULT_OF_4,0);
+                upDatePref(PREF_M_RIGHT,4);
+                upDatePref(PREF_RESULT_OF_4_RIGHT,0);
                 return "4/4";
             }else{
                 return "no reading";
             }
+        }
+    }
+    /**
+     * @param eye
+     * @return result
+     */
+    public String getEyeResult(int eye){
+        int resultOkPos=-1;
+        if(eye==0){
+            //find last good series
+            for (int p=0; p<results_left.size(); p++){
+                if(isResultOk(p,eye)){
+                    resultOkPos=p;
+                }
+            }
+            if(resultOkPos>-1 && resultOkPos<results_left.size()-1){
+                float[] array=  optotypes.get(resultOkPos);
+                if(array[2]-(int)array[2]>0){
+                    return String.format("%.1f", array[2]);
+                }
+                return String.valueOf(array[2]);
+            }else{
+                return "0";
+            }
+        }else if(eye==1){
+            //find last good series
+            for (int p=0; p<results_right.size(); p++){
+                if(isResultOk(p,eye)){
+                    resultOkPos=p;
+                }
+            }
+            if(resultOkPos>-1 && resultOkPos<results_right.size()){
+                float[] array=  optotypes.get(resultOkPos);
+                if(array[2]-(int)array[2]>0){
+                    return String.format("%.1f", array[2]);
+                }
+                return String.valueOf(array[2]);
+            }else{
+                return "0";
+            }
+        }else{
+            return "0";
         }
     }
 
@@ -256,8 +307,10 @@ public class LearnMachine {
         for(int j=0; j<optotypes.size();j++){
             results_right.add(new int[]{0,0,0,0});
         }
-        upDatePref(PREF_M,0);
-        upDatePref(PREF_RESULT_OF_4,0);
+        upDatePref(PREF_M_LEFT,0);
+        upDatePref(PREF_M_RIGHT,0);
+        upDatePref(PREF_RESULT_OF_4_LEFT,0);
+        upDatePref(PREF_RESULT_OF_4_RIGHT,0);
     }
 
     /**

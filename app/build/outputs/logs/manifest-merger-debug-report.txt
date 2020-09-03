@@ -1,19 +1,28 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-54:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-54:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-54:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-54:16
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-74:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-74:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-74:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-74:16
+MERGED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:17:1-31:12
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c05e12d52ed8cdccea63f852a107321\lifecycle-extensions-2.0.0\AndroidManifest.xml:17:1-25:12
 MERGED from [androidx.appcompat:appcompat:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cec049f9a6ba84e2d90ee9e8ab6996e5\appcompat-1.0.2\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.core:core-ktx:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\998742f384204cee70b675db347db615\jetified-core-ktx-1.0.2\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\14672fe2ea9cc30c56307dd8f248eece\constraintlayout-1.1.3\AndroidManifest.xml:2:1-11:12
 MERGED from [:aars] C:\projects\RocheSightChart\aars\build\.transforms\ad2b048774eb91350be5d1e58b32d969\jetified-pocketsphinx-android-5prealpha-release\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.sqlite:sqlite-framework:2.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\5bd534471b465998ca2ce65108fef3ab\sqlite-framework-2.0.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.sqlite:sqlite:2.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fe2b94cf2235e1b40133719232db5e79\sqlite-2.0.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.fragment:fragment:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\a9273397020014871d1fd40a95eceb7a\fragment-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fd34bad487aa7149544242dba90783d3\vectordrawable-animated-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\62b42771574550f7c60fb8090211772d\legacy-support-core-ui-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6a9ba58fa3bc7f62d1378a3eb93d4017\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\523762e3051670b80b8fa4e268d7619e\vectordrawable-1.0.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\8dbb9132b1fb53fd4fbb93eaf077875c\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f814c49c4e6d427ba2071c2724ae0c93\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fdf32433e1a6a6a1a59c5f19e6604e1d\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\666c8ed344b10ec64170c463acbc5b2c\core-runtime-2.0.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.lifecycle:lifecycle-service:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\1e74521c3d09b0bf0c11ad34be793613\jetified-lifecycle-service-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\523762e3051670b80b8fa4e268d7619e\vectordrawable-1.0.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c8d19400b7f90767a40bf848d545c16\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\3b340202e6e96084fa364bee26a8acfe\coordinatorlayout-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\1d758cb9ab12ad6092399d559f7f5aba\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
@@ -22,20 +31,17 @@ MERGED from [androidx.customview:customview:1.0.0] C:\Users\Sandra\.gradle\cache
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\8092df27876235e212dfd26626ab1ebc\swiperefreshlayout-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\754722de293e99795dfef034937daf8d\asynclayoutinflater-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e46cd076a917583a64b85f84aa2271dc\core-1.0.2\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\de383a1e4abedf07b55e6611b2045d0f\lifecycle-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e3e759fece966ac4b5d7fc5f89637585\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\835d5c10138ccb3764592e06b759c65c\versionedparcelable-1.0.0\AndroidManifest.xml:17:1-25:12
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\63375a8602e663a8c50b61d57bebad9d\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\d3a0c526675defaec83a58f88616d673\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\83186ecf5c8ddeae84db330840a1a96d\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\86c784bf68d2d55319264b405834eb0f\print-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e3e759fece966ac4b5d7fc5f89637585\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\de383a1e4abedf07b55e6611b2045d0f\lifecycle-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\1b095822d1b8a91797ad223c378ae9e6\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f814c49c4e6d427ba2071c2724ae0c93\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fdf32433e1a6a6a1a59c5f19e6604e1d\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\a8796c967b3c0d3b92f93a3b9f68bb69\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-54:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-54:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-54:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-74:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-74:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-74:16
 	package
 		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:3:5-45
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
@@ -51,73 +57,109 @@ INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-5
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 uses-feature#0x00020000
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:26:9-27:39
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:35:9-83
 	android:glEsVersion
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:26:23-55
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:35:23-55
 	android:required
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:27:13-36
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:35:57-80
 uses-permission#android.permission.BLUETOOTH
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:29:9-72
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:37:9-72
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:29:26-69
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:37:26-69
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:30:9-85
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:38:9-85
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:30:26-82
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:38:26-82
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:39:9-83
+	android:name
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:39:26-81
 uses-permission#android.permission.RECORD_AUDIO
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:31:9-75
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:40:9-75
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:31:26-72
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:40:26-72
 uses-permission#android.permission.WAKE_LOCK
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:32:9-72
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:41:9-72
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:32:26-69
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:41:26-69
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:42:9-80
+	android:name
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:42:26-77
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:43:9-80
+	android:name
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:43:26-77
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:44:9-82
+	android:name
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:44:26-80
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:45:9-82
+	android:name
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:45:26-80
+uses-permission#android.permission.INTERNET
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:46:9-70
+	android:name
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:46:26-68
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:47:9-78
+	android:name
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:47:26-76
 application
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:34:9-52:23
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:56:9-72:23
+MERGED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:24:5-29:19
+MERGED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:24:5-29:19
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c05e12d52ed8cdccea63f852a107321\lifecycle-extensions-2.0.0\AndroidManifest.xml:22:5-23:19
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c05e12d52ed8cdccea63f852a107321\lifecycle-extensions-2.0.0\AndroidManifest.xml:22:5-23:19
 MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\14672fe2ea9cc30c56307dd8f248eece\constraintlayout-1.1.3\AndroidManifest.xml:9:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\14672fe2ea9cc30c56307dd8f248eece\constraintlayout-1.1.3\AndroidManifest.xml:9:5-20
+MERGED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:22:5-28:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:22:5-28:19
 MERGED from [androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e46cd076a917583a64b85f84aa2271dc\core-1.0.2\AndroidManifest.xml:22:5-89
 MERGED from [androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e46cd076a917583a64b85f84aa2271dc\core-1.0.2\AndroidManifest.xml:22:5-89
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\835d5c10138ccb3764592e06b759c65c\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\835d5c10138ccb3764592e06b759c65c\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
 	android:screenOrientation
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:35:13-50
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:57:13-50
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e46cd076a917583a64b85f84aa2271dc\core-1.0.2\AndroidManifest.xml:22:18-86
 	android:supportsRtl
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:41:13-39
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:63:13-39
 	android:label
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:39:13-45
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:61:13-45
 	android:roundIcon
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:40:13-58
-	android:configChanges
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:42:13-95
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:62:13-58
 	android:icon
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:38:13-47
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:60:13-47
 	android:allowBackup
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:37:13-39
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:59:13-39
 	android:theme
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:36:13-77
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:58:13-77
 activity#com.givevision.rochesightchart.MainActivity
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:45:13-51:24
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:65:13-71:24
 	android:configChanges
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:46:17-99
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:66:17-111
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:45:23-51
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:65:23-51
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:47:17-50:33
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:67:17-70:33
 action#android.intent.action.MAIN
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:48:21-73
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:68:21-73
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:48:29-70
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:68:29-70
 category#android.intent.category.LAUNCHER
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:49:21-81
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:69:21-81
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:49:31-78
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:69:31-78
 uses-sdk
 INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
+MERGED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c05e12d52ed8cdccea63f852a107321\lifecycle-extensions-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-extensions:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c05e12d52ed8cdccea63f852a107321\lifecycle-extensions-2.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.appcompat:appcompat:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cec049f9a6ba84e2d90ee9e8ab6996e5\appcompat-1.0.2\AndroidManifest.xml:20:5-44
 MERGED from [androidx.appcompat:appcompat:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cec049f9a6ba84e2d90ee9e8ab6996e5\appcompat-1.0.2\AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core-ktx:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\998742f384204cee70b675db347db615\jetified-core-ktx-1.0.2\AndroidManifest.xml:5:5-44
@@ -126,6 +168,10 @@ MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Sandra\.
 MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\14672fe2ea9cc30c56307dd8f248eece\constraintlayout-1.1.3\AndroidManifest.xml:5:5-7:41
 MERGED from [:aars] C:\projects\RocheSightChart\aars\build\.transforms\ad2b048774eb91350be5d1e58b32d969\jetified-pocketsphinx-android-5prealpha-release\AndroidManifest.xml:7:5-9:41
 MERGED from [:aars] C:\projects\RocheSightChart\aars\build\.transforms\ad2b048774eb91350be5d1e58b32d969\jetified-pocketsphinx-android-5prealpha-release\AndroidManifest.xml:7:5-9:41
+MERGED from [androidx.sqlite:sqlite-framework:2.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\5bd534471b465998ca2ce65108fef3ab\sqlite-framework-2.0.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\5bd534471b465998ca2ce65108fef3ab\sqlite-framework-2.0.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fe2b94cf2235e1b40133719232db5e79\sqlite-2.0.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fe2b94cf2235e1b40133719232db5e79\sqlite-2.0.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.fragment:fragment:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\a9273397020014871d1fd40a95eceb7a\fragment-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.fragment:fragment:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\a9273397020014871d1fd40a95eceb7a\fragment-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fd34bad487aa7149544242dba90783d3\vectordrawable-animated-1.0.0\AndroidManifest.xml:20:5-44
@@ -134,10 +180,20 @@ MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\Sandra\.grad
 MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\62b42771574550f7c60fb8090211772d\legacy-support-core-ui-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6a9ba58fa3bc7f62d1378a3eb93d4017\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6a9ba58fa3bc7f62d1378a3eb93d4017\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\523762e3051670b80b8fa4e268d7619e\vectordrawable-1.0.1\AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\523762e3051670b80b8fa4e268d7619e\vectordrawable-1.0.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\8dbb9132b1fb53fd4fbb93eaf077875c\loader-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\8dbb9132b1fb53fd4fbb93eaf077875c\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f814c49c4e6d427ba2071c2724ae0c93\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f814c49c4e6d427ba2071c2724ae0c93\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fdf32433e1a6a6a1a59c5f19e6604e1d\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fdf32433e1a6a6a1a59c5f19e6604e1d\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\666c8ed344b10ec64170c463acbc5b2c\core-runtime-2.0.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\666c8ed344b10ec64170c463acbc5b2c\core-runtime-2.0.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-service:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\1e74521c3d09b0bf0c11ad34be793613\jetified-lifecycle-service-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-service:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\1e74521c3d09b0bf0c11ad34be793613\jetified-lifecycle-service-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\523762e3051670b80b8fa4e268d7619e\vectordrawable-1.0.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\523762e3051670b80b8fa4e268d7619e\vectordrawable-1.0.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c8d19400b7f90767a40bf848d545c16\viewpager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c8d19400b7f90767a40bf848d545c16\viewpager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\3b340202e6e96084fa364bee26a8acfe\coordinatorlayout-1.0.0\AndroidManifest.xml:20:5-44
@@ -154,6 +210,10 @@ MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\Sa
 MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\754722de293e99795dfef034937daf8d\asynclayoutinflater-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e46cd076a917583a64b85f84aa2271dc\core-1.0.2\AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e46cd076a917583a64b85f84aa2271dc\core-1.0.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\de383a1e4abedf07b55e6611b2045d0f\lifecycle-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\de383a1e4abedf07b55e6611b2045d0f\lifecycle-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e3e759fece966ac4b5d7fc5f89637585\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e3e759fece966ac4b5d7fc5f89637585\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\835d5c10138ccb3764592e06b759c65c\versionedparcelable-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\835d5c10138ccb3764592e06b759c65c\versionedparcelable-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\63375a8602e663a8c50b61d57bebad9d\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
@@ -164,18 +224,8 @@ MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\User
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\83186ecf5c8ddeae84db330840a1a96d\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.print:print:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\86c784bf68d2d55319264b405834eb0f\print-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.print:print:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\86c784bf68d2d55319264b405834eb0f\print-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e3e759fece966ac4b5d7fc5f89637585\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e3e759fece966ac4b5d7fc5f89637585\lifecycle-viewmodel-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\de383a1e4abedf07b55e6611b2045d0f\lifecycle-runtime-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\de383a1e4abedf07b55e6611b2045d0f\lifecycle-runtime-2.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\1b095822d1b8a91797ad223c378ae9e6\interpolator-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\1b095822d1b8a91797ad223c378ae9e6\interpolator-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f814c49c4e6d427ba2071c2724ae0c93\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f814c49c4e6d427ba2071c2724ae0c93\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fdf32433e1a6a6a1a59c5f19e6604e1d\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\fdf32433e1a6a6a1a59c5f19e6604e1d\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\a8796c967b3c0d3b92f93a3b9f68bb69\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\a8796c967b3c0d3b92f93a3b9f68bb69\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
 INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 	android:targetSdkVersion
@@ -186,3 +236,21 @@ INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
+service#androidx.room.MultiInstanceInvalidationService
+ADDED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:25:9-28:40
+	android:exported
+		ADDED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:28:13-37
+	android:directBootAware
+		ADDED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:27:13-43
+	android:name
+		ADDED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:26:13-74
+provider#androidx.lifecycle.ProcessLifecycleOwnerInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:23:9-27:43
+	android:authorities
+		ADDED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:25:13-69
+	android:multiprocess
+		ADDED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:27:13-40
+	android:exported
+		ADDED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:26:13-37
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\f424ef2f1683c1d4e5e0542fddfdaec2\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:24:13-79

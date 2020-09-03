@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
     android:targetSandboxVersion="2"
-    android:versionCode="303"
-    android:versionName="303" >
+    android:versionCode="401"
+    android:versionName="401" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -31,6 +31,14 @@
                 Added timer on the app start and of the test to recall to the user the app waiting
                 Center the circles step1 of calibration
     -->
+    <!--
+       ver 401 -  wifi connection with AP
+        Verbales instruction modification: modify right eye instruction
+        Put only one pitch with different volume for good/wrong responses, remove pitch for next sizes of E
+        Debug:  min 2 wrong for record  the best vision seen
+        Test: add max ¾ good for next chart sizes
+    -->
+<!--  ver 402 - local database -->
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -38,13 +46,28 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <!--
+         @SystemApi @hide Allows an application to modify any wifi configuration, even if created
+         by another application. Once reconfigured the original creator cannot make any further
+         modifications.
+         <p>Not for use by third-party applications.
+          application needs to be signed by the platform key or be privileged
+    -->
+    <!-- <permission android:name="android.permission.OVERRIDE_WIFI_CONFIG" -->
+    <!-- android:protectionLevel="signature|privileged" /> -->
     <application
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation"
         android:debuggable="true"
         android:extractNativeLibs="false"
         android:icon="@mipmap/ic_launcher"
@@ -56,13 +79,24 @@
         android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         <activity
             android:name="com.givevision.rochesightchart.MainActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation" >
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation|orientation" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="androidx.room.MultiInstanceInvalidationService"
+            android:directBootAware="true"
+            android:exported="false" />
+
+        <provider
+            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+            android:authorities="com.givevision.rochesightchart.lifecycle-process"
+            android:exported="false"
+            android:multiprocess="true" />
     </application>
 
 </manifest>
