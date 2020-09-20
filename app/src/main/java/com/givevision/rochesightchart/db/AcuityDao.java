@@ -45,6 +45,11 @@ public interface AcuityDao {
     void deleteAcuity(Acuity acuity);
 
     @Query("DELETE FROM acuities")
-    public void deleteAcuityTable();
+    void deleteAcuityTable();
 
+    @Query("SELECT * FROM acuities WHERE user_id =:userId AND in_server=0 ORDER BY id DESC LIMIT 1")
+    Acuity getLastAcuityByUserId(int userId);
+
+    @Query("UPDATE acuities SET in_server=1 WHERE id=:appID;")
+    void upDateInServerByAppId(int appID);
 }

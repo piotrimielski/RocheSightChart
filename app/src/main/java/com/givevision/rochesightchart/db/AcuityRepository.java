@@ -163,4 +163,17 @@ public class AcuityRepository {
         deleteAcuitiesTable();
     }
 
+    public Acuity getLastId(int userId) {
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_DB, "get last acuity by user id");
+            }
+            return gvDatabase.acuityDao().getLastAcuityByUserId(userId);
+    }
+
+    public void upDateInServer(int appID) {
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_DB, "upDate In Server for appId");
+        }
+        gvDatabase.acuityDao().upDateInServerByAppId(appID);
+    }
 }

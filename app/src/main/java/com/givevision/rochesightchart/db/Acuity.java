@@ -14,13 +14,13 @@ public class Acuity {
     private int id;
 
     @ColumnInfo(name = "user_id")
-    public int userId;
+    private int userId;
 
     @ColumnInfo(name = "left_eye")
-    public String leftEye;
+    private String leftEye;
 
     @ColumnInfo(name = "right_eye")
-    public String rightEye;
+    private String rightEye;
 
     @ColumnInfo(name = "in_server")
     private boolean inServer;
@@ -58,7 +58,7 @@ public class Acuity {
 
     public String getRightEye() {return rightEye;}
     public void setRightEye(String rightEye) {
-        this.leftEye = rightEye;
+        this.rightEye = rightEye;
     }
 
     public boolean getInServer() {

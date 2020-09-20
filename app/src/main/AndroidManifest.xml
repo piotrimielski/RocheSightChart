@@ -22,14 +22,16 @@
                 Added timer on the app start and of the test to recall to the user the app waiting
                 Center the circles step1 of calibration
 -->
-<!--   ver 401 -  wifi connection with AP
-        Verbales instruction modification: modify right eye instruction
+<!--   ver 401 - Verbales instruction modification: modify right eye instruction
         Put only one pitch with different volume for good/wrong responses, remove pitch for next sizes of E
         Debug:  min 2 wrong for record  the best vision seen
         Test: add max ¾ good for next chart sizes
   -->
  <!-- ver 402 - local database
-
+        server database
+        wifi connection with AP
+        connection with server
+        calibration 2 with bigger circles        
  -->
 
         <uses-feature android:glEsVersion="0x00020000"  android:required="true" />
@@ -44,6 +46,7 @@
         <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
         <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
         <uses-permission android:name="android.permission.INTERNET"/>
+        <uses-permission android:name="android.permission.NETWORK_STATE"/>
         <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
         <!-- @SystemApi @hide Allows an application to modify any wifi configuration, even if created
          by another application. Once reconfigured the original creator cannot make any further

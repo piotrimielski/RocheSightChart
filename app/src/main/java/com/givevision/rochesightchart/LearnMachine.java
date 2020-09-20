@@ -19,16 +19,13 @@ public class LearnMachine {
     //represent optotypes series: Visual Angle(min), LogMAR, Approximate M-units, Gap (mm),Outer diameter (mm)
     private ArrayList<float[]> optotypes =new ArrayList<>();
     private static final int NBR_OF_CHARACTERS=4;
-    private static final String MyPREFERENCES = "my preferences";
-    private static final String PREF_M_LEFT = "M-Unit left";
-    private static final String PREF_M_RIGHT = "M-Unit right";
-    private static final String PREF_RESULT_OF_4_LEFT = "result of 4 left";
-    private static final String PREF_RESULT_OF_4_RIGHT = "result of 4 right";
-    private static SharedPreferences sharedpreferences;
+    private Context context;
+
     /**
      *
      */
     public LearnMachine(Context ctx){
+        context=ctx;
     //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm), Image Outer diameter (mm)
         float[] optotype=new float [] {20f,1.3f,80f,23.08f,116.18f};
         optotypes.add(optotype);
@@ -79,7 +76,7 @@ public class LearnMachine {
             }
 
         }
-        sharedpreferences  = ctx.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
 
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_LEARN, "constructor done");        }
@@ -206,8 +203,8 @@ public class LearnMachine {
                 for (int p=0; p<resultNoArray.length; p++){
                     total=total+resultNoArray[p];
                 }
-                upDatePref(PREF_M_LEFT,array[2]);
-                upDatePref(PREF_RESULT_OF_4_LEFT,total);
+                Util.upDatePref(context, Util.PREF_M_LEFT,array[2]);
+                Util.upDatePref(context, Util.PREF_RESULT_OF_4_LEFT,total);
                 if(array[2]-(int)array[2]>0){
                     return "4/"+String.format("%.1f", array[2]);
 //                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
@@ -215,8 +212,8 @@ public class LearnMachine {
 //            return "4/"+(int)array[2]+" and "+total +" of 5";
                 return "4/"+(int)array[2];
             }else if(resultOkPos==results_left.size()-1) {
-                upDatePref(PREF_M_LEFT,4);
-                upDatePref(PREF_RESULT_OF_4_LEFT,0);
+                Util.upDatePref(context, Util.PREF_M_LEFT,4);
+                Util.upDatePref(context,Util.PREF_RESULT_OF_4_LEFT,0);
                 return "4/4";
             }else{
                 return "no reading";
@@ -234,8 +231,8 @@ public class LearnMachine {
                 for (int p=0; p<resultNoArray.length; p++){
                     total=total+resultNoArray[p];
                 }
-                upDatePref(PREF_M_RIGHT,array[2]);
-                upDatePref(PREF_RESULT_OF_4_RIGHT,total);
+                Util.upDatePref(context, Util.PREF_M_RIGHT,array[2]);
+                Util.upDatePref(context, Util.PREF_RESULT_OF_4_RIGHT,total);
                 if(array[2]-(int)array[2]>0){
                     return "4/"+String.format("%.1f", array[2]);
 //                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
@@ -243,8 +240,8 @@ public class LearnMachine {
 //            return "4/"+(int)array[2]+" and "+total +" of 4";
                 return "4/"+(int)array[2];
             }else if(resultOkPos==results_right.size()-1) {
-                upDatePref(PREF_M_RIGHT,4);
-                upDatePref(PREF_RESULT_OF_4_RIGHT,0);
+                Util.upDatePref(context, Util.PREF_M_RIGHT,4);
+                Util.upDatePref(context, Util.PREF_RESULT_OF_4_RIGHT,0);
                 return "4/4";
             }else{
                 return "no reading";
@@ -307,10 +304,10 @@ public class LearnMachine {
         for(int j=0; j<optotypes.size();j++){
             results_right.add(new int[]{0,0,0,0});
         }
-        upDatePref(PREF_M_LEFT,0);
-        upDatePref(PREF_M_RIGHT,0);
-        upDatePref(PREF_RESULT_OF_4_LEFT,0);
-        upDatePref(PREF_RESULT_OF_4_RIGHT,0);
+        Util.upDatePref(context, Util.PREF_M_LEFT,0);
+        Util.upDatePref(context, Util.PREF_M_RIGHT,0);
+        Util.upDatePref(context, Util.PREF_RESULT_OF_4_LEFT,0);
+        Util.upDatePref(context, Util.PREF_RESULT_OF_4_RIGHT,0);
     }
 
     /**
@@ -351,28 +348,5 @@ public class LearnMachine {
         return -1;
     }
 
-    protected void upDatePref(String key, String value){
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(key, value);
-        editor.commit();
-    }
-    protected void upDatePref(String key, int value){
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putInt(key, value);
-        editor.commit();
-    }
-    protected void upDatePref(String key, float value){
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putFloat(key, value);
-        editor.commit();
-    }
-    protected void upDatePref(String key, boolean value){
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean(key, value);
-        editor.commit();
-    }
 
-    public SharedPreferences getSharedPreferences(){
-        return sharedpreferences;
-    }
 }
