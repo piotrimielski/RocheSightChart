@@ -206,15 +206,15 @@ public class LearnMachine {
                 Util.upDatePref(context, Util.PREF_M_LEFT,array[2]);
                 Util.upDatePref(context, Util.PREF_RESULT_OF_4_LEFT,total);
                 if(array[2]-(int)array[2]>0){
-                    return "4/"+String.format("%.1f", array[2]);
+                    return String.format("%.1f", array[2]);
 //                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
                 }
 //            return "4/"+(int)array[2]+" and "+total +" of 5";
-                return "4/"+(int)array[2];
+                return String.format("%.0f", array[2]);
             }else if(resultOkPos==results_left.size()-1) {
                 Util.upDatePref(context, Util.PREF_M_LEFT,4);
                 Util.upDatePref(context,Util.PREF_RESULT_OF_4_LEFT,0);
-                return "4/4";
+                return "4";
             }else{
                 return "no reading";
             }
@@ -234,15 +234,15 @@ public class LearnMachine {
                 Util.upDatePref(context, Util.PREF_M_RIGHT,array[2]);
                 Util.upDatePref(context, Util.PREF_RESULT_OF_4_RIGHT,total);
                 if(array[2]-(int)array[2]>0){
-                    return "4/"+String.format("%.1f", array[2]);
+                    return String.format("%.1f", array[2]);
 //                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
                 }
 //            return "4/"+(int)array[2]+" and "+total +" of 4";
-                return "4/"+(int)array[2];
+                return String.format("%.0f", array[2]);
             }else if(resultOkPos==results_right.size()-1) {
                 Util.upDatePref(context, Util.PREF_M_RIGHT,4);
                 Util.upDatePref(context, Util.PREF_RESULT_OF_4_RIGHT,0);
-                return "4/4";
+                return "4";
             }else{
                 return "no reading";
             }

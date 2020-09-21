@@ -1188,14 +1188,8 @@ public class MainActivity extends Activity {
                     public void run() {
                         int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
                         acuityRepository.insertAcuity(userId,learn.getEyeResult(0),learn.getEyeResult(1));
-                        if(isInternetAvailable(context)){
-                            // Add a request (in this example, called stringRequest) to your RequestQueue.
-                            if(userId!=-1){
-                                Util.postData(context,acuityRepository,imei,acuityRepository.getLastId(userId));
-                                if (Util.DEBUG) {
-                                    Log.d(LOG_TAG_MAIN, "AsyncTask userId= " + userId+ " send to server");}
-                            }
-                        }
+                        handler0.removeCallbacks(runnableCode0);
+                        handler0.postDelayed(runnableCode0, SHORT_DELAY);
                     }
                 });
 //            }
