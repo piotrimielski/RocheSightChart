@@ -209,17 +209,16 @@ public class MainActivity extends Activity {
                             Acuity acuity=acuities.get(i);
                             if(!acuity.getInServer()){
                                 Util.postData(context, acuityRepository, imei,acuity);
-                            }
-
-                            if (Util.DEBUG) {
-                                Log.i(LOG_TAG_MAIN, "acuity posted: "
-                                        +" id=  "+ acuity.getId()
-                                        +" userId=  "+ acuity.getUserId()
-                                        +" leftEye=  "+ acuity.getLeftEye()
-                                        +" rightEye=  "+ acuity.getRightEye()
-                                        +" createdAt=  "+ acuity.getCreatedAt()
-                                        +" modifiedAt=  "+ acuity.getModifiedAt()
-                                        +" inServer=  "+ acuity.getInServer());
+                                if (Util.DEBUG) {
+                                    Log.i(LOG_TAG_MAIN, "acuity found: "
+                                            +" id=  "+ acuity.getId()
+                                            +" userId=  "+ acuity.getUserId()
+                                            +" leftEye=  "+ acuity.getLeftEye()
+                                            +" rightEye=  "+ acuity.getRightEye()
+                                            +" createdAt=  "+ acuity.getCreatedAt()
+                                            +" modifiedAt=  "+ acuity.getModifiedAt()
+                                            +" inServer=  "+ acuity.getInServer());
+                                }
                             }
                         }
                     }
@@ -1177,18 +1176,22 @@ public class MainActivity extends Activity {
         setInfo("end of test");
         say("end of test",false);
         if(test){
-            setText("left eye: "+learn.getResult(0),"right eye: "+learn.getResult(1));
-            say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+" "+learn.getResult(0), true);
-            say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+learn.getResult(1), true);
+            final String left=learn.getResult(0);
+            final String right=learn.getResult(1);
+            setText("left eye: "+left,"right eye: "+right);
+            say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+" "+left, true);
+            say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+right, true);
             if (Util.DEBUG) {
                 Log.d(LOG_TAG_MAIN, "Result left= " + learn.getEyeResult(0)+ " right= "+learn.getEyeResult(1));}
 //            if(!learn.getEyeResult(0).contains("0") && !learn.getEyeResult(1).contains("0")){
                 AsyncTask.execute( new Runnable() {
                     @Override
                     public void run() {
-                        int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-                        acuityRepository.insertAcuity(userId,learn.getEyeResult(0),learn.getEyeResult(1));
                         handler0.removeCallbacks(runnableCode0);
+                        int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
+                        if(userId>-1){
+                            acuityRepository.insertAcuity(userId,learn.getEyeResult(0),learn.getEyeResult(1));
+                        }
                         handler0.postDelayed(runnableCode0, SHORT_DELAY);
                     }
                 });

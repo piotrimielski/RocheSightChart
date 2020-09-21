@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-76:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-76:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-76:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-76:16
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-81:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-81:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-81:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-81:16
 MERGED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:17:1-31:12
 MERGED from [androidx.lifecycle:lifecycle-extensions:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c05e12d52ed8cdccea63f852a107321\lifecycle-extensions-2.0.0\AndroidManifest.xml:17:1-25:12
 MERGED from [androidx.appcompat:appcompat:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cec049f9a6ba84e2d90ee9e8ab6996e5\appcompat-1.0.2\AndroidManifest.xml:17:1-22:12
@@ -40,9 +40,9 @@ MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\Sandra\.gradle\c
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\83186ecf5c8ddeae84db330840a1a96d\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\86c784bf68d2d55319264b405834eb0f\print-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\1b095822d1b8a91797ad223c378ae9e6\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-76:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-76:16
-INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-76:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-81:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-81:16
+INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-81:16
 	package
 		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:3:5-45
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
@@ -58,61 +58,61 @@ INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:2:1-7
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 		INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml
 uses-feature#0x00020000
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:36:9-83
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:41:9-83
 	android:glEsVersion
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:36:23-55
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:41:23-55
 	android:required
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:36:57-80
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:41:57-80
 uses-permission#android.permission.BLUETOOTH
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:38:9-72
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:43:9-72
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:38:26-69
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:43:26-69
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:39:9-85
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:44:9-85
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:39:26-82
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:44:26-82
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:40:9-83
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:45:9-83
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:40:26-81
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:45:26-81
 uses-permission#android.permission.RECORD_AUDIO
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:41:9-75
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:46:9-75
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:41:26-72
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:46:26-72
 uses-permission#android.permission.WAKE_LOCK
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:42:9-72
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:47:9-72
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:42:26-69
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:47:26-69
 uses-permission#android.permission.ACCESS_WIFI_STATE
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:43:9-80
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:48:9-80
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:43:26-77
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:48:26-77
 uses-permission#android.permission.CHANGE_WIFI_STATE
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:44:9-80
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:49:9-80
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:44:26-77
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:49:26-77
 uses-permission#android.permission.CHANGE_NETWORK_STATE
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:45:9-82
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:50:9-82
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:45:26-80
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:50:26-80
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:46:9-82
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:51:9-82
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:46:26-80
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:51:26-80
 uses-permission#android.permission.INTERNET
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:47:9-70
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:52:9-70
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:47:26-68
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:52:26-68
 uses-permission#android.permission.NETWORK_STATE
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:48:9-75
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:53:9-75
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:48:26-73
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:53:26-73
 uses-permission#android.permission.READ_PHONE_STATE
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:49:9-78
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:54:9-78
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:49:26-76
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:54:26-76
 application
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:58:9-74:23
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:63:9-79:23
 MERGED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:24:5-29:19
 MERGED from [androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\daa2cd03dd1f7252d8fa18764f8f849c\room-runtime-2.2.5\AndroidManifest.xml:24:5-29:19
 MERGED from [androidx.lifecycle:lifecycle-extensions:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\6c05e12d52ed8cdccea63f852a107321\lifecycle-extensions-2.0.0\AndroidManifest.xml:22:5-23:19
@@ -128,37 +128,37 @@ MERGED from [androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\835d5c10138ccb3764592e06b759c65c\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\835d5c10138ccb3764592e06b759c65c\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
 	android:screenOrientation
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:59:13-50
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:64:13-50
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.0.2] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\e46cd076a917583a64b85f84aa2271dc\core-1.0.2\AndroidManifest.xml:22:18-86
 	android:supportsRtl
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:65:13-39
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:70:13-39
 	android:label
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:63:13-45
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:68:13-45
 	android:roundIcon
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:64:13-58
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:69:13-58
 	android:icon
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:62:13-47
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:67:13-47
 	android:allowBackup
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:61:13-39
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:66:13-39
 	android:theme
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:60:13-77
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:65:13-77
 activity#com.givevision.rochesightchart.MainActivity
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:67:13-73:24
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:72:13-78:24
 	android:configChanges
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:68:17-111
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:73:17-111
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:67:23-51
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:72:23-51
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:69:17-72:33
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:74:17-77:33
 action#android.intent.action.MAIN
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:70:21-73
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:75:21-73
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:70:29-70
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:75:29-70
 category#android.intent.category.LAUNCHER
-ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:71:21-81
+ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:76:21-81
 	android:name
-		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:71:31-78
+		ADDED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:76:31-78
 uses-sdk
 INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml

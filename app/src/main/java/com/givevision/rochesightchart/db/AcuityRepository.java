@@ -36,13 +36,13 @@ public class AcuityRepository {
         acuity.setModifiedAt(currentTime);
         acuity.setLeftEye(leftEye);
         acuity.setRightEye(rightEye);
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_DB, "insert acuity: userId:"+userId+" leftEye:"+leftEye+" rightEye:"+rightEye);
+        }
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 gvDatabase.acuityDao().insertAcuity(acuity);
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_DB, "insert acuity");
-                }
                 return null;
             }
         }.execute();

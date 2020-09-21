@@ -261,7 +261,7 @@ public class LearnMachine {
                     resultOkPos=p;
                 }
             }
-            if(resultOkPos>-1 && resultOkPos<results_left.size()-1){
+            if(resultOkPos>-1 && resultOkPos<results_left.size()){
                 float[] array=  optotypes.get(resultOkPos);
                 if(array[2]-(int)array[2]>0){
                     return String.format("%.1f", array[2]);

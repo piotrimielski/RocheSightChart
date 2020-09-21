@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
-    android:versionCode="402"
-    android:versionName="402" >
+    android:versionCode="404"
+    android:versionName="404" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -41,6 +41,11 @@
         server database
         wifi connection with AP
         connection with server
+        calibration 2 with bigger circles
+    -->
+    <!--
+     ver 403 - bug with result left eye in the server
+        modified voice result (removing 4/)
     -->
 
     <uses-feature

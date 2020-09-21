@@ -10,8 +10,8 @@
       "apkData": {
         "type": "MAIN",
         "splits": [],
-        "versionCode": 402,
-        "versionName": "402",
+        "versionCode": 404,
+        "versionName": "404",
         "outputFile": "app-debug.apk",
         "fullName": "debug",
         "baseName": "debug",
