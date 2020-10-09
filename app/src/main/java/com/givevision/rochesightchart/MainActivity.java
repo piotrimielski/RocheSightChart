@@ -58,8 +58,10 @@ public class MainActivity extends Activity {
     private static final String CHARTS_SEARCH = "charts";
     private static final String ACTION_CALIBRATION1 = "calibration";
     private static final String ACTION_CALIBRATION2 = "sizes";
+    private static final String ACTION_CALIBRATION3 = "contrast";
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO1 = "controller calibration info1";
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO2 = "controller calibration info2";
+    private static final String ACTION_CONTROLLER_CALIBRATION_INFO3 = "controller calibration info3";
     private static final String ACTION_TEST = "test";
     private static final String ACTION_TEST_REMINDER = "test reminder";
     private static final String ACTION_RESET_USER = "reset user";
@@ -77,6 +79,7 @@ public class MainActivity extends Activity {
 
     private boolean step1=false;
     private boolean step2=false;
+    private boolean step3=false;
     private boolean test=false;
     private RelativeLayout   relativeLayout  ;
     private boolean isReadyForSpeech;
@@ -114,10 +117,13 @@ public class MainActivity extends Activity {
     private int totalLengthStringArray=0;
     private  static int FIRST_CHART_LEFT_EYE=0;
     private  static int FIRST_CHART_RIGHT_EYE=0;
-
+    private  static int GREY_ORG_E=125;
+    private  static int GREY_ORG_SQUARE=126;
     private int chart=0;
     private int chartPos=-1;
     private boolean learning=false;
+    private int greyE;
+    private int greySquare;
     private int eye=-1; //0-left 1-right -1-double
 //    private SpeechRecognizer mSpeechRecognizer;
 //    private Intent mSpeechRecognizerIntent;
@@ -408,11 +414,14 @@ public class MainActivity extends Activity {
         relativeLayout.addView(mGLView);
 
         setInfo("Preparing the test");
+        //TODO:: removed for test
         // Prepare the data for UI
         captions = new HashMap<>();
-        captions.put(KWS_SEARCH, R.string.kws_caption);
+//        captions.put(KWS_SEARCH, R.string.kws_caption);
         captions.put(CHARTS_SEARCH, R.string.charts);
         captions.put(ACTION_CALIBRATION1, R.string.action_calibration);
+        captions.put(ACTION_CALIBRATION3, R.string.action_controller_contrast);
+        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO3, R.string.action_controller_contrast_info);
         captions.put(ACTION_CALIBRATION2, R.string.action_controller_size);
         captions.put(ACTION_CONTROLLER_CALIBRATION_INFO1, R.string.action_controller_calibration_info1);
         captions.put(ACTION_CONTROLLER_CALIBRATION_INFO11, R.string.action_controller_calibration_info11);
@@ -427,9 +436,8 @@ public class MainActivity extends Activity {
         captions.put(ACTION_RESET_USER, R.string.action_reset_user);
         captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
         captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
-//        captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
-//        captions.put(ACTION_CONTROLLER, R.string.action_controller);
-//        captions.put(ACTION_VOICE, R.string.action_voice);
+
+
         // Check if user has given permission to record audio
         int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.RECORD_AUDIO);
@@ -470,38 +478,39 @@ public class MainActivity extends Activity {
                             }
                             if (status != TextToSpeech.ERROR) {
                                 mTTS.setLanguage(Locale.UK);
+                                //TODO:: removed for test
                                 say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
                                 handler.removeCallbacks(runnableCode);
                                 handler.postDelayed(runnableCode, LONG_DELAY);
                                 isAppStarted=false;
-                                if(newUser){
-                                    AsyncTask.execute( new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            acuityRepository.newInstallation();
-                                        }
-                                    });
-                                }else{
-                                    AsyncTask.execute( new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            List<Acuity> acuities=acuityRepository.getAllAcuities();
-                                            for(int i=0; i<acuities.size();i++){
-                                                Acuity acuity=acuities.get(i);
-                                                if (Util.DEBUG) {
-                                                    Log.i(LOG_TAG_MAIN, "acuity: "
-                                                            +" id=  "+ acuity.getId()
-                                                            +" userId=  "+ acuity.getUserId()
-                                                            +" leftEye=  "+ acuity.getLeftEye()
-                                                            +" rightEye=  "+ acuity.getRightEye()
-                                                            +" createdAt=  "+ acuity.getCreatedAt()
-                                                            +" modifiedAt=  "+ acuity.getModifiedAt()
-                                                            +" inServer=  "+ acuity.getInServer());
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
+//                                if(newUser){
+//                                    AsyncTask.execute( new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            acuityRepository.newInstallation();
+//                                        }
+//                                    });
+//                                }else{
+//                                    AsyncTask.execute( new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            List<Acuity> acuities=acuityRepository.getAllAcuities();
+//                                            for(int i=0; i<acuities.size();i++){
+//                                                Acuity acuity=acuities.get(i);
+//                                                if (Util.DEBUG) {
+//                                                    Log.i(LOG_TAG_MAIN, "acuity: "
+//                                                            +" id=  "+ acuity.getId()
+//                                                            +" userId=  "+ acuity.getUserId()
+//                                                            +" leftEye=  "+ acuity.getLeftEye()
+//                                                            +" rightEye=  "+ acuity.getRightEye()
+//                                                            +" createdAt=  "+ acuity.getCreatedAt()
+//                                                            +" modifiedAt=  "+ acuity.getModifiedAt()
+//                                                            +" inServer=  "+ acuity.getInServer());
+//                                                }
+//                                            }
+//                                        }
+//                                    });
+//                                }
                             }else{
                                 isTTS=false;
                             }
@@ -513,9 +522,10 @@ public class MainActivity extends Activity {
         wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "RocheSightChart:tracker");
         wl.acquire();
 
-        acuityRepository = new AcuityRepository(context);
-        //Get a RequestQueue For Handle Network Request
-        requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        //TODO:: removed for test
+//        acuityRepository = new AcuityRepository(context);
+//        //Get a RequestQueue For Handle Network Request
+//        requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext()).getRequestQueue();
     }
 
 
@@ -559,15 +569,15 @@ public class MainActivity extends Activity {
         chart=-1;
         chartPos=-1;
         eye=-1;
-        if(Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START,100)==100){
-            newUser=true;
-        }else{
-            newUser=false;
-        }
 
-
-        handler0.removeCallbacks(runnableCode0);
-        handler0.postDelayed(runnableCode0, SHORT_DELAY);
+        //TODO:: removed for test
+//        if(Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START,100)==100){
+//            newUser=true;
+//        }else{
+//            newUser=false;
+//        }
+//        handler0.removeCallbacks(runnableCode0);
+//        handler0.postDelayed(runnableCode0, SHORT_DELAY);
     }
 
     /**
@@ -602,27 +612,28 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "onStop");
         }
-        if (requestQueue != null) {
-            requestQueue.cancelAll(Util.LOG_TAG_MAIN);
-        }
-        WifiManager wifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-        if (wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(false);
-        }
-        handler.removeCallbacks(runnableCode);
-        handler0.removeCallbacks(runnableCode0);
-        handler1.removeCallbacks(runnableCode1);
-        handler2.removeCallbacks(runnableCode2);
-
-        if(mTTS !=null){
-            mTTS.stop();
-            mTTS.shutdown();
-            mTTS=null;
-            isTTS=false;
-        }
-        step1=false;
-        step2=false;
-        test=false;
+        //TODO:: removed for test
+//        if (requestQueue != null) {
+//            requestQueue.cancelAll(Util.LOG_TAG_MAIN);
+//        }
+//        WifiManager wifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+//        if (wifiManager.isWifiEnabled()) {
+//            wifiManager.setWifiEnabled(false);
+//        }
+//        handler.removeCallbacks(runnableCode);
+//        handler0.removeCallbacks(runnableCode0);
+//        handler1.removeCallbacks(runnableCode1);
+//        handler2.removeCallbacks(runnableCode2);
+//
+//        if(mTTS !=null){
+//            mTTS.stop();
+//            mTTS.shutdown();
+//            mTTS=null;
+//            isTTS=false;
+//        }
+//        step1=false;
+//        step2=false;
+//        test=false;
         wl.release();
     }
 
@@ -647,80 +658,83 @@ public class MainActivity extends Activity {
     @Override
     public boolean
     dispatchKeyEvent(KeyEvent event) {
+        int keyCode=event.getKeyCode();
+        int keyEvent=event.getAction();
         if(isProcessing){
             return true;
         }
-//        new Handler().postDelayed(new Runnable() {
-//            public void run() {
-//                isProcessing=false;
-//            }}, 1000);
-        if (Util.DEBUG) {
-            Log.i(LOG_TAG_MAIN, "keyCode: select: "+event.getKeyCode()+" action: "+event.getAction()
-                    +" newUser: "+newUser);
-        }
-        int keyCode=event.getKeyCode();
-        int keyEvent=event.getAction();
-//        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP && (!step1 && !step2 && !test)){
-//            isProcessing=true;
-//            say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
-//            isProcessing=false;
-//        }else
-        if(keyCode==Util.KEY_POWER  && keyEvent == KeyEvent.ACTION_UP){
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                isProcessing=false;
+            }}, 1000);
+//        if (Util.DEBUG) {
+//            Log.i(LOG_TAG_MAIN, "keyCode: select: "+event.getKeyCode()+" action: "+event.getAction()
+//                    +" newUser: "+newUser);
+//        }
+        //TODO:: removed for test
+////        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP && (!step1 && !step2 && !test)){
+////            isProcessing=true;
+////            say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
+////            isProcessing=false;
+////        }else
+        if(keyCode==Util.KEY_POWER  && keyEvent == KeyEvent.ACTION_UP) {
             //start app
-            if(step1 || step2 ||test){
+            if (step1 || step2 || test || step3) {
                 return true;
             }
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_POWER");
             }
             handler.removeCallbacks(runnableCode);
-            err=0;
-            good=0;
-            isAppStarted=true;
-            isProcessing=true;
+            err = 0;
+            good = 0;
+            isAppStarted = true;
+            isProcessing = true;
             myGLRenderer.setChart(-1, -2, "", 0);
             learn.clearResult();
+            //TODO:: new user for test
+            newUser = true;
             myGLRenderer.resetUser(newUser);
             resetPreferences(newUser);
-            if(!newUser){
-                step1=false;
-                step2=false;
-                test=true;
-                eyeCalibration=-1;
+            if (!newUser) {
+                step1 = false;
+                step2 = false;
+                test = true;
+                eyeCalibration = -1;
                 myGLRenderer.setChart(-1, -2, "", 0);
                 setInfo("Test running");
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false);
-                myGLRenderer.setCharacter(2);
-                float x= Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_X,0f );
-                float y= Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_Y,0f );
+                myGLRenderer.setCharacter(2); //E character
+                float x = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_X, 0f);
+                float y = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_Y, 0f);
                 myGLRenderer.setLeftCenterX(x);
                 myGLRenderer.setLeftCenterY(y);
-                x= Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_X,0f );
-                y= Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_Y,0f );
+                x = Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_X, 0f);
+                y = Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_Y, 0f);
                 myGLRenderer.setRightCenterX(x);
                 myGLRenderer.setRightCenterY(y);
-                eye=-1;
+                eye = -1;
                 myGLRenderer.setCalibrationImage(3);
                 nextChart();
                 restardTask(LONG_DELAY);
-            }else{
+            } else {
                 myGLRenderer.setCalibrationImage(2);
-                myGLRenderer.setCharacter(1);
+                myGLRenderer.setCharacter(1); //circle with gaps character
                 setText("", "");
                 setInfo("Goggle calibration");
-                eyeCalibration=0;
+                eyeCalibration = 0;
                 say(getResources().getString(captions.get(ACTION_CALIBRATION1)), false);
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO1)), true);
                 myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypeOuterDiameter(1));
                 say("left eye", true);
-                step1=true;
-                step2=false;
-                test=false;
+                step1 = true;
+                step2 = false;
+                step3= false;
+                test = false;
             }
-            isProcessing=false;
-
-        }else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP
-                && (step1==false && step2==false && test==false)){
+            isProcessing = false;
+      }  else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP
+                && (step1==false && step2==false && test==false && step2==false)){
             isProcessing=true;
             newUser=true;
             acuityRepository.newInstallation();
@@ -731,20 +745,77 @@ public class MainActivity extends Activity {
             step2=false;
             test=false;
             isProcessing=false;
-        }else if(step1){
+        }else if(step1 ){
             isProcessing=true;
             calibration1(keyCode, keyEvent);
             isProcessing=false;
-        }else if(step2){
+        }else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP &&  step3){
             isProcessing=true;
-            calibration2(keyCode, keyEvent);
+            say("calibration stopped", false);
+            step1=false;
+            step3=false;
             isProcessing=false;
-        }else if(test){
-            isProcessing=true;
-            if(isReady){
-                test(keyCode, keyEvent);
+//        }else if(step2){
+//            isProcessing=true;
+//            calibration2(keyCode, keyEvent);
+//            isProcessing=false;
+//        }else if(test){
+//            isProcessing=true;
+//            if(isReady){
+//                test(keyCode, keyEvent);
+//            }
+//            isProcessing=false;
+//        }
+
+        }else if(step3){
+            if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP){
+                isProcessing=true;
+                if (Util.DEBUG) {
+                    Log.i(LOG_TAG_MAIN, "keyCode: trigger");
+                }
+                say("grey E character level: "+greyE, false);
+                say("grey square level: "+greySquare, false);
+                if(eyeCalibration == 0){
+                    eyeCalibration = 1;
+//                say(getResources().getString(captions.get(ACTION_CALIBRATION3)), false);
+//                    say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO3)), true);
+                    myGLRenderer.setCharacter(2);
+                    greyE=GREY_ORG_E;
+                    greySquare=GREY_ORG_SQUARE;
+                    myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
+                    myGLRenderer.setChart(-1, eyeCalibration, "right", 0);
+                    say("right eye", true);
+                }else{
+                    say("calibration ended", false);
+                    step1=false;
+                    step3=false;
+                }
+                isProcessing=false;
+            }else if((keyCode==Util.KEY_UP)){ // || keyCode==24
+                isProcessing=true;
+                if (Util.DEBUG) {
+                    Log.i(LOG_TAG_MAIN, "keyCode: UP greyE= "+greyE+" greySquare= "+greySquare);
+                }
+                if(greySquare<255 && greyE>0){
+                    greySquare++;
+                    greyE--;
+                }
+
+                myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
+                isProcessing=false;
+            }else if((keyCode==Util.KEY_DOWN)){ // || keyCode==25
+                isProcessing=true;
+                if (Util.DEBUG) {
+                    Log.i(LOG_TAG_MAIN, "keyCode: DOWN greyE= "+greyE+" greySquare= "+greySquare);
+                }
+                if(greySquare>126 && greyE<125){
+                    greySquare--;
+                    greyE++;
+                }
+
+                myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
+                isProcessing=false;
             }
-            isProcessing=false;
         }
         return true;
     }
@@ -786,19 +857,31 @@ public class MainActivity extends Activity {
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO11)), true);
             }else{
                 step1=false;
-                step2=true;
-                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_X,myGLRenderer.getRightPositionX());
-                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,myGLRenderer.getRightPositionY());
-                eyeCalibration=0;
-                myGLRenderer.setChart(-1, -2, "", 0);
-                setInfo("Chart calibration");
-                say(getResources().getString(captions.get(ACTION_CALIBRATION2)), false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true);
-                myGLRenderer.setCalibrationImage(1);
-                eye=-1;
-                chart=0;//totalLengthCharts*1/3;
-                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+                //TODO::removed for contrast test
+                step3=true;
+                eyeCalibration = 0;
+//                say(getResources().getString(captions.get(ACTION_CALIBRATION3)), false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO3)), true);
+                myGLRenderer.setCharacter(2);
+                greyE=GREY_ORG_E;
+                greySquare=GREY_ORG_SQUARE;
+                myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
+                myGLRenderer.setChart(-1, eyeCalibration, "right", 0);
                 say("left eye", true);
+
+//                step2=true;
+//                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_X,myGLRenderer.getRightPositionX());
+//                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,myGLRenderer.getRightPositionY());
+//                eyeCalibration=0;
+//                myGLRenderer.setChart(-1, -2, "", 0);
+//                setInfo("Chart calibration");
+//                say(getResources().getString(captions.get(ACTION_CALIBRATION2)), false);
+//                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true);
+//                myGLRenderer.setCalibrationImage(1);
+//                eye=-1;
+//                chart=0;//totalLengthCharts*1/3;
+//                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+//                say("left eye", true);
             }
 
         }else if(keyCode==Util.KEY_UP){
@@ -887,7 +970,7 @@ public class MainActivity extends Activity {
                 myGLRenderer.setChart(-1, -2, "", 0);
                 setInfo("Test running");
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false);
-                myGLRenderer.setCharacter(2);
+                myGLRenderer.setCharacter(2); //E character
                 if(chart>2 && chart<totalLengthCharts-1){
                     chart=chart-2;
                 }else if(chart>=totalLengthCharts-1){

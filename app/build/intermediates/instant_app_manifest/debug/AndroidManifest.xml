@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
     android:targetSandboxVersion="2"
-    android:versionCode="404"
-    android:versionName="404" >
+    android:versionCode="500"
+    android:versionName="500" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -47,6 +47,15 @@
     <!--
      ver 403 - bug with result left eye in the server
         modified voice result (removing 4/)
+    -->
+    <!--
+     ver 404 - bug with result left eye in the server
+        modified if border in getEyeResult(int eye)
+    -->
+    <!--
+     ver 500 - contrast test
+             - joystique up/down to more/less contrast
+             - trigger say level of contrast
     -->
 
     <uses-feature

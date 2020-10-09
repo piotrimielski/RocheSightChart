@@ -43,6 +43,9 @@ Click on the power button of your controller to start."</string>
         move the joystick up or down to make the circle as small as you can still see four gaps in the circle
         then press the trigger."</string>
     <string name="action_controller_size_info21">"Well done, now right eye"</string>
+    <string name="action_controller_contrast">"Finding the best contrast for the smallest E character,"</string>
+    <string name="action_controller_contrast_info">"
+        move the joystick up or down to find the best contrast then press the trigger for heard the values chosen."</string>
     <string name="action_controller_test_info">"The final test is starting now"</string>
     <string name="action_controller_test_info1" >"First left eye,
         push the joystick in the same direction as the E is facing, up, down, left or right."</string>

@@ -891,6 +891,8 @@ string action_calibration_right
 string action_controller
 string action_controller_calibration_info1
 string action_controller_calibration_info11
+string action_controller_contrast
+string action_controller_contrast_info
 string action_controller_size
 string action_controller_size_info2
 string action_controller_size_info21

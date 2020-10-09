@@ -31,6 +31,8 @@ public class GLESprite {
 
     private final short mDrawOrder[] = {0, 1, 2, 0, 2, 3}; // order to draw vertices
     private int mChart;
+    private int mGreyE;
+    private int mGreySquare;
 
     public GLESprite(float[] color, int eye, float delta) {
         if (Util.DEBUG) {
@@ -60,6 +62,120 @@ public class GLESprite {
                 "} \n";
 
         String fragmentShaderSource = "" +
+                "precision highp float;\n" +
+                "uniform vec2 aCirclePosition;\n" +
+                "uniform float aRadius; \n" +
+                "uniform vec4 aColor; \n" +
+                "uniform int aChartPos; \n" +
+                "uniform int aType; \n" +
+                "uniform float aGreyE; \n" +
+                "uniform float aGreySquare; \n" +
+                "uniform float aChart; \n" +
+                "const float threshold = 0.005;\n" +
+                "const float roottwo = 1.41421356237;\n" +
+                "void main() \n" +
+                "{ \n" +
+                "   if(aType==1 ){\n"+ // circle with gaps
+                "     float d, dist, pos_y, pos_x, gape;\n" +
+                "     dist = distance(aCirclePosition, gl_FragCoord.xy);\n" +
+                "     pos_y = aCirclePosition.y - gl_FragCoord.y;\n" +
+                "     pos_x = aCirclePosition.x - gl_FragCoord.x;\n" +
+                "     gape = 2. * aRadius / 5.; \n" +
+                "     if(dist == 0.){\n" +
+                "       dist = 1.;\n" +
+                "     }\n"+
+                "     d = aRadius / dist;\n" +
+                "     if(dist < aRadius - gape){\n" +
+                "       gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "     }else if(dist <= aRadius){\n" +
+                "        if(aChart == -1.){\n" +
+//                "        gl_FragColor = vec4(0.5, 0.5, 0.5, 1.); \n" +
+                "          gl_FragColor = aColor;\n" +
+                "        }else if(aChartPos==2 && pos_y<gape/2. && pos_y>-gape/2. && pos_x<0.){\n" +
+                "          gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "        }else if(aChartPos==4 && pos_y<gape/2. && pos_y>-gape/2. && pos_x>0.){\n" +
+                "          gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "        }else if(aChartPos==1 && pos_x<gape/2. && pos_x>-gape/2. && pos_y<0.){\n" +
+                "          gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "        }else if(aChartPos==3 && pos_x<gape/2. && pos_x>-gape/2. && pos_y>0.){\n" +
+                "          gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "        }else if(aChartPos==5){\n" +
+                "           if( pos_y<gape/5. && pos_y>-gape/5. && pos_x<0.){\n" +
+                "               gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "           }else if( pos_y<gape/5. && pos_y>-gape/5. && pos_x>0.){\n" +
+                "               gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "           }else if( pos_x<gape/5. && pos_x>-gape/5. && pos_y<0.){\n" +
+                "               gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "           }else if( pos_x<gape/5. && pos_x>-gape/5. && pos_y>0.){\n" +
+                "               gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+                "           }\n"+
+                "        }else{\n"+
+                "          gl_FragColor = aColor;\n" +
+                "        }\n"+
+//                "   }else if(d >= 1. - threshold) {\n" +
+//                "        float a = (d - (1. - threshold)) / threshold;\n" +
+//                "        gl_FragColor = vec4(aColor.r, aColor.g, aColor.b, a); \n" +
+                "      }else{\n" +
+                "        gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +//vec4(0.79, 0.81, 0.6, 0.)
+                "      }\n"+
+                "   }else{\n"+ // E character
+                "     float greyDelta = 0.00392156862;\n" + // 1/255
+                "     float oPos_x = aCirclePosition.x;\n" +
+                "     float oPos_y = aCirclePosition.y;\n" +
+                "     float pos_x = gl_FragCoord.x;\n" +
+                "     float pos_y = gl_FragCoord.y;\n" +
+                "     if(pos_x > oPos_x - aRadius*100. &&  pos_x < oPos_x + aRadius*100. && pos_y > oPos_y - aRadius*100. &&  pos_y < oPos_y + aRadius*100.){\n" +
+                "       gl_FragColor = vec4(greyDelta*aGreySquare,greyDelta*aGreySquare,greyDelta*aGreySquare, 1);\n" +
+                "       if(aChartPos==4){\n"+ //LEFT
+//                "          if(pos_y < - dist/2. + d ||  pos_y > dist/2. - d){\n" +
+//                "             gl_FragColor = aColor;\n" +
+//                "          }else if(pos_x < - dist/2. + d){\n" +
+//                "             gl_FragColor = aColor;\n" +
+//                "          }else if(pos_y > - d/2. &&  pos_y < d/2.){\n" +
+//                "             gl_FragColor = aColor;\n" +
+//                "          }else{\n" +
+//                "             gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+//                "          }\n"+
+                "       }else if(aChartPos==1){\n" + //UP
+//                "          if(pos_x < - dist/2. + d ||  pos_x > dist/2. - d){\n" +
+//                "             gl_FragColor = aColor;\n" +
+//                "          }else if(pos_y > dist/2. - d){\n" +
+//                "             gl_FragColor = aColor;\n" +
+//                "          }else if(pos_x > - d/2. &&  pos_x < d/2.){\n" +
+//                "             gl_FragColor = aColor;\n" +
+//                "          }else{\n" +
+//                "             gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+//                "          }\n"+
+                "       }else if(aChartPos==3){\n" + //DOWN
+//                "          if(pos_x < - dist/2. + d ||  pos_x > dist/2. - d){\n" +
+//                "             gl_FragColor = aColor;\n" +
+//                "          }else if(pos_y < - dist/2. + d){\n" +
+//                "             gl_FragColor = aColor;\n" +
+//                "          }else if(pos_x > - d/2. &&  pos_x < d/2.){\n" +
+//                "             gl_FragColor = aColor;\n" +
+//                "          }else{\n" +
+//                "             gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
+//                "          }\n"+
+                "       }else if(aChartPos==2){\n" + //RIGHT
+                "          if(pos_x >= oPos_x - aRadius*4. && pos_x <= oPos_x + aRadius*4. && pos_y <= oPos_y+0.5 && pos_y >= oPos_y-0.5){\n" + //segment O
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }else if(pos_x >= oPos_x - aRadius*4. && pos_x <= oPos_x + aRadius*4. && pos_y <= oPos_y+aRadius*3.+0.5 && pos_y >= oPos_y+aRadius*3.-0.5){\n" + //segment A-B
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }else if(pos_x >= oPos_x - aRadius*4. && pos_x <= oPos_x + aRadius*4. && pos_y <= oPos_y-aRadius*3.+0.5 && pos_y >= oPos_y-aRadius*3.-0.5){\n" + //segment C-D
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }else if(pos_x <= oPos_x-aRadius*3.+0.5 && pos_x >= oPos_x-aRadius*3.-0.5 && pos_y >= oPos_y - aRadius*4. && pos_y <= oPos_y + aRadius*4.){\n" + //segment A-C
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+//                "          }else{\n" +
+//                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }\n"+
+                "       }\n"+
+                "     }else{\n" +
+                "        gl_FragColor = vec4(0., 0., 0., 1.);\n" +
+                "     }\n"+
+                "   }\n"+
+                "} \n";
+
+        String fragmentShaderSourceOrg = "" +
                 "precision highp float;\n" +
                 "uniform vec2 aCirclePosition;\n" +
                 "uniform float aRadius; \n" +
@@ -294,7 +410,9 @@ public class GLESprite {
         GLES20.glUniform2f(GLES20.glGetUniformLocation(mProgram, "aCirclePosition"), mCenterX, mCenterY);
         GLES20.glUniform1f(GLES20.glGetUniformLocation(mProgram, "aRadius"), mRadius);
         GLES20.glUniform1i(GLES20.glGetUniformLocation(mProgram, "aChartPos"), pos);
-        GLES20.glUniform1i(GLES20.glGetUniformLocation(mProgram, "aType"), character);
+        GLES20.glUniform1f(GLES20.glGetUniformLocation(mProgram, "aGreyE"), (float)mGreyE);
+        GLES20.glUniform1f(GLES20.glGetUniformLocation(mProgram, "aGreySquare"), (float)mGreySquare);
+        GLES20.glUniform1i(GLES20.glGetUniformLocation(mProgram, "aType"), character); //1 - circle with gaps 2 - E character
         GLES20.glUniform1f(GLES20.glGetUniformLocation(mProgram, "aChart"), (float)mChart);
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, mDrawOrder.length, GLES20.GL_UNSIGNED_SHORT, mDrawListBuffer);
         GLES20.glDisableVertexAttribArray(mPositionHandle);
@@ -330,14 +448,14 @@ public class GLESprite {
 
     public float getRadius() {
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_SPRITE, "getRadius");
+            Log.i(Util.LOG_TAG_SPRITE, "getRadius mRadius= "+mRadius);
         }
         return mRadius;
     }
 
     public void setRadius(float radius) {
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_SPRITE, "setRadius");
+            Log.i(Util.LOG_TAG_SPRITE, "setRadius radius= "+radius);
         }
         this.mRadius = radius;
     }
@@ -357,6 +475,11 @@ public class GLESprite {
 
     public void setChart(int chart) {
         this.mChart=chart;
+    }
+
+    public void setGrey(int e, int s) {
+        this.mGreyE=e;
+        this.mGreySquare=s;
     }
 
     public void setColor(float[] c) {

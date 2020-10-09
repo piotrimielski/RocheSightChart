@@ -13,7 +13,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
     private static final float X_POSITION_RIGHT = 0.75f;//was 70
     private static final int MAX_XY_DELTA = 200;//in pixel
     private static final float Y_POSITION = 0.5f;
-    private static final int ORG_RADIUS = 150;
+    private static final int ORG_RADIUS = 1;//150;
     private static final float CORRECTION = 1.875f; //pixels /mm if phone 25mm from lens 1.875
     private int radius;
     private static float YELLOW_COLOR[] = {0.976f, 0.694f, 0.015f, 1f};
@@ -32,6 +32,8 @@ public class GLERenderer implements GLSurfaceView.Renderer{
     private GLESprite mSpriteLeft;
     private static int chart=-1;
     private static int eye=0;
+    private static int greyE=125;
+    private static int greySquare=126;
     private int pos=-1;
     private int mCharacter=1;
 
@@ -49,8 +51,8 @@ public class GLERenderer implements GLSurfaceView.Renderer{
         }
         GLES20.glClearColor(.1f, .1f, .1f, 1);
 //        mSprite = new GLESprite(YELLOW_COLOR,-1, 0f);
-        mSpriteLeft = new GLESprite(GREEN_COLOR,0,0f);
-        mSpriteRight = new GLESprite(BlEU_COLOR,1,0f);
+        mSpriteLeft = new GLESprite(YELLOW_COLOR,0,0f);
+        mSpriteRight = new GLESprite(YELLOW_COLOR,1,0f);
     }
 
     @Override
@@ -77,6 +79,13 @@ public class GLERenderer implements GLSurfaceView.Renderer{
         mSpriteRight.setRadius(radius);
         mSpriteLeft.setChart(chart);
         mSpriteRight.setChart(chart);
+        mSpriteLeft.setGrey(greyE,greySquare);
+        mSpriteRight.setGrey(greyE,greySquare);
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_RENDERING, "onSurfaceChanged width= "+width+ " height= "+height+
+                    " leftBlobX= " + leftBlobX + " leftBlobY= " + leftBlobY +
+                    " rightBlobX= " + rightBlobX+ " rightBlobY= "+rightBlobY);
+        }
     }
 
     @Override
@@ -92,6 +101,20 @@ public class GLERenderer implements GLSurfaceView.Renderer{
             mSpriteRight.draw(pos, mCharacter);
         }else {
 
+        }
+    }
+
+    public void setGrey(int eye, int e, int s){
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_RENDERING, "setGrey E= "+
+                    e + " square= " + s + " eye= " + eye);
+        }
+        if(mSpriteLeft!=null && mSpriteRight!=null) {
+            if (eye == 0) {
+                mSpriteLeft.setGrey(e, s);
+            } else {
+                mSpriteRight.setGrey(e, s);
+            }
         }
     }
 
