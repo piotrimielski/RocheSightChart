@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
     android:targetSandboxVersion="2"
-    android:versionCode="500"
-    android:versionName="500" >
+    android:versionCode="501"
+    android:versionName="501" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -56,6 +56,11 @@
      ver 500 - contrast test
              - joystique up/down to more/less contrast
              - trigger say level of contrast
+    -->
+    <!--
+     ver 501 - add virtual controller button
+             - add left/right modification of pixels
+             - add text information - remove trigger say level of contrast
     -->
 
     <uses-feature

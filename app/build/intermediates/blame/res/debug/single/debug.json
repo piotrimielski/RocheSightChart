@@ -8,6 +8,50 @@
         "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
     },
     {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_chart3.png.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\chart3.png"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_chart2.png.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\chart2.png"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_chart5.png.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\chart5.png"
+    },
+    {
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_main_org.xml.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\layout\\activity_main_org.xml"
+    },
+    {
         "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v24_ic_launcher_foreground.xml.flat",
         "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable-v24\\ic_launcher_foreground.xml"
     },
@@ -24,16 +68,8 @@
         "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\testimg.png"
     },
     {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_chart3.png.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\chart3.png"
-    },
-    {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
-    },
-    {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher_round.png.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.png"
+        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\layout_view_test_controls.xml.flat",
+        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\layout\\view_test_controls.xml"
     },
     {
         "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
@@ -48,43 +84,15 @@
         "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png"
     },
     {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_chart2.png.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\chart2.png"
-    },
-    {
         "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_chart1.png.flat",
         "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\chart1.png"
-    },
-    {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher.png.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
-    },
-    {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_ic_launcher_background.xml.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\ic_launcher_background.xml"
-    },
-    {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher_round.png.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.png"
     },
     {
         "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_img5.jpg.flat",
         "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\img5.jpg"
     },
     {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
-    },
-    {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher.xml"
-    },
-    {
         "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
         "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher_round.xml"
-    },
-    {
-        "merged": "C:\\projects\\RocheSightChart\\app\\build\\intermediates\\res\\merged\\debug\\drawable_chart5.png.flat",
-        "source": "C:\\projects\\RocheSightChart\\app\\src\\main\\res\\drawable\\chart5.png"
     }
 ]
