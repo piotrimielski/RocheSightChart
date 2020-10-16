@@ -129,43 +129,43 @@ public class GLESprite {
                 "     if(pos_x > oPos_x - aRadius &&  pos_x < oPos_x + aRadius && pos_y > oPos_y - aRadius &&  pos_y < oPos_y + aRadius){\n" +
                 "       gl_FragColor = vec4(greyDelta*aGreySquare,greyDelta*aGreySquare,greyDelta*aGreySquare, 1);\n" +
                 "       if(aChartPos==4){\n"+ //LEFT
-                "          if(pos_x >= oPos_x - aPixelNbr*4. && pos_x <= oPos_x + aPixelNbr*4. && pos_y <= oPos_y+aPixelNbr*0.82 && pos_y >= oPos_y-aPixelNbr*0.82){\n" + //segment O
+                "          if(pos_x > oPos_x - aPixelNbr*5. && pos_x < oPos_x + aPixelNbr*5. && pos_y < oPos_y+aPixelNbr && pos_y > oPos_y-aPixelNbr){\n" + //segment O
                 "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
-                "          }else if(pos_x >= oPos_x - aPixelNbr*4. && pos_x <= oPos_x + aPixelNbr*4. && pos_y <= oPos_y+aPixelNbr*3.+aPixelNbr*1. && pos_y >= oPos_y+aPixelNbr*3.-aPixelNbr*0.62){\n" + //segment A-B
+                "          }else if(pos_x > oPos_x - aPixelNbr*5. && pos_x < oPos_x + aPixelNbr*5. && pos_y <= oPos_y+aPixelNbr*4.+aPixelNbr && pos_y > oPos_y+aPixelNbr*4.-aPixelNbr){\n" + //segment A-B
                 "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
-                "          }else if(pos_x >= oPos_x - aPixelNbr*4. && pos_x <= oPos_x + aPixelNbr*4. && pos_y <= oPos_y-aPixelNbr*3.+aPixelNbr*0.62 && pos_y >= oPos_y-aPixelNbr*3.-aPixelNbr*1.){\n" + //segment C-D
+                "          }else if(pos_x > oPos_x - aPixelNbr*5. && pos_x < oPos_x + aPixelNbr*5. && pos_y <= oPos_y-aPixelNbr*4.+aPixelNbr && pos_y > oPos_y-aPixelNbr*4.-aPixelNbr){\n" + //segment C-D
                 "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
-                "          }else if(pos_x <= oPos_x+aPixelNbr*3.+aPixelNbr*1. && pos_x >= oPos_x+aPixelNbr*3.-aPixelNbr*0.62 && pos_y >= oPos_y - aPixelNbr*4. && pos_y <= oPos_y + aPixelNbr*4.){\n" + //segment B-D
+                "          }else if(pos_x <= oPos_x+aPixelNbr*4.+aPixelNbr && pos_x > oPos_x+aPixelNbr*4.-aPixelNbr && pos_y > oPos_y - aPixelNbr*5. && pos_y < oPos_y + aPixelNbr*5.){\n" + //segment B-D
                 "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n"+
                 "          }\n"+
                 "       }else if(aChartPos==1){\n" + //UP
-//                "          if(pos_x < - dist/2. + d ||  pos_x > dist/2. - d){\n" +
-//                "             gl_FragColor = aColor;\n" +
-//                "          }else if(pos_y > dist/2. - d){\n" +
-//                "             gl_FragColor = aColor;\n" +
-//                "          }else if(pos_x > - d/2. &&  pos_x < d/2.){\n" +
-//                "             gl_FragColor = aColor;\n" +
-//                "          }else{\n" +
-//                "             gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
-//                "          }\n"+
+                "          if( pos_x < oPos_x+aPixelNbr && pos_x > oPos_x-aPixelNbr && pos_y > oPos_y - aPixelNbr*5. && pos_y <= oPos_y + aPixelNbr*5.){\n" + //segment O
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }else if(pos_x < oPos_x+aPixelNbr*4.+aPixelNbr && pos_x > oPos_x+aPixelNbr*4.-aPixelNbr && pos_y > oPos_y - aPixelNbr*5. && pos_y <= oPos_y + aPixelNbr*5.){\n" + //segment B-D
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }else if(pos_x > oPos_x - aPixelNbr*4. && pos_x < oPos_x + aPixelNbr*4. && pos_y < oPos_y-aPixelNbr*4.+aPixelNbr && pos_y > oPos_y-aPixelNbr*4.-aPixelNbr){\n" + //segment C-D
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }else if(pos_x > oPos_x-aPixelNbr*4.-aPixelNbr && pos_x < oPos_x-aPixelNbr*4.+aPixelNbr && pos_y > oPos_y - aPixelNbr*5. && pos_y <= oPos_y + aPixelNbr*5.){\n" + //segment A-C
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n"+
+                "          }\n"+
                 "       }else if(aChartPos==3){\n" + //DOWN
-//                "          if(pos_x < - dist/2. + d ||  pos_x > dist/2. - d){\n" +
-//                "             gl_FragColor = aColor;\n" +
-//                "          }else if(pos_y < - dist/2. + d){\n" +
-//                "             gl_FragColor = aColor;\n" +
-//                "          }else if(pos_x > - d/2. &&  pos_x < d/2.){\n" +
-//                "             gl_FragColor = aColor;\n" +
-//                "          }else{\n" +
-//                "             gl_FragColor = vec4(0.79, 0.81, 0.6, 1.);\n" +
-//                "          }\n"+
+                "          if( pos_x < oPos_x+aPixelNbr && pos_x > oPos_x-aPixelNbr && pos_y > oPos_y - aPixelNbr*5. && pos_y <= oPos_y + aPixelNbr*5.){\n" + //segment O
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }else if(pos_x < oPos_x+aPixelNbr*4.+aPixelNbr && pos_x > oPos_x+aPixelNbr*4.-aPixelNbr && pos_y > oPos_y - aPixelNbr*5. && pos_y < oPos_y + aPixelNbr*5.){\n" + //segment B-D
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }else if(pos_x > oPos_x - aPixelNbr*4. && pos_x < oPos_x + aPixelNbr*4. && pos_y > oPos_y+aPixelNbr*4.-aPixelNbr && pos_y < oPos_y+aPixelNbr*4.+aPixelNbr){\n" + //segment C-D
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
+                "          }else if(pos_x > oPos_x-aPixelNbr*4.-aPixelNbr && pos_x < oPos_x-aPixelNbr*4.+aPixelNbr && pos_y > oPos_y - aPixelNbr*5. && pos_y <= oPos_y + aPixelNbr*5.){\n" + //segment A-C
+                "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n"+
+                "          }\n"+
                 "       }else if(aChartPos==2){\n" + //RIGHT
-                "          if(pos_x >= oPos_x - aPixelNbr*4. && pos_x <= oPos_x + aPixelNbr*4. && pos_y <= oPos_y+0.5 && pos_y >= oPos_y-0.5){\n" + //segment O
+                "          if(pos_x > oPos_x - aPixelNbr*5. && pos_x < oPos_x + aPixelNbr*5. && pos_y < oPos_y+aPixelNbr && pos_y > oPos_y-aPixelNbr){\n" + //segment O
                 "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
-                "          }else if(pos_x >= oPos_x - aPixelNbr*4. && pos_x <= oPos_x + aPixelNbr*4. && pos_y <= oPos_y+aPixelNbr*3.+0.5 && pos_y >= oPos_y+aPixelNbr*3.-0.5){\n" + //segment A-B
+                "          }else if(pos_x > oPos_x - aPixelNbr*5. && pos_x < oPos_x + aPixelNbr*5. && pos_y < oPos_y+aPixelNbr*4.+aPixelNbr && pos_y > oPos_y+aPixelNbr*4.-aPixelNbr){\n" + //segment A-B
                 "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
-                "          }else if(pos_x >= oPos_x - aPixelNbr*4. && pos_x <= oPos_x + aPixelNbr*4. && pos_y <= oPos_y-aPixelNbr*3.+0.5 && pos_y >= oPos_y-aPixelNbr*3.-0.5){\n" + //segment C-D
+                "          }else if(pos_x > oPos_x - aPixelNbr*5. && pos_x < oPos_x + aPixelNbr*5. && pos_y < oPos_y-aPixelNbr*4.+aPixelNbr && pos_y > oPos_y-aPixelNbr*4.-aPixelNbr){\n" + //segment C-D
                 "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n" +
-                "          }else if(pos_x <= oPos_x-aPixelNbr*3.+0.5 && pos_x >= oPos_x-aPixelNbr*3.-0.5 && pos_y >= oPos_y - aPixelNbr*4. && pos_y <= oPos_y + aPixelNbr*4.){\n" + //segment A-C
+                "          }else if(pos_x > oPos_x-aPixelNbr*4.-aPixelNbr && pos_x < oPos_x-aPixelNbr*4.+aPixelNbr && pos_y > oPos_y - aPixelNbr*5. && pos_y < oPos_y + aPixelNbr*5.){\n" + //segment A-C
                 "             gl_FragColor = vec4(greyDelta*aGreyE,greyDelta*aGreyE,greyDelta*aGreyE, 1);\n"+
                 "          }\n"+
                 "       }\n"+

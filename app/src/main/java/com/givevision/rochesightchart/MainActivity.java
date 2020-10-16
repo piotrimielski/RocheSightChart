@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
     private AcuityRepository acuityRepository;
     private RequestQueue requestQueue;
     private String imei;
-    private boolean fakeControls=false;
+    private boolean fakeControls=true;
 
 //   test reminder
     private Runnable runnableCode1 = new Runnable() {
@@ -758,7 +758,7 @@ public class MainActivity extends Activity {
                 myGLRenderer.setCharacter(2);
                 myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
                 myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
-                myGLRenderer.setChart(-2, eyeCalibration, "left", 0);
+                myGLRenderer.setChart(-2, eyeCalibration, "up", 0);
                 say("left eye", true);
 //                step1 = false;
 //                step2 = false;
@@ -849,14 +849,7 @@ public class MainActivity extends Activity {
                 }
 //                say("grey E character level: "+greyE, false);
 //                say("grey square level: "+greySquare, false);
-
                 if(eyeCalibration == 0){
-                    greyE_left=greyE;
-                    greySquare_left=greySquare;
-                    pixelNbr_left=pixelNbr;
-                    setInfo("pixels left: "+pixelNbr_left+" right: "+pixelNbr_right);
-                    setText("grey level left: "+greyE_left+"/"+greySquare_left,
-                            "grey level right: "+greyE_right+"/"+greySquare_right);
                     eyeCalibration = 1;
 //                say(getResources().getString(captions.get(ACTION_CALIBRATION3)), false);
 //                    say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO3)), true);
@@ -866,15 +859,9 @@ public class MainActivity extends Activity {
                     pixelNbr=1;
                     myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
                     myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
-                    myGLRenderer.setChart(-2, eyeCalibration, "left", 0);
+                    myGLRenderer.setChart(-2, eyeCalibration, "down", 0);
                     say("right eye", true);
                 }else{
-                    greyE_right=greyE;
-                    greySquare_right=greySquare;
-                    pixelNbr_right=pixelNbr;
-                    setInfo("pixels left: "+pixelNbr_left+" right: "+ pixelNbr_right);
-                    setText("grey level left: "+greyE_left+"/"+greySquare_left,
-                            "grey level right: "+greyE_right+"/"+greySquare_right);
                     say("calibration ended", false);
                     step1=false;
                     step3=false;
@@ -927,8 +914,32 @@ public class MainActivity extends Activity {
                 myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
                 isProcessing=false;
             }
+            showInfo(eyeCalibration);
         }
         return true;
+    }
+
+    private void showInfo(int e) {
+        if(e==0){
+            greyE_left=greyE;
+            greySquare_left=greySquare;
+            pixelNbr_left=pixelNbr;
+        }else if(e==1){
+            greyE_right=greyE;
+            greySquare_right=greySquare;
+            pixelNbr_right=pixelNbr;
+        }else{
+            greyE_left=0;
+            greySquare_left=0;
+            pixelNbr_left=0;
+            greyE_right=0;
+            greySquare_right=0;
+            pixelNbr_right=0;
+        }
+
+        setInfo("pixels left: "+pixelNbr_left+" right: "+pixelNbr_right);
+        setText("grey level left: "+greyE_left+"/"+greySquare_left,
+                "grey level right: "+greyE_right+"/"+greySquare_right);
     }
 
     /**
@@ -979,7 +990,7 @@ public class MainActivity extends Activity {
                 myGLRenderer.setCharacter(2);
                 myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
                 myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
-                myGLRenderer.setChart(-2, eyeCalibration, "right", 0);
+                myGLRenderer.setChart(-2, eyeCalibration, "up", 0);
                 say("left eye", true);
 
 //                step2=true;

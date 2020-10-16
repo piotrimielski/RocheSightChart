@@ -26,34 +26,42 @@ public class LearnMachine {
      */
     public LearnMachine(Context ctx){
         context=ctx;
-    //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm), Image Outer diameter (mm)
-        float[] optotype=new float [] {20f,1.3f,80f,23.08f,116.18f};
+    //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm), Image Outer diameter (mm), pixels, E grey, square grey
+        float[] optotype=new float [] {50f,1.7f,200f,58.16f,290.80f,18f};
         optotypes.add(optotype);
-        optotype=new float [] {16f,1.2f,63f,18.33f,92.20f};
+        optotype=new float [] {40f,1.6f,160f,46.52f,232.60f,17f};
         optotypes.add(optotype);
-        optotype=new float [] {12.5f,1.1f,50f,14.69f,72.24f};
+        optotype=new float [] {30f,1.5f,125f,34.89f,174.45f,16f};
         optotypes.add(optotype);
-        optotype=new float [] {10f,1f,40f,11.64f,58.18f};
+        optotype=new float [] {25f,1.4f,100f,29.08f,145.40f,15f};
         optotypes.add(optotype);
-        optotype=new float [] {8f,.9f,32f,9.24f,46.21f};
+        optotype=new float [] {20f,1.3f,80f,23.26f,116.18f,14f};
         optotypes.add(optotype);
-        optotype=new float [] {6.3f,.8f,25f,7.34f,36.71f};
+        optotype=new float [] {16f,1.2f,63f,18.33f,92.20f,13f};
         optotypes.add(optotype);
-        optotype=new float [] {5f,.7f,20f,5.83f,29.16f};
+        optotype=new float [] {12.5f,1.1f,50f,14.69f,72.24f,12f};
         optotypes.add(optotype);
-        optotype=new float [] {4f,.6f,16f,4.63f,23.16f};
+        optotype=new float [] {10f,1f,40f,11.64f,58.18f,11f};
         optotypes.add(optotype);
-        optotype=new float [] {3.2f,.5f,12.5f,3.68f,18.40f};
+        optotype=new float [] {8f,.9f,32f,9.24f,46.21f,4f,10f};
         optotypes.add(optotype);
-        optotype=new float [] {2.5f,.4f,10f,2.92f,14.61f};
+        optotype=new float [] {6.3f,.8f,25f,7.34f,36.71f,9f};
         optotypes.add(optotype);
-        optotype=new float [] {2f,.3f,8f,2.34f,11.61f};
+        optotype=new float [] {5f,.7f,20f,5.83f,29.16f,8f};
         optotypes.add(optotype);
-        optotype=new float [] {1.6f,.2f,6.3f,1.84f,9.22f};
+        optotype=new float [] {4f,.6f,16f,4.63f,23.16f,7f};
         optotypes.add(optotype);
-        optotype=new float [] {1.25f,0.1f,5f,1.46f,7.32f};
+        optotype=new float [] {3.2f,.5f,12.5f,3.68f,18.40f,6f};
         optotypes.add(optotype);
-        optotype=new float [] {1f,0f,4f,1.6f,5.82f};
+        optotype=new float [] {2.5f,.4f,10f,2.92f,14.61f,5f};
+        optotypes.add(optotype);
+        optotype=new float [] {2f,.3f,8f,2.34f,11.61f,4f};
+        optotypes.add(optotype);
+        optotype=new float [] {1.6f,.2f,6.3f,1.84f,9.22f,3f};
+        optotypes.add(optotype);
+        optotype=new float [] {1.25f,0.1f,5f,1.46f,7.32f,2f};
+        optotypes.add(optotype);
+        optotype=new float [] {1f,0f,4f,1.16f,5.82f,1f};
         optotypes.add(optotype);
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_LEARN, "constructor optotypes done");        }
