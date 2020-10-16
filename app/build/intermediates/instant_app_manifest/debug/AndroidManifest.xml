@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
     android:targetSandboxVersion="2"
-    android:versionCode="501"
-    android:versionName="501" >
+    android:versionCode="502"
+    android:versionName="502" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -12,13 +12,13 @@
     <!-- ver 100 - generate chart with picture -->
     <!-- ver 200 - generate C into texture -->
     <!--
-       ver 300 - generate E into texture, remove voice command, add 1 step, modify controller responses,
-               add bip, auto-play each 3s
+           ver 300 - generate E into texture, remove voice command, add 1 step, modify controller responses,
+                   add bip, auto-play each 3s
     -->
     <!-- ver 301 - Calibration for each eye separately, Step 1: gray circle -->
     <!-- ver 302 - text modification -->
     <!--
-       ver 303 - step 1: position of circles in horizontal bit further,
+           ver 303 - step 1: position of circles in horizontal bit further,
                  allow the circles to move up or down a bit,
                  add the maximum deviation possible from the original position,
                  step2: to start  the circle a few sizes higher (on the middle of charts),
@@ -27,40 +27,44 @@
                  make delay on key detection
     -->
     <!--
-       ver 304 - Verbales instruction modification
+           ver 304 - Verbales instruction modification
                 Added timer on the app start and of the test to recall to the user the app waiting
                 Center the circles step1 of calibration
     -->
     <!--
-       ver 401 - Verbales instruction modification: modify right eye instruction
-        Put only one pitch with different volume for good/wrong responses, remove pitch for next sizes of E
-        Debug:  min 2 wrong for record  the best vision seen
-        Test: add max ¾ good for next chart sizes
+           ver 401 - Verbales instruction modification: modify right eye instruction
+            Put only one pitch with different volume for good/wrong responses, remove pitch for next sizes of E
+            Debug:  min 2 wrong for record  the best vision seen
+            Test: add max ¾ good for next chart sizes
     -->
     <!--
-      ver 402 - local database
-        server database
-        wifi connection with AP
-        connection with server
-        calibration 2 with bigger circles
+          ver 402 - local database
+            server database
+            wifi connection with AP
+            connection with server
+            calibration 2 with bigger circles
     -->
     <!--
-     ver 403 - bug with result left eye in the server
-        modified voice result (removing 4/)
+         ver 403 - bug with result left eye in the server
+            modified voice result (removing 4/)
     -->
     <!--
-     ver 404 - bug with result left eye in the server
-        modified if border in getEyeResult(int eye)
+         ver 404 - bug with result left eye in the server
+            modified if border in getEyeResult(int eye)
     -->
     <!--
-     ver 500 - contrast test
+         ver 500 - contrast test
              - joystique up/down to more/less contrast
              - trigger say level of contrast
     -->
     <!--
-     ver 501 - add virtual controller button
+         ver 501 - add virtual controller button
              - add left/right modification of pixels
              - add text information - remove trigger say level of contrast
+    -->
+    <!--
+         ver 502 - add optotype all scale with pixels value and gray scale
+                 - add modification OpenGL script for pixel scaling
     -->
 
     <uses-feature
