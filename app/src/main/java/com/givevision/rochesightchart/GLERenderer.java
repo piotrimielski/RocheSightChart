@@ -139,17 +139,24 @@ public class GLERenderer implements GLSurfaceView.Renderer{
             pos=-1;
         }
         if(chart>-1){
-            radius = (int) (optotypeOuterDiameter / 2f * CORRECTION);
+            if(pos==5){
+                radius = (int) (optotypeOuterDiameter / 2f * CORRECTION);
+            }else{
+                radius=370;
+            }
         }else if(chart==-1){
             radius=ORG_RADIUS;
         }else{
             radius=230;
         }
+
         if(mSpriteLeft!=null && mSpriteRight!=null){
             mSpriteLeft.setRadius(radius);
             mSpriteRight.setRadius(radius);
             mSpriteLeft.setChart(chart);
             mSpriteRight.setChart(chart);
+            mSpriteLeft.setPixelNbr((int) optotypeOuterDiameter/4);
+            mSpriteRight.setPixelNbr((int) optotypeOuterDiameter/4);
         }
     }
 

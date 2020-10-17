@@ -58,10 +58,8 @@ public class MainActivity extends Activity {
     private static final String CHARTS_SEARCH = "charts";
     private static final String ACTION_CALIBRATION1 = "calibration";
     private static final String ACTION_CALIBRATION2 = "sizes";
-    private static final String ACTION_CALIBRATION3 = "contrast";
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO1 = "controller calibration info1";
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO2 = "controller calibration info2";
-    private static final String ACTION_CONTROLLER_CALIBRATION_INFO3 = "controller calibration info3";
     private static final String ACTION_TEST = "test";
     private static final String ACTION_TEST_REMINDER = "test reminder";
     private static final String ACTION_RESET_USER = "reset user";
@@ -79,7 +77,6 @@ public class MainActivity extends Activity {
 
     private boolean step1=false;
     private boolean step2=false;
-    private boolean step3=false;
     private boolean test=false;
     private RelativeLayout   relativeLayout  ;
     private boolean isReadyForSpeech;
@@ -119,12 +116,13 @@ public class MainActivity extends Activity {
     private  static int FIRST_CHART_RIGHT_EYE=0;
     private  static int GREY_ORG_E=125;
     private  static int GREY_ORG_SQUARE=126;
+
     private int chart=0;
     private int chartPos=-1;
     private boolean learning=false;
+    private int eye=-1; //0-left 1-right -1-double
     private int greyE;
     private int greySquare;
-    private int eye=-1; //0-left 1-right -1-double
     private int pixelNbr=1;
     private int greyE_left;
     private int greySquare_left;
@@ -132,7 +130,7 @@ public class MainActivity extends Activity {
     private int greyE_right;
     private int greySquare_right;
     private int pixelNbr_right=1;
-//    private SpeechRecognizer mSpeechRecognizer;
+    //    private SpeechRecognizer mSpeechRecognizer;
 //    private Intent mSpeechRecognizerIntent;
     private boolean isProcessing;
     private boolean isReady=true;
@@ -147,7 +145,7 @@ public class MainActivity extends Activity {
     private boolean newUser=true;
     private int err=0;
     private int good=0;
-//    // Create the Handler object (on the main thread by default)
+    //    // Create the Handler object (on the main thread by default)
     private Handler handler = new Handler();
     private Handler handler0 = new Handler();
     private Handler handler1 = new Handler();
@@ -156,9 +154,9 @@ public class MainActivity extends Activity {
     private AcuityRepository acuityRepository;
     private RequestQueue requestQueue;
     private String imei;
-    private boolean fakeControls=true;
+    private boolean fakeControls=false;
 
-//   test reminder
+    //   test reminder
     private Runnable runnableCode1 = new Runnable() {
         @Override
         public void run() {
@@ -171,7 +169,7 @@ public class MainActivity extends Activity {
             }
         }
     };
-//   test go next
+    //   test go next
     private Runnable runnableCode2 = new Runnable() {
         @Override
         public void run() {
@@ -182,20 +180,20 @@ public class MainActivity extends Activity {
             }
         }
     };
-//   first massage reminder
+    //   first massage reminder
     private Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
             if(!isAppStarted){
                 say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
                 handler.removeCallbacks(runnableCode);
-                handler.postDelayed(runnableCode, LONG_DELAY);
+                handler.postDelayed(runnableCode, 2*LONG_DELAY);
             }else{
                 handler.removeCallbacks(runnableCode);
             }
         }
     };
-//   internet connaction test
+    //   internet connaction test
     private Runnable runnableCode0 = new Runnable() {
         @Override
         public void run() {
@@ -340,18 +338,11 @@ public class MainActivity extends Activity {
 //	    		 | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
 //        );
 
-    //TODO:: for test
-//        relativeLayout = new RelativeLayout(this);
-//        relativeLayout.setId(AndroidUtils.generateViewId());
-//        relativeLayout.setKeepScreenOn(true);
-//        relativeLayout.setBackgroundColor(Color.BLACK);; //or whatever your image is
-//        setContentView(relativeLayout);
         setContentView(R.layout.activity_main);
         relativeLayout = (RelativeLayout) findViewById(R.id.surfaceContainer);
         relativeLayout.setId(AndroidUtils.generateViewId());
         relativeLayout.setKeepScreenOn(true);
         relativeLayout.setBackgroundColor(Color.BLACK);
-        ; //or whatever your image is
 
         //initialisation openGLES2
         if (hasGLES20()) {
@@ -446,14 +437,11 @@ public class MainActivity extends Activity {
         initControls();
 
         setInfo("Preparing the test");
-        //TODO:: removed for test
         // Prepare the data for UI
         captions = new HashMap<>();
-//        captions.put(KWS_SEARCH, R.string.kws_caption);
+        captions.put(KWS_SEARCH, R.string.kws_caption);
         captions.put(CHARTS_SEARCH, R.string.charts);
         captions.put(ACTION_CALIBRATION1, R.string.action_calibration);
-        captions.put(ACTION_CALIBRATION3, R.string.action_controller_contrast);
-        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO3, R.string.action_controller_contrast_info);
         captions.put(ACTION_CALIBRATION2, R.string.action_controller_size);
         captions.put(ACTION_CONTROLLER_CALIBRATION_INFO1, R.string.action_controller_calibration_info1);
         captions.put(ACTION_CONTROLLER_CALIBRATION_INFO11, R.string.action_controller_calibration_info11);
@@ -468,8 +456,9 @@ public class MainActivity extends Activity {
         captions.put(ACTION_RESET_USER, R.string.action_reset_user);
         captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
         captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
-
-
+//        captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
+//        captions.put(ACTION_CONTROLLER, R.string.action_controller);
+//        captions.put(ACTION_VOICE, R.string.action_voice);
         // Check if user has given permission to record audio
         int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.RECORD_AUDIO);
@@ -510,10 +499,9 @@ public class MainActivity extends Activity {
                             }
                             if (status != TextToSpeech.ERROR) {
                                 mTTS.setLanguage(Locale.UK);
-                                //TODO:: removed for test
                                 say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
                                 handler.removeCallbacks(runnableCode);
-                                handler.postDelayed(runnableCode, LONG_DELAY);
+                                handler.postDelayed(runnableCode, 2*LONG_DELAY);
                                 isAppStarted=false;
                                 if(newUser){
                                     AsyncTask.execute( new Runnable() {
@@ -600,23 +588,15 @@ public class MainActivity extends Activity {
         chart=-1;
         chartPos=-1;
         eye=-1;
-
-        if(Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_X,0f)==0f){
+        if(Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START,100)==100){
             newUser=true;
         }else{
             newUser=false;
         }
-        if (Util.DEBUG) {
-            Log.i(LOG_TAG_MAIN, "onResume newUser= "+newUser);
-        }
-        //TODO:: removed for test
-//        if(Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START,100)==100){
-//            newUser=true;
-//        }else{
-//            newUser=false;
-//        }
-//        handler0.removeCallbacks(runnableCode0);
-//        handler0.postDelayed(runnableCode0, SHORT_DELAY);
+
+
+        handler0.removeCallbacks(runnableCode0);
+        handler0.postDelayed(runnableCode0, SHORT_DELAY);
     }
 
     /**
@@ -651,28 +631,27 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "onStop");
         }
-        //TODO:: removed for test
-//        if (requestQueue != null) {
-//            requestQueue.cancelAll(Util.LOG_TAG_MAIN);
-//        }
-//        WifiManager wifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-//        if (wifiManager.isWifiEnabled()) {
-//            wifiManager.setWifiEnabled(false);
-//        }
-//        handler.removeCallbacks(runnableCode);
-//        handler0.removeCallbacks(runnableCode0);
-//        handler1.removeCallbacks(runnableCode1);
-//        handler2.removeCallbacks(runnableCode2);
-//
-//        if(mTTS !=null){
-//            mTTS.stop();
-//            mTTS.shutdown();
-//            mTTS=null;
-//            isTTS=false;
-//        }
-//        step1=false;
-//        step2=false;
-//        test=false;
+        if (requestQueue != null) {
+            requestQueue.cancelAll(Util.LOG_TAG_MAIN);
+        }
+        WifiManager wifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(false);
+        }
+        handler.removeCallbacks(runnableCode);
+        handler0.removeCallbacks(runnableCode0);
+        handler1.removeCallbacks(runnableCode1);
+        handler2.removeCallbacks(runnableCode2);
+
+        if(mTTS !=null){
+            mTTS.stop();
+            mTTS.shutdown();
+            mTTS=null;
+            isTTS=false;
+        }
+        step1=false;
+        step2=false;
+        test=false;
         wl.release();
     }
 
@@ -720,10 +699,10 @@ public class MainActivity extends Activity {
 ////            say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
 ////            isProcessing=false;
 ////        }else
-        if(keyCode==Util.KEY_POWER  && keyEvent == KeyEvent.ACTION_UP) {
+        if(keyCode==Util.KEY_POWER  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)) {
             say("",false);
             //start app
-            if (step1 || step2 || test || step3) {
+            if (step1 || step2 || test) {
                 return true;
             }
             if (Util.DEBUG) {
@@ -748,38 +727,27 @@ public class MainActivity extends Activity {
             pixelNbr_right=1;
             pixelNbr=1;
             if (!newUser) {
-                //TODO:: for Contrast calibration
                 setText("", "");
-                setInfo("Contrast calibration");
-                step3=true;
-                eyeCalibration = 0;
-//                say(getResources().getString(captions.get(ACTION_CALIBRATION3)), false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO3)), true);
-                myGLRenderer.setCharacter(2);
-                myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
-                myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
-                myGLRenderer.setChart(-2, eyeCalibration, "up", 0);
-                say("left eye", true);
-//                step1 = false;
-//                step2 = false;
-//                test = true;
-//                eyeCalibration = -1;
-//                myGLRenderer.setChart(-1, -2, "", 0);
-//                setInfo("Test running");
-//                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false);
-//                myGLRenderer.setCharacter(2); //E character
-//                float x = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_X, 0f);
-//                float y = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_Y, 0f);
-//                myGLRenderer.setLeftCenterX(x);
-//                myGLRenderer.setLeftCenterY(y);
-//                x = Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_X, 0f);
-//                y = Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_Y, 0f);
-//                myGLRenderer.setRightCenterX(x);
-//                myGLRenderer.setRightCenterY(y);
-//                eye = -1;
-//                myGLRenderer.setCalibrationImage(3);
-//                nextChart();
-//                restardTask(LONG_DELAY);
+                step1 = false;
+                step2 = false;
+                test = true;
+                eyeCalibration = -1;
+                myGLRenderer.setChart(-1, -2, "", 0);
+                setInfo("Test running");
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false);
+                myGLRenderer.setCharacter(2); //E character
+                float x = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_X, 0f);
+                float y = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_Y, 0f);
+                myGLRenderer.setLeftCenterX(x);
+                myGLRenderer.setLeftCenterY(y);
+                x = Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_X, 0f);
+                y = Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_Y, 0f);
+                myGLRenderer.setRightCenterX(x);
+                myGLRenderer.setRightCenterY(y);
+                eye = -1;
+                myGLRenderer.setCalibrationImage(3);
+                nextChart();
+                restardTask(LONG_DELAY);
             } else {
                 myGLRenderer.setCalibrationImage(2);
                 myGLRenderer.setCharacter(1); //circle with gaps character
@@ -792,13 +760,14 @@ public class MainActivity extends Activity {
                 say("left eye", true);
                 step1 = true;
                 step2 = false;
-                step3= false;
                 test = false;
             }
             isProcessing = false;
-        }  else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP
-                && (step1==false && step2==false && test==false && step3==false)){
+        }  else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)
+                && (step1==false && step2==false && test==false)){
             say("",false);
+            isAppStarted=false;
+            stopTask();
             isProcessing=true;
             newUser=true;
             acuityRepository.newInstallation();
@@ -808,6 +777,19 @@ public class MainActivity extends Activity {
             step1=false;
             step2=false;
             test=false;
+            handler.postDelayed(runnableCode, 2*LONG_DELAY);
+            isProcessing=false;
+        }else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
+            isProcessing=true;
+            isAppStarted=false;
+            stopTask();
+            say("test stopped", false);
+            step1=false;
+            step2=false;
+            test=false;
+            learn.clearResult();
+            myGLRenderer.setChart(-1, -2, "", 0);
+            handler.postDelayed(runnableCode, 2*LONG_DELAY);
             isProcessing=false;
         }else if(step1 ){
             say("",false);
@@ -823,123 +805,19 @@ public class MainActivity extends Activity {
             pixelNbr=1;
             calibration1(keyCode, keyEvent);
             isProcessing=false;
-        }else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP &&  step3){
+        }else if(step2){
             isProcessing=true;
-            say("calibration stopped", false);
-            step1=false;
-            step3=false;
+            calibration2(keyCode, keyEvent);
             isProcessing=false;
-//        }else if(step2){
-//            isProcessing=true;
-//            calibration2(keyCode, keyEvent);
-//            isProcessing=false;
-//        }else if(test){
-//            isProcessing=true;
-//            if(isReady){
-//                test(keyCode, keyEvent);
-//            }
-//            isProcessing=false;
-//        }
-        }else if(step3){
-            if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP){
-                say("",false);
-                isProcessing=true;
-                if (Util.DEBUG) {
-                    Log.i(LOG_TAG_MAIN, "keyCode: trigger");
-                }
-//                say("grey E character level: "+greyE, false);
-//                say("grey square level: "+greySquare, false);
-                if(eyeCalibration == 0){
-                    eyeCalibration = 1;
-//                say(getResources().getString(captions.get(ACTION_CALIBRATION3)), false);
-//                    say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO3)), true);
-                    myGLRenderer.setCharacter(2);
-                    greyE=GREY_ORG_E;
-                    greySquare=GREY_ORG_SQUARE;
-                    pixelNbr=1;
-                    myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
-                    myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
-                    myGLRenderer.setChart(-2, eyeCalibration, "down", 0);
-                    say("right eye", true);
-                }else{
-                    say("calibration ended", false);
-                    step1=false;
-                    step3=false;
-                }
-                isProcessing=false;
-            }else if((keyCode==Util.KEY_UP)){ // || keyCode==24
-                say("",false);
-                isProcessing=true;
-                if (Util.DEBUG) {
-                    Log.i(LOG_TAG_MAIN, "keyCode: UP greyE= "+greyE+" greySquare= "+greySquare);
-                }
-                if(greySquare<255 && greyE>0){
-                    greySquare++;
-                    greyE--;
-                }
-                myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
-                isProcessing=false;
-            }else if((keyCode==Util.KEY_DOWN)){ // || keyCode==25
-                say("",false);
-                isProcessing=true;
-                if (Util.DEBUG) {
-                    Log.i(LOG_TAG_MAIN, "keyCode: DOWN greyE= "+greyE+" greySquare= "+greySquare);
-                }
-                if(greySquare>126 && greyE<125){
-                    greySquare--;
-                    greyE++;
-                }
-                myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
-                isProcessing=false;
-            }else if((keyCode==Util.KEY_LEFT)){ // || keyCode==24
-                say("",false);
-                isProcessing=true;
-                if (Util.DEBUG) {
-                    Log.i(LOG_TAG_MAIN, "keyCode: LEFT pixelNbr= "+pixelNbr);
-                }
-                if(pixelNbr>1){
-                    pixelNbr--;
-                }
-                myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
-                isProcessing=false;
-            }else if((keyCode==Util.KEY_RIGHT)){ // || keyCode==25
-                say("",false);
-                isProcessing=true;
-                if (Util.DEBUG) {
-                    Log.i(LOG_TAG_MAIN, "keyCode: RIGHT pixelNbr= "+pixelNbr);
-                }
-                if(pixelNbr<500){
-                    pixelNbr++;
-                }
-                myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
-                isProcessing=false;
+        }else if(test){
+            isProcessing=true;
+            if(isReady){
+                test(keyCode, keyEvent);
             }
-            showInfo(eyeCalibration);
+            isProcessing=false;
         }
+
         return true;
-    }
-
-    private void showInfo(int e) {
-        if(e==0){
-            greyE_left=greyE;
-            greySquare_left=greySquare;
-            pixelNbr_left=pixelNbr;
-        }else if(e==1){
-            greyE_right=greyE;
-            greySquare_right=greySquare;
-            pixelNbr_right=pixelNbr;
-        }else{
-            greyE_left=0;
-            greySquare_left=0;
-            pixelNbr_left=0;
-            greyE_right=0;
-            greySquare_right=0;
-            pixelNbr_right=0;
-        }
-
-        setInfo("pixels left: "+pixelNbr_left+" right: "+pixelNbr_right);
-        setText("grey level left: "+greyE_left+"/"+greySquare_left,
-                "grey level right: "+greyE_right+"/"+greySquare_right);
     }
 
     /**
@@ -967,7 +845,7 @@ public class MainActivity extends Activity {
      * @return
      */
     private void calibration1(int keyCode, int keyEvent){
-        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP){
+        if(keyCode==Util.KEY_TRIGGER && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
             }
@@ -975,37 +853,24 @@ public class MainActivity extends Activity {
                 Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_X,myGLRenderer.getLeftPositionX());
                 Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_Y,myGLRenderer.getLeftPositionY());
                 eyeCalibration=1;
-                myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypeOuterDiameter(1));
+                myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypePixels(1));
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO11)), true);
             }else{
                 step1=false;
-                //TODO::removed for contrast test
-                setText("", "");
-                setInfo("Contrast calibration");
-                newUser=false;
-                step3=true;
-                eyeCalibration = 0;
-//                say(getResources().getString(captions.get(ACTION_CALIBRATION3)), false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO3)), true);
-                myGLRenderer.setCharacter(2);
+                step2=true;
+                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_X,myGLRenderer.getRightPositionX());
+                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,myGLRenderer.getRightPositionY());
+                eyeCalibration=0;
                 myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
-                myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
-                myGLRenderer.setChart(-2, eyeCalibration, "up", 0);
+                myGLRenderer.setChart(-1, -2, "", 0);
+                setInfo("Chart calibration");
+                say(getResources().getString(captions.get(ACTION_CALIBRATION2)), false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true);
+                myGLRenderer.setCalibrationImage(1);
+                eye=-1;
+                chart=0;//totalLengthCharts*2/3;
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
                 say("left eye", true);
-
-//                step2=true;
-//                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_X,myGLRenderer.getRightPositionX());
-//                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,myGLRenderer.getRightPositionY());
-//                eyeCalibration=0;
-//                myGLRenderer.setChart(-1, -2, "", 0);
-//                setInfo("Chart calibration");
-//                say(getResources().getString(captions.get(ACTION_CALIBRATION2)), false);
-//                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true);
-//                myGLRenderer.setCalibrationImage(1);
-//                eye=-1;
-//                chart=0;//totalLengthCharts*1/3;
-//                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
-//                say("left eye", true);
             }
 
         }else if(keyCode==Util.KEY_UP){
@@ -1056,7 +921,7 @@ public class MainActivity extends Activity {
                 myGLRenderer.setLeftPositionX(5f);
                 myGLRenderer.setRightPositionX(5f);
             }
-        }else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
             }
@@ -1070,7 +935,7 @@ public class MainActivity extends Activity {
      * @return
      */
     private void calibration2(int keyCode, int keyEvent){
-        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP){
+        if(keyCode==Util.KEY_TRIGGER && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
             }
@@ -1084,8 +949,8 @@ public class MainActivity extends Activity {
                 }
                 Util.upDatePref(this, Util.PREF_LEFT_START,chart);
                 eyeCalibration=1;
-                chart=0;//totalLengthCharts*1/3;
-                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+                chart=0;//totalLengthCharts*2/3;
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO21)), true);
             }else{
                 step2=false;
@@ -1094,7 +959,7 @@ public class MainActivity extends Activity {
                 myGLRenderer.setChart(-1, -2, "", 0);
                 setInfo("Test running");
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false);
-                myGLRenderer.setCharacter(2); //E character
+                myGLRenderer.setCharacter(2);
                 if(chart>2 && chart<totalLengthCharts-1){
                     chart=chart-2;
                 }else if(chart>=totalLengthCharts-1){
@@ -1109,7 +974,7 @@ public class MainActivity extends Activity {
                 nextChart();
                 restardTask(LONG_DELAY);
             }
-        }else if(keyCode==Util.KEY_UP  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_UP && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_UP");
             }
@@ -1118,14 +983,14 @@ public class MainActivity extends Activity {
                 chart=0;
             }
             if(eyeCalibration==0){
-                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
             }else if(eyeCalibration==1){
-                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
             }else{
-                myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
+                myGLRenderer.setChart(chart,eye,"all", learn.getOptotypePixels(chart) );
             }
 //            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
-        }else if(keyCode==Util.KEY_DOWN  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_DOWN && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_DOWN");
             }
@@ -1134,24 +999,24 @@ public class MainActivity extends Activity {
                 chart=totalLengthCharts-1;
             }
             if(eyeCalibration==0){
-                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
             }else if(eyeCalibration==1){
-                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypeOuterDiameter(chart) );
+                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
             }else{
-                myGLRenderer.setChart(chart,eye,"all", learn.getOptotypeOuterDiameter(chart) );
+                myGLRenderer.setChart(chart,eye,"all", learn.getOptotypePixels(chart) );
             }
 //            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
-        }else if(keyCode==Util.KEY_LEFT  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_LEFT  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_LEFT");
             }
 
-        }else if(keyCode==Util.KEY_RIGHT  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_RIGHT && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_RIGHT");
             }
 
-        }else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
             }
@@ -1166,13 +1031,14 @@ public class MainActivity extends Activity {
      * @return
      */
     private void test(int keyCode, int keyEvent){
-        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP){
+        say(" ",false);
+        if(keyCode==Util.KEY_TRIGGER && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
             }
             //start checking or next chart
 //            nextChart();
-        }else if(keyCode==Util.KEY_UP  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_UP  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             isReady=false;
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_UP");
@@ -1181,9 +1047,9 @@ public class MainActivity extends Activity {
             new Handler().postDelayed(new Runnable() {
                 public void run() {
                     isReady=true;
-            }}, KEY_DELAY);
+                }}, KEY_DELAY);
 
-        }else if(keyCode==Util.KEY_DOWN  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_DOWN  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             isReady=false;
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_DOWN");
@@ -1193,7 +1059,7 @@ public class MainActivity extends Activity {
                 public void run() {
                     isReady=true;
                 }}, KEY_DELAY);
-        }else if(keyCode==Util.KEY_LEFT  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_LEFT  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             isReady=false;
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_LEFT");
@@ -1203,7 +1069,7 @@ public class MainActivity extends Activity {
                 public void run() {
                     isReady=true;
                 }}, KEY_DELAY);
-        }else if(keyCode==Util.KEY_RIGHT  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_RIGHT  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             isReady=false;
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_RIGHT");
@@ -1213,7 +1079,7 @@ public class MainActivity extends Activity {
                 public void run() {
                     isReady=true;
                 }}, KEY_DELAY);
-        }else if(keyCode==Util.KEY_BACK  && keyEvent == KeyEvent.ACTION_UP){
+        }else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             isReady=false;
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
@@ -1267,9 +1133,13 @@ public class MainActivity extends Activity {
                 eye=1;
                 setText("","");
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true);
+                greyE = (int) learn.getOptotypeEgrey(chart);
+                greySquare =(int) learn.getOptotypeSquaregrey(chart);
+                myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
+//                myGLRenderer.setPixelNbr(eyeCalibration,pixelNbr);
                 totalLengthStringArray=learn.getSizeChartsPos(chart);
                 myGLRenderer.setChart(chart,eye,learn.getChartPosString(chart,chartPos),
-                        learn.getOptotypeOuterDiameter(chart) );
+                        learn.getOptotypePixels(chart) );
 //                toneL.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200); //new chart
                 if(test){
                     restardTask(LONG_DELAY);
@@ -1287,8 +1157,11 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "eye= " + eye +" chart=" + chart);
             }
+            greyE = (int) learn.getOptotypeEgrey(chart);
+            greySquare =(int) learn.getOptotypeSquaregrey(chart);
+            myGLRenderer.setGrey(eye,greyE,greySquare);
             myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos),
-                    learn.getOptotypeOuterDiameter(chart));
+                    learn.getOptotypePixels(chart));
             if(test){
                 restardTask(LONG_DELAY);
             }
@@ -1346,10 +1219,10 @@ public class MainActivity extends Activity {
                     //chartPos was -2 before this procedure
                     if(chartPos==-1){
                         //no test
-                        myGLRenderer.setChart(-1, eye, "", learn.getOptotypeOuterDiameter(0));
+                        myGLRenderer.setChart(-1, eye, "", learn.getOptotypePixels(0));
                     }else{
                         //test
-                        myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypeOuterDiameter(chart));
+                        myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
                     }
                 }
             }else{
@@ -1391,17 +1264,17 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.d(LOG_TAG_MAIN, "Result left= " + learn.getEyeResult(0)+ " right= "+learn.getEyeResult(1));}
 //            if(!learn.getEyeResult(0).contains("0") && !learn.getEyeResult(1).contains("0")){
-                AsyncTask.execute( new Runnable() {
-                    @Override
-                    public void run() {
-                        handler0.removeCallbacks(runnableCode0);
-                        int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-                        if(userId>-1){
-                            acuityRepository.insertAcuity(userId,learn.getEyeResult(0),learn.getEyeResult(1));
-                        }
-                        handler0.postDelayed(runnableCode0, SHORT_DELAY);
+            AsyncTask.execute( new Runnable() {
+                @Override
+                public void run() {
+                    handler0.removeCallbacks(runnableCode0);
+                    int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
+                    if(userId>-1){
+                        acuityRepository.insertAcuity(userId,learn.getEyeResult(0),learn.getEyeResult(1));
                     }
-                });
+                    handler0.postDelayed(runnableCode0, SHORT_DELAY);
+                }
+            });
 //            }
         }else{
             setText("","");

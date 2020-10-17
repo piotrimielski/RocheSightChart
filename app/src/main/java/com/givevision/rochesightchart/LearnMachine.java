@@ -27,41 +27,41 @@ public class LearnMachine {
     public LearnMachine(Context ctx){
         context=ctx;
     //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm), Image Outer diameter (mm), pixels, E grey, square grey
-        float[] optotype=new float [] {50f,1.7f,200f,58.16f,290.80f,18f};
+        float[] optotype=new float [] {50f,1.7f,200f,58.16f,290.80f,200f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {40f,1.6f,160f,46.52f,232.60f,17f};
+        optotype=new float [] {40f,1.6f,160f,46.52f,232.60f,160f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {30f,1.5f,125f,34.89f,174.45f,16f};
+        optotype=new float [] {30f,1.5f,125f,34.89f,174.45f,125f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {25f,1.4f,100f,29.08f,145.40f,15f};
+        optotype=new float [] {25f,1.4f,100f,29.08f,145.40f,100f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {20f,1.3f,80f,23.26f,116.18f,14f};
+        optotype=new float [] {20f,1.3f,80f,23.26f,116.18f,80f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {16f,1.2f,63f,18.33f,92.20f,13f};
+        optotype=new float [] {16f,1.2f,63f,18.33f,92.20f,63f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {12.5f,1.1f,50f,14.69f,72.24f,12f};
+        optotype=new float [] {12.5f,1.1f,50f,14.69f,72.24f,50f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {10f,1f,40f,11.64f,58.18f,11f};
+        optotype=new float [] {10f,1f,40f,11.64f,58.18f,40f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {8f,.9f,32f,9.24f,46.21f,4f,10f};
+        optotype=new float [] {8f,.9f,32f,9.24f,46.21f,4f,32f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {6.3f,.8f,25f,7.34f,36.71f,9f};
+        optotype=new float [] {6.3f,.8f,25f,7.34f,36.71f,25f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {5f,.7f,20f,5.83f,29.16f,8f};
+        optotype=new float [] {5f,.7f,20f,5.83f,29.16f,20f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {4f,.6f,16f,4.63f,23.16f,7f};
+        optotype=new float [] {4f,.6f,16f,4.63f,23.16f,16f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {3.2f,.5f,12.5f,3.68f,18.40f,6f};
+        optotype=new float [] {3.2f,.5f,12.5f,3.68f,18.40f,12f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {2.5f,.4f,10f,2.92f,14.61f,5f};
+        optotype=new float [] {2.5f,.4f,10f,2.92f,14.61f,10f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {2f,.3f,8f,2.34f,11.61f,4f};
+        optotype=new float [] {2f,.3f,8f,2.34f,11.61f,8f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {1.6f,.2f,6.3f,1.84f,9.22f,3f};
+        optotype=new float [] {1.6f,.2f,6.3f,1.84f,9.22f,6f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {1.25f,0.1f,5f,1.46f,7.32f,2f};
+        optotype=new float [] {1.25f,0.1f,5f,1.46f,7.32f,5f,100f,151f};
         optotypes.add(optotype);
-        optotype=new float [] {1f,0f,4f,1.16f,5.82f,1f};
+        optotype=new float [] {1f,0f,4f,1.16f,5.82f,4f,100f,151f};
         optotypes.add(optotype);
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_LEARN, "constructor optotypes done");        }
@@ -356,5 +356,36 @@ public class LearnMachine {
         return -1;
     }
 
+    /**
+     * @param optotype
+     * @return number of pixels
+     */
+    public float getOptotypePixels(int optotype) {
+        if(optotypes.size()>optotype) {
+            return optotypes.get(optotype)[4];//5
+        }
+        return -1;
+    }
 
+    /**
+     * @param optotype
+     * @return grey level of E charatcer
+     */
+    public float getOptotypeEgrey(int optotype) {
+        if(optotypes.size()>optotype) {
+            return optotypes.get(optotype)[6];
+        }
+        return -1;
+    }
+
+    /**
+     * @param optotype
+     * @return grey level of E charatcer
+     */
+    public float getOptotypeSquaregrey(int optotype) {
+        if(optotypes.size()>optotype) {
+            return optotypes.get(optotype)[7];
+        }
+        return -1;
+    }
 }

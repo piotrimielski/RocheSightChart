@@ -77,7 +77,7 @@ public class GLESprite {
                 "const float roottwo = 1.41421356237;\n" +
                 "void main() \n" +
                 "{ \n" +
-                "   if(aType==1 ){\n"+ // circle with gaps
+                "   if(aType==1 ){\n"+ // circle OR circle with gaps
                 "     float d, dist, pos_y, pos_x, gape;\n" +
                 "     dist = distance(aCirclePosition, gl_FragCoord.xy);\n" +
                 "     pos_y = aCirclePosition.y - gl_FragCoord.y;\n" +
@@ -472,11 +472,11 @@ public class GLESprite {
         }
     }
 
-    public void setChart(int chart) {
+    public void setChart(int c) {
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_SPRITE,"setChart: mChart= "+chart);
+            Log.i(Util.LOG_TAG_SPRITE,"setChart: mChart= "+c);
         }
-        this.mChart=chart;
+        this.mChart=c;
     }
 
     public void setGrey(int e, int s) {
