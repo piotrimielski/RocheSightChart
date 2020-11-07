@@ -7,6 +7,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static java.lang.System.exit;
+
 /**
  *
  */
@@ -27,67 +29,73 @@ public class LearnMachine {
     public LearnMachine(Context ctx){
         context=ctx;
     //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm), Image Outer diameter (mm), pixels, E grey, square grey
-        float[] optotype=new float [] {50f,1.7f,200f,58.16f,290.80f,200f,100f,151f};
+        float[] optotype= new float [] {50f, 1.7f, 200f, 58.16f, 290.80f, 18f, 113f, 138f}; //0
         optotypes.add(optotype);
-        optotype=new float [] {40f,1.6f,160f,46.52f,232.60f,160f,100f,151f};
+        optotype=new float [] {40f,   1.6f, 160f, 46.52f, 232.60f, 17f, 113f, 138f};  //1
         optotypes.add(optotype);
-        optotype=new float [] {30f,1.5f,125f,34.89f,174.45f,125f,100f,151f};
+        optotype=new float [] {30f,   1.5f, 125f, 34.89f, 174.45f, 16f, 113f, 138f}; //2
         optotypes.add(optotype);
-        optotype=new float [] {25f,1.4f,100f,29.08f,145.40f,100f,100f,151f};
+        optotype=new float [] {25f,   1.4f, 100f, 29.08f, 145.40f, 15f, 113f, 138f}; //3
         optotypes.add(optotype);
-        optotype=new float [] {20f,1.3f,80f,23.26f,116.18f,80f,100f,151f};
+        optotype=new float [] {20f,   1.3f, 80f,  23.26f, 116.18f, 14f, 113f, 138f}; //4
         optotypes.add(optotype);
-        optotype=new float [] {16f,1.2f,63f,18.33f,92.20f,63f,100f,151f};
+        optotype=new float [] {16f,   1.2f, 63f,  18.33f, 92.20f,  13f, 113f, 138f}; //5
         optotypes.add(optotype);
-        optotype=new float [] {12.5f,1.1f,50f,14.69f,72.24f,50f,100f,151f};
+        optotype=new float [] {12.5f, 1.1f, 50f,  14.69f, 72.24f,  12f, 113f, 138f}; //6
         optotypes.add(optotype);
-        optotype=new float [] {10f,1f,40f,11.64f,58.18f,40f,100f,151f};
+        optotype=new float [] {10f,   1f,   40f,  11.64f, 58.18f,  11f, 113f, 138f}; //7
         optotypes.add(optotype);
-        optotype=new float [] {8f,.9f,32f,9.24f,46.21f,4f,32f,100f,151f};
+        optotype=new float [] {8f,    0.9f, 32f,  9.24f,  46.21f,  10f, 113f, 138f}; //8
         optotypes.add(optotype);
-        optotype=new float [] {6.3f,.8f,25f,7.34f,36.71f,25f,100f,151f};
+        optotype=new float [] {6.3f,  0.8f, 25f,  7.34f, 36.71f,   9f,  113f, 138f}; //9
         optotypes.add(optotype);
-        optotype=new float [] {5f,.7f,20f,5.83f,29.16f,20f,100f,151f};
+        optotype=new float [] {5f,    0.7f, 20f,  5.83f, 29.16f,   8f,  113f, 138f}; //10
         optotypes.add(optotype);
-        optotype=new float [] {4f,.6f,16f,4.63f,23.16f,16f,100f,151f};
+        optotype=new float [] {4f,    0.6f, 16f,  4.63f, 23.16f,   7f,  113f, 138f}; //11
         optotypes.add(optotype);
-        optotype=new float [] {3.2f,.5f,12.5f,3.68f,18.40f,12f,100f,151f};
+        optotype=new float [] {3.2f,  0.5f, 12.5f,3.68f, 18.40f,   6f,  113f, 138f}; //12
         optotypes.add(optotype);
-        optotype=new float [] {2.5f,.4f,10f,2.92f,14.61f,10f,100f,151f};
+        optotype=new float [] {2.5f,  0.4f, 10f,  2.92f, 14.61f,   5f,  113f, 138f}; //13
         optotypes.add(optotype);
-        optotype=new float [] {2f,.3f,8f,2.34f,11.61f,8f,100f,151f};
+        optotype=new float [] {2f,    0.3f, 8f,   2.34f, 11.61f,   4f,  113f, 138f}; //14
         optotypes.add(optotype);
-        optotype=new float [] {1.6f,.2f,6.3f,1.84f,9.22f,6f,100f,151f};
+        optotype=new float [] {1.6f,  0.2f, 6.3f, 1.84f, 9.22f,    3f,  113f, 138f}; //15
         optotypes.add(optotype);
-        optotype=new float [] {1.25f,0.1f,5f,1.46f,7.32f,5f,100f,151f};
+        optotype=new float [] {1.25f, 0.1f, 5f,   1.46f, 7.32f,    2f,  113f, 138f}; //16
         optotypes.add(optotype);
-        optotype=new float [] {1f,0f,4f,1.16f,5.82f,4f,100f,151f};
+        optotype=new float [] {1f,    0f,   4f,   1.16f, 5.82f,    1f,  113f, 138f}; //17
         optotypes.add(optotype);
+//        for(int i=104; i>0;i--){
+//            float[] optotype= new float [] {50f, 1.7f, 200f, 58.16f, 290.80f, i*1f, 113f, 138f}; //0
+//            optotypes.add(optotype);
+////            Log.i(Util.LOG_TAG_LEARN, "optotypes created= "+i);
+//        }
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_LEARN, "constructor optotypes done");        }
+            Log.i(Util.LOG_TAG_LEARN, "constructor optotypes sizes= "+optotypes.size());        }
         Random r = new Random();
         String[] array=new String [] {"down", "up", "left", "right"};
         for(int j=0; j<optotypes.size();j++){
+//            Log.i(Util.LOG_TAG_LEARN, "optotypes charts= "+j);
             String[] chart=new String []{"","","",""};
-            for(int i=0; i<NBR_OF_CHARACTERS; i++) {
+            for(int k=0; k<NBR_OF_CHARACTERS; k++) {
                 int p = r.nextInt(4);
-                chart[i] = array[p];
+                chart[k] = array[p];
             }
             charts.add(j, chart);
         }
-        for(int j=0; j<optotypes.size();j++){
-            String[] chart=charts.get(j);
-            Log.i(Util.LOG_TAG_LEARN, "chart= "+j);
-            for(int i=0; i<NBR_OF_CHARACTERS; i++){
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_LEARN, "serie= "+j+" chart= "+i+" value= "+chart[i]);        }
-            }
-
-        }
-
-
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_LEARN, "constructor done");        }
+            Log.i(Util.LOG_TAG_LEARN, "constructor optotypes sizes= "+optotypes.size()+ " charts sizes= "+charts.size());        }
+
+//        for(int m=0; m<optotypes.size();m++){
+//            Log.i(Util.LOG_TAG_LEARN, "optotypes done= "+m);
+//            String[] chart=charts.get(m);
+//            for(int n=0; n<NBR_OF_CHARACTERS; n++){
+//                if (Util.DEBUG) {
+//                    Log.i(Util.LOG_TAG_LEARN, "serie= "+m+" chart= "+n+" value= "+chart[n]);        }
+//            }
+//        }
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_LEARN, "constructor done"); }
     }
 
     /**
@@ -214,15 +222,15 @@ public class LearnMachine {
                 Util.upDatePref(context, Util.PREF_M_LEFT,array[2]);
                 Util.upDatePref(context, Util.PREF_RESULT_OF_4_LEFT,total);
                 if(array[2]-(int)array[2]>0){
-                    return String.format("%.1f", array[2]);
+                    return String.format("%.1f", array[1]);
 //                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
                 }
 //            return "4/"+(int)array[2]+" and "+total +" of 5";
-                return String.format("%.0f", array[2]);
+                return String.format("%.0f", array[1]);
             }else if(resultOkPos==results_left.size()-1) {
                 Util.upDatePref(context, Util.PREF_M_LEFT,4);
                 Util.upDatePref(context,Util.PREF_RESULT_OF_4_LEFT,0);
-                return "4";
+                return "0";
             }else{
                 return "no reading";
             }
@@ -242,15 +250,15 @@ public class LearnMachine {
                 Util.upDatePref(context, Util.PREF_M_RIGHT,array[2]);
                 Util.upDatePref(context, Util.PREF_RESULT_OF_4_RIGHT,total);
                 if(array[2]-(int)array[2]>0){
-                    return String.format("%.1f", array[2]);
+                    return String.format("%.1f", array[1]);
 //                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
                 }
 //            return "4/"+(int)array[2]+" and "+total +" of 4";
-                return String.format("%.0f", array[2]);
+                return String.format("%.0f", array[1]);
             }else if(resultOkPos==results_right.size()-1) {
                 Util.upDatePref(context, Util.PREF_M_RIGHT,4);
                 Util.upDatePref(context, Util.PREF_RESULT_OF_4_RIGHT,0);
-                return "4";
+                return "=0";
             }else{
                 return "no reading";
             }
@@ -362,7 +370,7 @@ public class LearnMachine {
      */
     public float getOptotypePixels(int optotype) {
         if(optotypes.size()>optotype) {
-            return optotypes.get(optotype)[4];//5
+            return optotypes.get(optotype)[5];
         }
         return -1;
     }

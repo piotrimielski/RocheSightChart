@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -47,6 +49,7 @@ import java.util.List;
 import java.util.Locale;
 import static android.os.SystemClock.sleep;
 import static com.givevision.rochesightchart.Util.LOG_TAG_MAIN;
+import static java.lang.System.exit;
 
 
 //https://cmusphinx.github.io/wiki/tutorialandroid/
@@ -145,6 +148,7 @@ public class MainActivity extends Activity {
     private boolean newUser=true;
     private int err=0;
     private int good=0;
+    private String startedByPackage="";
     //    // Create the Handler object (on the main thread by default)
     private Handler handler = new Handler();
     private Handler handler0 = new Handler();
@@ -203,7 +207,7 @@ public class MainActivity extends Activity {
                 if (Util.DEBUG) {
                     Log.i(LOG_TAG_MAIN, " isWifi= "+isWifi);
                 }
-                handler0.postDelayed(runnableCode0, SHORT_DELAY);
+                handler0.postDelayed(runnableCode0, LONG_DELAY);
             }else{
                 if (Util.DEBUG) {
                     Log.i(LOG_TAG_MAIN, "runnableCode0 userId= "+
@@ -313,6 +317,11 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "onCreate");
         }
+        Intent intent = getIntent();
+        startedByPackage=intent.getStringExtra("startedByPackage");
+        if (Util.DEBUG) {
+            Log.i(LOG_TAG_MAIN, "onCreate startedByPackage "+startedByPackage);
+        }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //full screen definition
@@ -321,11 +330,25 @@ public class MainActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+//        View decorView = getWindow().getDecorView();
+//        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+//        decorView.setSystemUiVisibility(uiOptions);
 
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        int ui = getWindow().getDecorView().getSystemUiVisibility();
+        ui = ui | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        final Window win = getWindow();
+        win.getDecorView().setSystemUiVisibility(ui);
+        win.setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        win.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        win.addFlags(
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        |WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                        |WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                        |WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                        |WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+        );
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
@@ -487,6 +510,27 @@ public class MainActivity extends Activity {
             return;
         }
         imei=telephonyManager.getDeviceId();
+
+        acuityRepository = new AcuityRepository(context);
+        //Get a RequestQueue For Handle Network Request
+        requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+    }
+
+
+    /**
+     * start activity
+     * @param
+     * @return
+     */
+    @Override
+    protected void onStart () {
+        super.onStart();
+        if (Util.DEBUG) {
+            Log.i(LOG_TAG_MAIN, "onStart");
+        }
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "RocheSightChart:tracker");
+        wl.acquire();
         if(!isTTS) {
             isTTS=true;
             new Handler().postDelayed(new Runnable() {
@@ -538,27 +582,6 @@ public class MainActivity extends Activity {
                     });
                 }}, 500);
         }
-        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "RocheSightChart:tracker");
-        wl.acquire();
-
-        acuityRepository = new AcuityRepository(context);
-        //Get a RequestQueue For Handle Network Request
-        requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext()).getRequestQueue();
-    }
-
-
-    /**
-     * start activity
-     * @param
-     * @return
-     */
-    @Override
-    protected void onStart () {
-        super.onStart();
-        if (Util.DEBUG) {
-            Log.i(LOG_TAG_MAIN, "onStart");
-        }
     }
 
     /**
@@ -596,7 +619,7 @@ public class MainActivity extends Activity {
 
 
         handler0.removeCallbacks(runnableCode0);
-        handler0.postDelayed(runnableCode0, SHORT_DELAY);
+        handler0.postDelayed(runnableCode0, LONG_DELAY);
     }
 
     /**
@@ -634,10 +657,15 @@ public class MainActivity extends Activity {
         if (requestQueue != null) {
             requestQueue.cancelAll(Util.LOG_TAG_MAIN);
         }
-        WifiManager wifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-        if (wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(false);
+        if(startedByPackage==null){
+            WifiManager wifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+            if (wifiManager.isWifiEnabled()) {
+                wifiManager.setWifiEnabled(false);
+            }
+        }else{
+            startedByPackage=null;
         }
+
         handler.removeCallbacks(runnableCode);
         handler0.removeCallbacks(runnableCode0);
         handler1.removeCallbacks(runnableCode1);
@@ -835,7 +863,7 @@ public class MainActivity extends Activity {
             Util.upDatePref(this,Util.PREF_RIGHT_START,100);
             Util.upDatePref(this,Util.PREF_USER_ID,-1);
         }
-        learn.clearResult();
+        //learn.clearResult();
     }
 
     /**
@@ -937,7 +965,7 @@ public class MainActivity extends Activity {
     private void calibration2(int keyCode, int keyEvent){
         if(keyCode==Util.KEY_TRIGGER && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
+                Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER chart= "+chart);
             }
             if(eyeCalibration==0){
                 if(chart>2 && chart<totalLengthCharts-1){
@@ -976,15 +1004,13 @@ public class MainActivity extends Activity {
             }
         }else if(keyCode==Util.KEY_UP && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_KEY, "KEY_UP");
+                Log.i(Util.LOG_TAG_KEY, "KEY_UP chart= "+chart+ " OptotypePixels= "+ learn.getOptotypePixels(chart));
             }
-            chart=chart-2;
+            chart=chart-1;
             if(chart <0){
                 chart=0;
             }
-            if(eyeCalibration==0){
-                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
-            }else if(eyeCalibration==1){
+            if(eyeCalibration==0 || eyeCalibration==1){
                 myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
             }else{
                 myGLRenderer.setChart(chart,eye,"all", learn.getOptotypePixels(chart) );
@@ -992,15 +1018,13 @@ public class MainActivity extends Activity {
 //            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
         }else if(keyCode==Util.KEY_DOWN && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_KEY, "KEY_DOWN");
+                Log.i(Util.LOG_TAG_KEY, "KEY_DOWN chart= "+chart + " OptotypePixels= "+ learn.getOptotypePixels(chart));
             }
-            chart=chart+2;
+            chart=chart+1;
             if(chart > totalLengthCharts-1){
                 chart=totalLengthCharts-1;
             }
-            if(eyeCalibration==0){
-                myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
-            }else if(eyeCalibration==1){
+            if(eyeCalibration==0 || eyeCalibration==1){
                 myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
             }else{
                 myGLRenderer.setChart(chart,eye,"all", learn.getOptotypePixels(chart) );
@@ -1263,19 +1287,69 @@ public class MainActivity extends Activity {
             say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+right, true);
             if (Util.DEBUG) {
                 Log.d(LOG_TAG_MAIN, "Result left= " + learn.getEyeResult(0)+ " right= "+learn.getEyeResult(1));}
-//            if(!learn.getEyeResult(0).contains("0") && !learn.getEyeResult(1).contains("0")){
-            AsyncTask.execute( new Runnable() {
-                @Override
-                public void run() {
-                    handler0.removeCallbacks(runnableCode0);
-                    int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-                    if(userId>-1){
-                        acuityRepository.insertAcuity(userId,learn.getEyeResult(0),learn.getEyeResult(1));
+            if(startedByPackage!=null){
+                stopTask();
+                if(isInternetAvailable(context)){
+                    if (Util.DEBUG) {
+                        Log.i(LOG_TAG_MAIN, "start update server userId= "+
+                                Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1));
                     }
-                    handler0.postDelayed(runnableCode0, SHORT_DELAY);
+                    // Add a request
+                    if(Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1)==-1){
+                        Util.postData(context, acuityRepository, imei,null);
+                    }
+                    AsyncTask.execute( new Runnable() {
+                        @Override
+                        public void run() {
+                            List<Acuity> acuities=acuityRepository.getAllAcuities();
+                            for(int i=0; i<acuities.size();i++){
+                                Acuity acuity=acuities.get(i);
+                                if(!acuity.getInServer()){
+                                    Util.postData(context, acuityRepository, imei,acuity);
+                                    if (Util.DEBUG) {
+                                        Log.i(LOG_TAG_MAIN, "acuity found: "
+                                                +" id=  "+ acuity.getId()
+                                                +" userId=  "+ acuity.getUserId()
+                                                +" leftEye=  "+ acuity.getLeftEye()
+                                                +" rightEye=  "+ acuity.getRightEye()
+                                                +" createdAt=  "+ acuity.getCreatedAt()
+                                                +" modifiedAt=  "+ acuity.getModifiedAt()
+                                                +" inServer=  "+ acuity.getInServer());
+                                    }
+                                }
+                            }
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startExternalApp(startedByPackage);
+                                }
+                            },LONG_DELAY);
+                        }
+                    });
+                }else{
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startExternalApp(startedByPackage);
+                        }
+                    },SHORT_DELAY);
                 }
-            });
+
+            }else{
+                //            if(!learn.getEyeResult(0).contains("0") && !learn.getEyeResult(1).contains("0")){
+                AsyncTask.execute( new Runnable() {
+                    @Override
+                    public void run() {
+                        handler0.removeCallbacks(runnableCode0);
+                        int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
+                        if(userId>-1){
+                            acuityRepository.insertAcuity(userId,learn.getEyeResult(0),learn.getEyeResult(1));
+                        }
+                        handler0.postDelayed(runnableCode0, SHORT_DELAY);
+                    }
+                });
 //            }
+            }
         }else{
             setText("","");
             setInfo("Preparing the test");
@@ -1450,6 +1524,30 @@ public class MainActivity extends Activity {
             Log.e(LOG_TAG_MAIN, "IOException " + e.getCause());
         }
         return false;
+    }
+
+    private boolean isPackageInstalled(String packagename, PackageManager packageManager) {
+        try {
+            packageManager.getPackageInfo(packagename, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    private void startExternalApp(String app ) {
+        boolean isInstalled = isPackageInstalled(app, this.getPackageManager());
+        if(isInstalled){
+//			memorizeState();
+            PackageManager pm = getPackageManager();
+            Intent intent = pm.getLaunchIntentForPackage(startedByPackage);
+            intent.putExtra("startedByPackage","com.givevision.rochesightchart" );
+            startActivity(intent);
+            finish();
+            System.exit(0);
+        }else {
+            Log.e(LOG_TAG_MAIN, "application to start not found");
+        }
     }
 
 }

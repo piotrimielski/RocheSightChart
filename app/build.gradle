@@ -42,8 +42,8 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // ViewModel and LiveData
-    implementation "android.arch.lifecycle:extensions:2.0.0"
-    annotationProcessor "android.arch.lifecycle:compiler:2.0.0"
+    implementation "android.arch.lifecycle:extensions:2.1.0"
+    annotationProcessor "android.arch.lifecycle:compiler:2.1.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
