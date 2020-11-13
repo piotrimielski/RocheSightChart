@@ -13,6 +13,29 @@ import static java.lang.System.exit;
  *
  */
 public class LearnMachine {
+
+    private static final int NBR_OF_CHARACTERS=4;
+    //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm), Image Outer diameter (mm), pixels, E grey, square grey
+    private float[][] OPTO_TYPE={
+            {1f,    0f,   4f,   1.16f, 5.82f,    1f,  113f, 138f},
+            {1.25f, 0.1f, 5f,   1.46f, 7.32f,    2f,  113f, 138f},
+            {1.6f,  0.2f, 6.3f, 1.84f, 9.22f,    3f,  113f, 138f},
+            {2f,    0.3f, 8f,   2.34f, 11.61f,   4f,  113f, 138f},
+            {2.5f,  0.4f, 10f,  2.92f, 14.61f,   5f,  113f, 138f},
+            {3.2f,  0.5f, 12.5f,3.68f, 18.40f,   6f,  113f, 138f},
+            {4f,    0.6f, 16f,  4.63f, 23.16f,   7f,  113f, 138f},
+            {5f,    0.7f, 20f,  5.83f, 29.16f,   8f,  113f, 138f},
+            {6.3f,  0.8f, 25f,  7.34f, 36.71f,   9f,  113f, 138f},
+            {8f,    0.9f, 32f,  9.24f,  46.21f,  10f, 113f, 138f},
+            {10f,   1f, 40f,  11.64f, 58.18f,  11f, 113f, 138f},
+            {12.5f, 1.1f, 50f,  14.69f, 72.24f,  12f, 113f, 138f},
+            {16f,   1.2f, 63f,  18.33f, 92.20f,  13f, 113f, 138f},
+            {20f,   1.3f, 80f,  23.26f, 116.18f, 14f, 113f, 138f},
+            {25f,   1.4f, 100f, 29.08f, 145.40f, 15f, 113f, 138f},
+            {30f,   1.5f, 125f, 34.89f, 174.45f, 16f, 113f, 138f},
+            {40f,   1.6f, 160f, 46.52f, 232.60f, 17f, 113f, 138f}
+    };
+
     //represent charts series: random "down", "up", "left", "right" string in array of 4 by series
     private ArrayList<String[]> charts = new ArrayList<>();
     //represent results by eye: chart,series result
@@ -20,7 +43,6 @@ public class LearnMachine {
     private ArrayList<int[]> results_right = new ArrayList<>();
     //represent optotypes series: Visual Angle(min), LogMAR, Approximate M-units, Gap (mm),Outer diameter (mm)
     private ArrayList<float[]> optotypes =new ArrayList<>();
-    private static final int NBR_OF_CHARACTERS=4;
     private Context context;
 
     /**
@@ -28,43 +50,9 @@ public class LearnMachine {
      */
     public LearnMachine(Context ctx){
         context=ctx;
-    //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm), Image Outer diameter (mm), pixels, E grey, square grey
-        float[] optotype= new float [] {50f, 1.7f, 200f, 58.16f, 290.80f, 18f, 113f, 138f}; //0
-        optotypes.add(optotype);
-        optotype=new float [] {40f,   1.6f, 160f, 46.52f, 232.60f, 17f, 113f, 138f};  //1
-        optotypes.add(optotype);
-        optotype=new float [] {30f,   1.5f, 125f, 34.89f, 174.45f, 16f, 113f, 138f}; //2
-        optotypes.add(optotype);
-        optotype=new float [] {25f,   1.4f, 100f, 29.08f, 145.40f, 15f, 113f, 138f}; //3
-        optotypes.add(optotype);
-        optotype=new float [] {20f,   1.3f, 80f,  23.26f, 116.18f, 14f, 113f, 138f}; //4
-        optotypes.add(optotype);
-        optotype=new float [] {16f,   1.2f, 63f,  18.33f, 92.20f,  13f, 113f, 138f}; //5
-        optotypes.add(optotype);
-        optotype=new float [] {12.5f, 1.1f, 50f,  14.69f, 72.24f,  12f, 113f, 138f}; //6
-        optotypes.add(optotype);
-        optotype=new float [] {10f,   1f,   40f,  11.64f, 58.18f,  11f, 113f, 138f}; //7
-        optotypes.add(optotype);
-        optotype=new float [] {8f,    0.9f, 32f,  9.24f,  46.21f,  10f, 113f, 138f}; //8
-        optotypes.add(optotype);
-        optotype=new float [] {6.3f,  0.8f, 25f,  7.34f, 36.71f,   9f,  113f, 138f}; //9
-        optotypes.add(optotype);
-        optotype=new float [] {5f,    0.7f, 20f,  5.83f, 29.16f,   8f,  113f, 138f}; //10
-        optotypes.add(optotype);
-        optotype=new float [] {4f,    0.6f, 16f,  4.63f, 23.16f,   7f,  113f, 138f}; //11
-        optotypes.add(optotype);
-        optotype=new float [] {3.2f,  0.5f, 12.5f,3.68f, 18.40f,   6f,  113f, 138f}; //12
-        optotypes.add(optotype);
-        optotype=new float [] {2.5f,  0.4f, 10f,  2.92f, 14.61f,   5f,  113f, 138f}; //13
-        optotypes.add(optotype);
-        optotype=new float [] {2f,    0.3f, 8f,   2.34f, 11.61f,   4f,  113f, 138f}; //14
-        optotypes.add(optotype);
-        optotype=new float [] {1.6f,  0.2f, 6.3f, 1.84f, 9.22f,    3f,  113f, 138f}; //15
-        optotypes.add(optotype);
-        optotype=new float [] {1.25f, 0.1f, 5f,   1.46f, 7.32f,    2f,  113f, 138f}; //16
-        optotypes.add(optotype);
-        optotype=new float [] {1f,    0f,   4f,   1.16f, 5.82f,    1f,  113f, 138f}; //17
-        optotypes.add(optotype);
+        for(int i=OPTO_TYPE.length-1; i>=0;i--){
+            optotypes.add(OPTO_TYPE[i]);
+        }
 //        for(int i=104; i>0;i--){
 //            float[] optotype= new float [] {50f, 1.7f, 200f, 58.16f, 290.80f, i*1f, 113f, 138f}; //0
 //            optotypes.add(optotype);
@@ -203,9 +191,6 @@ public class LearnMachine {
      */
     public String getResult(int eye){
         int resultOkPos=-1;
-        int total=0;
-
-        //find next series result
         if(eye==0){
             //find last good series
             for (int p=0; p<results_left.size(); p++){
@@ -213,55 +198,33 @@ public class LearnMachine {
                     resultOkPos=p;
                 }
             }
-            if(resultOkPos>-1 && resultOkPos<results_left.size()-1){
+            if(resultOkPos>-1 && resultOkPos<results_left.size()){
                 float[] array=  optotypes.get(resultOkPos);
-                int[]  resultNoArray=  results_left.get(resultOkPos+1);
-                for (int p=0; p<resultNoArray.length; p++){
-                    total=total+resultNoArray[p];
-                }
-                Util.upDatePref(context, Util.PREF_M_LEFT,array[2]);
-                Util.upDatePref(context, Util.PREF_RESULT_OF_4_LEFT,total);
                 if(array[2]-(int)array[2]>0){
                     return String.format("%.1f", array[1]);
-//                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
                 }
-//            return "4/"+(int)array[2]+" and "+total +" of 5";
-                return String.format("%.0f", array[1]);
-            }else if(resultOkPos==results_left.size()-1) {
-                Util.upDatePref(context, Util.PREF_M_LEFT,4);
-                Util.upDatePref(context,Util.PREF_RESULT_OF_4_LEFT,0);
-                return "0";
+                return String.valueOf(array[1]);
             }else{
                 return "no reading";
             }
-        }else{
+        }else if(eye==1){
             //find last good series
             for (int p=0; p<results_right.size(); p++){
                 if(isResultOk(p,eye)){
                     resultOkPos=p;
                 }
             }
-            if(resultOkPos>-1 && resultOkPos<results_right.size()-1){
+            if(resultOkPos>-1 && resultOkPos<results_right.size()){
                 float[] array=  optotypes.get(resultOkPos);
-                int[]  resultNoArray=  results_right.get(resultOkPos+1);
-                for (int p=0; p<resultNoArray.length; p++){
-                    total=total+resultNoArray[p];
-                }
-                Util.upDatePref(context, Util.PREF_M_RIGHT,array[2]);
-                Util.upDatePref(context, Util.PREF_RESULT_OF_4_RIGHT,total);
                 if(array[2]-(int)array[2]>0){
                     return String.format("%.1f", array[1]);
-//                return "4/"+String.format("%.1f", array[2])+" and "+total +" of 4";
                 }
-//            return "4/"+(int)array[2]+" and "+total +" of 4";
-                return String.format("%.0f", array[1]);
-            }else if(resultOkPos==results_right.size()-1) {
-                Util.upDatePref(context, Util.PREF_M_RIGHT,4);
-                Util.upDatePref(context, Util.PREF_RESULT_OF_4_RIGHT,0);
-                return "=0";
+                return String.valueOf(array[1]);
             }else{
                 return "no reading";
             }
+        }else{
+            return "no reading";
         }
     }
     /**

@@ -166,7 +166,7 @@ public class MainActivity extends Activity {
         public void run() {
             if(isTimerStart) {
                 isTimerStart=false;
-                say(getResources().getString(captions.get(ACTION_TEST_REMINDER)), false);
+                say(getResources().getString(captions.get(ACTION_TEST_REMINDER)), false,false);
                 handler2.removeCallbacks(runnableCode2);
                 handler2.postDelayed(runnableCode2, SHORT_DELAY);
                 isSecondPeriod=true;
@@ -189,7 +189,7 @@ public class MainActivity extends Activity {
         @Override
         public void run() {
             if(!isAppStarted){
-                say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
+                say(getResources().getString(captions.get(CHARTS_SEARCH)), false,false);
                 handler.removeCallbacks(runnableCode);
                 handler.postDelayed(runnableCode, 2*LONG_DELAY);
             }else{
@@ -239,7 +239,9 @@ public class MainActivity extends Activity {
                         }
                     }
                 });
-                handler0.postDelayed(runnableCode0, LONG_DELAY);
+                if(startedByPackage==null){
+                    handler0.postDelayed(runnableCode0, LONG_DELAY);
+                }
             }
             if (Util.DEBUG) {
                 Log.i(LOG_TAG_MAIN, " isOnline= "+isInternetAvailable(context));
@@ -543,7 +545,7 @@ public class MainActivity extends Activity {
                             }
                             if (status != TextToSpeech.ERROR) {
                                 mTTS.setLanguage(Locale.UK);
-                                say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
+                                say(getResources().getString(captions.get(CHARTS_SEARCH)), false,false);
                                 handler.removeCallbacks(runnableCode);
                                 handler.postDelayed(runnableCode, 2*LONG_DELAY);
                                 isAppStarted=false;
@@ -559,10 +561,11 @@ public class MainActivity extends Activity {
                                         @Override
                                         public void run() {
                                             List<Acuity> acuities=acuityRepository.getAllAcuities();
+                                            Log.i(LOG_TAG_MAIN, "AsyncTask acuities: "+acuities.size());
                                             for(int i=0; i<acuities.size();i++){
                                                 Acuity acuity=acuities.get(i);
                                                 if (Util.DEBUG) {
-                                                    Log.i(LOG_TAG_MAIN, "acuity: "
+                                                    Log.i(LOG_TAG_MAIN, "AsyncTask acuity: "
                                                             +" id=  "+ acuity.getId()
                                                             +" userId=  "+ acuity.getUserId()
                                                             +" leftEye=  "+ acuity.getLeftEye()
@@ -572,6 +575,7 @@ public class MainActivity extends Activity {
                                                             +" inServer=  "+ acuity.getInServer());
                                                 }
                                             }
+//                                            exit(0);
                                         }
                                     });
                                 }
@@ -619,7 +623,7 @@ public class MainActivity extends Activity {
 
 
         handler0.removeCallbacks(runnableCode0);
-        handler0.postDelayed(runnableCode0, LONG_DELAY);
+        handler0.postDelayed(runnableCode0, KEY_DELAY);
     }
 
     /**
@@ -640,7 +644,7 @@ public class MainActivity extends Activity {
         if (mGLView != null) {
             mGLView.onPause();
         }
-        say("",false);
+        say("",false,false);
     }
 
     /**
@@ -663,7 +667,7 @@ public class MainActivity extends Activity {
                 wifiManager.setWifiEnabled(false);
             }
         }else{
-            startedByPackage=null;
+
         }
 
         handler.removeCallbacks(runnableCode);
@@ -728,7 +732,7 @@ public class MainActivity extends Activity {
 ////            isProcessing=false;
 ////        }else
         if(keyCode==Util.KEY_POWER  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)) {
-            say("",false);
+            say("",false,false);
             //start app
             if (step1 || step2 || test) {
                 return true;
@@ -762,7 +766,7 @@ public class MainActivity extends Activity {
                 eyeCalibration = -1;
                 myGLRenderer.setChart(-1, -2, "", 0);
                 setInfo("Test running");
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
                 myGLRenderer.setCharacter(2); //E character
                 float x = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_X, 0f);
                 float y = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_Y, 0f);
@@ -782,10 +786,10 @@ public class MainActivity extends Activity {
                 setText("", "");
                 setInfo("Goggle calibration");
                 eyeCalibration = 0;
-                say(getResources().getString(captions.get(ACTION_CALIBRATION1)), false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO1)), true);
+                say(getResources().getString(captions.get(ACTION_CALIBRATION1)), false,false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO1)), true,false);
                 myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypeOuterDiameter(1));
-                say("left eye", true);
+                say("left eye", true,false);
                 step1 = true;
                 step2 = false;
                 test = false;
@@ -793,13 +797,13 @@ public class MainActivity extends Activity {
             isProcessing = false;
         }  else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)
                 && (step1==false && step2==false && test==false)){
-            say("",false);
+            say("",false,false);
             isAppStarted=false;
             stopTask();
             isProcessing=true;
             newUser=true;
             acuityRepository.newInstallation();
-            say(getResources().getString(captions.get(ACTION_RESET_USER)), false);
+            say(getResources().getString(captions.get(ACTION_RESET_USER)), false,false);
             myGLRenderer.setChart(-1, -2, "", 0);
             resetPreferences(newUser);
             step1=false;
@@ -811,16 +815,34 @@ public class MainActivity extends Activity {
             isProcessing=true;
             isAppStarted=false;
             stopTask();
-            say("test stopped", false);
+            say("test stopped", false,false);
             step1=false;
             step2=false;
             test=false;
             learn.clearResult();
-            myGLRenderer.setChart(-1, -2, "", 0);
-            handler.postDelayed(runnableCode, 2*LONG_DELAY);
-            isProcessing=false;
+            if(startedByPackage!=null){
+                stopTask();
+                say("we will start SightPlus now",true,false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startExternalApp(startedByPackage);
+                    }
+                },SHORT_DELAY);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                        System.exit(0);
+                    }
+                },LONG_DELAY);
+            }else {
+                myGLRenderer.setChart(-1, -2, "", 0);
+                handler.postDelayed(runnableCode, 2 * LONG_DELAY);
+                isProcessing = false;
+            }
         }else if(step1 ){
-            say("",false);
+            say("",false,false);
             isProcessing=true;
             greyE_left=GREY_ORG_E;
             greyE_right=GREY_ORG_E;
@@ -882,7 +904,7 @@ public class MainActivity extends Activity {
                 Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_Y,myGLRenderer.getLeftPositionY());
                 eyeCalibration=1;
                 myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypePixels(1));
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO11)), true);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO11)), true,false);
             }else{
                 step1=false;
                 step2=true;
@@ -892,13 +914,13 @@ public class MainActivity extends Activity {
                 myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
                 myGLRenderer.setChart(-1, -2, "", 0);
                 setInfo("Chart calibration");
-                say(getResources().getString(captions.get(ACTION_CALIBRATION2)), false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true);
+                say(getResources().getString(captions.get(ACTION_CALIBRATION2)), false,false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO2)), true,false);
                 myGLRenderer.setCalibrationImage(1);
                 eye=-1;
                 chart=0;//totalLengthCharts*2/3;
                 myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
-                say("left eye", true);
+                say("left eye", true,false);
             }
 
         }else if(keyCode==Util.KEY_UP){
@@ -979,14 +1001,14 @@ public class MainActivity extends Activity {
                 eyeCalibration=1;
                 chart=0;//totalLengthCharts*2/3;
                 myGLRenderer.setChart(chart,eyeCalibration,"all", learn.getOptotypePixels(chart) );
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO21)), true);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO21)), true,false);
             }else{
                 step2=false;
                 test=true;
                 eyeCalibration=-1;
                 myGLRenderer.setChart(-1, -2, "", 0);
                 setInfo("Test running");
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
                 myGLRenderer.setCharacter(2);
                 if(chart>2 && chart<totalLengthCharts-1){
                     chart=chart-2;
@@ -1055,7 +1077,7 @@ public class MainActivity extends Activity {
      * @return
      */
     private void test(int keyCode, int keyEvent){
-        say(" ",false);
+        say(" ",false,false);
         if(keyCode==Util.KEY_TRIGGER && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
@@ -1130,7 +1152,7 @@ public class MainActivity extends Activity {
             eye=0;
             chart=Util.getSharedPreferences(context).getInt(Util.PREF_LEFT_START,FIRST_CHART_LEFT_EYE);
             totalLengthStringArray=learn.getSizeChartsPos(chart);
-            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true);
+            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true,false);
             learn.clearResult();
         }else{
             if(learn.isResultOk(chart,eye)){
@@ -1156,7 +1178,7 @@ public class MainActivity extends Activity {
                 chart=Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START,FIRST_CHART_RIGHT_EYE);
                 eye=1;
                 setText("","");
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true,false);
                 greyE = (int) learn.getOptotypeEgrey(chart);
                 greySquare =(int) learn.getOptotypeSquaregrey(chart);
                 myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
@@ -1278,15 +1300,16 @@ public class MainActivity extends Activity {
         good=0;
         myGLRenderer.setChart(chart, eye, "", 0);
         setInfo("end of test");
-        say("end of test",false);
+        say("end of test",false,false);
         if(test){
             final String left=learn.getResult(0);
             final String right=learn.getResult(1);
             setText("left eye: "+left,"right eye: "+right);
-            say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+" "+left, true);
-            say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+right, true);
+            say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+" "+left, true,false);
+            say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+right, true,false);
             if (Util.DEBUG) {
-                Log.d(LOG_TAG_MAIN, "Result left= " + learn.getEyeResult(0)+ " right= "+learn.getEyeResult(1));}
+                Log.d(LOG_TAG_MAIN, "Result left= " + learn.getEyeResult(0)+ " right= "+learn.getEyeResult(1)+
+                        " startedByPackage="+ startedByPackage);}
             if(startedByPackage!=null){
                 stopTask();
                 if(isInternetAvailable(context)){
@@ -1298,44 +1321,23 @@ public class MainActivity extends Activity {
                     if(Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1)==-1){
                         Util.postData(context, acuityRepository, imei,null);
                     }
-                    AsyncTask.execute( new Runnable() {
-                        @Override
-                        public void run() {
-                            List<Acuity> acuities=acuityRepository.getAllAcuities();
-                            for(int i=0; i<acuities.size();i++){
-                                Acuity acuity=acuities.get(i);
-                                if(!acuity.getInServer()){
-                                    Util.postData(context, acuityRepository, imei,acuity);
-                                    if (Util.DEBUG) {
-                                        Log.i(LOG_TAG_MAIN, "acuity found: "
-                                                +" id=  "+ acuity.getId()
-                                                +" userId=  "+ acuity.getUserId()
-                                                +" leftEye=  "+ acuity.getLeftEye()
-                                                +" rightEye=  "+ acuity.getRightEye()
-                                                +" createdAt=  "+ acuity.getCreatedAt()
-                                                +" modifiedAt=  "+ acuity.getModifiedAt()
-                                                +" inServer=  "+ acuity.getInServer());
-                                    }
-                                }
-                            }
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    startExternalApp(startedByPackage);
-                                }
-                            },LONG_DELAY);
-                        }
-                    });
-                }else{
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            startExternalApp(startedByPackage);
-                        }
-                    },SHORT_DELAY);
-                }
 
-            }else{
+                }
+                say("we will start SightPlus now",true,true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startExternalApp(startedByPackage);
+                    }
+                },SHORT_DELAY);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                        System.exit(0);
+                    }
+                },LONG_DELAY);
+            }
                 //            if(!learn.getEyeResult(0).contains("0") && !learn.getEyeResult(1).contains("0")){
                 AsyncTask.execute( new Runnable() {
                     @Override
@@ -1345,11 +1347,11 @@ public class MainActivity extends Activity {
                         if(userId>-1){
                             acuityRepository.insertAcuity(userId,learn.getEyeResult(0),learn.getEyeResult(1));
                         }
-                        handler0.postDelayed(runnableCode0, SHORT_DELAY);
+                        handler0.postDelayed(runnableCode0, KEY_DELAY);
                     }
                 });
 //            }
-            }
+
         }else{
             setText("","");
             setInfo("Preparing the test");
@@ -1368,21 +1370,26 @@ public class MainActivity extends Activity {
      * @param queue
      * @return
      */
-    private void say(String toSpeak, boolean queue){
+    private void say(String toSpeak, boolean queue, boolean block){
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, " say toSpeak= "+toSpeak);        }
         if(mTTS!=null){
-//            while (mTTS.isSpeaking()){
-//                new SleepThread(100).start();
-//            }
+            if(block){
+                while (mTTS.isSpeaking()){
+                    new SleepThread(100).start();
+                }
+            }
             String utteranceId=this.hashCode() + "";
-            if(queue)
+            if(queue) {
                 mTTS.speak(toSpeak, TextToSpeech.QUEUE_ADD, null, utteranceId);
-            else
+            }else {
                 mTTS.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
-//            while (mTTS.isSpeaking()){
-//                new SleepThread(100).start();
-//            }
+            }
+            if(block){
+                while (mTTS.isSpeaking()){
+                    new SleepThread(100).start();
+                }
+            }
         }
     }
 
@@ -1543,8 +1550,7 @@ public class MainActivity extends Activity {
             Intent intent = pm.getLaunchIntentForPackage(startedByPackage);
             intent.putExtra("startedByPackage","com.givevision.rochesightchart" );
             startActivity(intent);
-            finish();
-            System.exit(0);
+            startedByPackage =null;
         }else {
             Log.e(LOG_TAG_MAIN, "application to start not found");
         }
