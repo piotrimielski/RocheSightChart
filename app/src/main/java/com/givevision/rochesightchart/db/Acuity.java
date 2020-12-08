@@ -16,6 +16,9 @@ public class Acuity {
     @ColumnInfo(name = "user_id")
     private int userId;
 
+    @ColumnInfo(name = "contrast")
+    private boolean contrast;
+
     @ColumnInfo(name = "left_eye")
     private String leftEye;
 
@@ -47,6 +50,14 @@ public class Acuity {
     }
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public boolean getContrast() {
+        return contrast;
+    }
+
+    public void setContrast(boolean contrast) {
+        this.contrast = contrast;
     }
 
     public String getLeftEye() {

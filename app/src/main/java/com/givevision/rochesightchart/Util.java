@@ -38,6 +38,7 @@ public class Util {
     public static final String LOG_TAG_RENDERING = "Rendering";
     public static final String LOG_TAG_LEARN = "Learn";
     public static final String LOG_TAG_SPRITE = "Sprite";
+    public static final int KEY_NBR = 5; //number of check key touched
     protected static final String PREF_USER_ID = "user Id";
     protected static final String PREF_LEFT_CALIBRATION_X = "left eye calibration x";
     protected static final String PREF_RIGHT_CALIBRATION_X = "right eye calibration x";
@@ -159,6 +160,12 @@ public class Util {
             if(acuity!=null){
                 object.put("appID", acuity.getId());
                 object.put("userID", acuity.getUserId());
+                if(acuity.getContrast()){
+                    object.put("contrast", 1);
+                }else{
+                    object.put("contrast", 0);
+                }
+                object.put("userID", acuity.getUserId());
                 object.put("createdAt", getDateTime(acuity.getCreatedAt()));
                 object.put("left", acuity.getLeftEye());
                 object.put("right", acuity.getRightEye());
@@ -189,7 +196,7 @@ public class Util {
             Request.Method.POST, URL, object, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    final int appID=response.optInt("appID");
+                    int appID=response.optInt("appID");
                     int code= response.optInt("code");
                     final int userID= response.optInt("userID");
                     String status= response.optString("status");
@@ -208,26 +215,30 @@ public class Util {
                             AsyncTask.execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    acuityRepository.upDateInServer(appID);
                                     if (Util.DEBUG) {
                                         Log.i(TAG, "VolleyResponse upDateInServer userID= "+userID);
                                     }
+                                    acuityRepository.upDateInServer(appID);
+
                                 }
                             });
                         }
                     }else{
-                        Log.e(TAG, "VolleyResponse code= "+code+" status= "+status);
+                        Log.e(TAG, "VolleyResponse code= "+code+" appID= "+appID+" status= "+status);
                         if(code== 211){
                             //exist in database
-                            AsyncTask.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    acuityRepository.upDateInServer(appID);
-                                    if (Util.DEBUG) {
-                                        Log.i(TAG, "VolleyResponse upDateInServer userID= "+userID);
+                            if(appID>0){
+                                AsyncTask.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (Util.DEBUG) {
+                                            Log.i(TAG, "VolleyResponse upDateInServer userID= "+userID);
+                                        }
+                                        acuityRepository.upDateInServer(appID);
+
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 }

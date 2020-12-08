@@ -26,18 +26,21 @@ public class AcuityRepository {
         gvDatabase = Room.databaseBuilder(context, GiveVisionDatabase.class, DB_NAME).build();
     }
 
-    public void insertAcuity(int userId, String leftEye,String rightEye) {
+    public void insertAcuity(int userId, boolean contrast, String leftEye,String rightEye) {
         Date currentTime = new Date(Calendar.getInstance().getTimeInMillis());
 
         final Acuity acuity = new Acuity();
         acuity.setUserId(userId);
+        acuity.setContrast(contrast);
+        acuity.setContrast(contrast);
         acuity.setInServer(false);
         acuity.setCreatedAt(currentTime);
         acuity.setModifiedAt(currentTime);
         acuity.setLeftEye(leftEye);
         acuity.setRightEye(rightEye);
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_DB, "insert acuity: userId:"+userId+" leftEye:"+leftEye+" rightEye:"+rightEye);
+            Log.i(Util.LOG_TAG_DB, "insert acuity: userId:"+userId+" contrast:"+contrast
+                     +" leftEye:"+leftEye+" rightEye:"+rightEye);
         }
         new AsyncTask<Void, Void, Void>() {
             @Override

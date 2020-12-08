@@ -359,4 +359,18 @@ public class LearnMachine {
         }
         return -1;
     }
+
+    /**
+     * @param  contrastRightResult in M-init
+     * @return logM in String
+     */
+    public String getLogMFromMunit(String contrastRightResult) {
+        for(int j=0; j<optotypes.size();j++){
+            float[] array=  optotypes.get(j);
+            if(array[2]==Float.parseFloat(contrastRightResult)){
+                return String.valueOf(array[1]);
+            }
+        }
+        return "no reading";
+    }
 }
