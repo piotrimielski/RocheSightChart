@@ -16,7 +16,11 @@ import com.givevision.rochesightchart.db.AcuityRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.zip.Adler32;
@@ -339,4 +343,25 @@ public class Util {
         return ctx.getSharedPreferences(Util.MyPREFERENCES, Context.MODE_PRIVATE);
     }
 
+    public static ArrayList<String> readConfigFile(String path){
+        ArrayList<String> arrayOfString=new ArrayList<>();;
+        try {
+            RandomAccessFile reader = new RandomAccessFile(path, "r");
+            reader.seek(0);
+            String str=" ";
+            while(str!=null){
+                str=reader.readLine();
+                if(str!=null){
+                    Log.i(TAG, "stat "+str);
+                    arrayOfString.add(str);
+                }
+            }
+            return arrayOfString;
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "readFile FileNotFoundException  "+e);
+        } catch (IOException e) {
+            Log.e(TAG, "readFile IOException  "+e);
+        }
+        return null;
+    }
 }

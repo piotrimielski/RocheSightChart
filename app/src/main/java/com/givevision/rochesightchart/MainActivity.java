@@ -20,6 +20,7 @@ import android.net.wifi.WifiManager;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.speech.SpeechRecognizer;
@@ -45,6 +46,7 @@ import com.givevision.rochesightchart.db.AcuityRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +59,10 @@ import static java.lang.System.exit;
 //https://cmusphinx.github.io/wiki/tutorialandroid/
 
 public class MainActivity extends Activity {
+    private static  int GREY_E = 250;
+    private static  int GREY_B = 255;
     private static Context context;
+    public static final String CONF_PATH = Environment.getExternalStorageDirectory()+ "/GiveVision/contrast.txt";
     /* Named searches allow to quickly reconfigure the decoder */
     private static final String KWS_SEARCH = "wakeup";
     private static final String CHARTS_SEARCH = "charts";
@@ -638,6 +643,24 @@ public class MainActivity extends Activity {
 
         handler0.removeCallbacks(runnableCode0);
         handler0.postDelayed(runnableCode0, KEY_DELAY);
+
+        //read sequences of chart from 1 to 17
+        ArrayList<String> lists= Util.readConfigFile(CONF_PATH);
+        if(lists!=null){
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_MAIN, "seq= "+lists.size());
+            }
+            String str=lists.get(0);
+            Log.i(Util.LOG_TAG_MAIN, "str= "+str);
+            String[] arrayOfString=str.split(",");
+            GREY_E= Integer.parseInt(arrayOfString[0]);
+            GREY_B= Integer.parseInt(arrayOfString[1]);
+            ArrayList<Integer> list =new ArrayList<Integer>();
+        }else{
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_MAIN, "contrast static");
+            }
+        }
     }
 
     /**
@@ -1375,8 +1398,8 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_KEY, "eye= " + eye +" chart=" + chart);
         }
-        greyE = (int) learn.getOptotypeEgrey(chart);
-        greySquare =(int) learn.getOptotypeSquaregrey(chart);
+        greyE = GREY_E;//(int) learn.getOptotypeEgrey(chart);
+        greySquare = GREY_B; //(int) learn.getOptotypeSquaregrey(chart);
         if(isContrast){
             myGLRenderer.setGrey(eye,greyE,greySquare);
         }else {
