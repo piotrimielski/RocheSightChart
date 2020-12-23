@@ -82,6 +82,7 @@
          ver 603
          test 1 , the high 100% contrast test, foreground pixel value( of the letter E)  is 0 (black) and all background pixel value 255 (white)  for the entire test
          test 2 , the low 2.5% contrast test, foreground pixel value ( of the letter E)  is 250( light grey)  and all background pixel value is 255 (white)  for the entire test .
+         contrast.txt for modification
     -->
     <uses-feature
         android:glEsVersion="0x00020000"

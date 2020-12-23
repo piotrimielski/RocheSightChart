@@ -1405,8 +1405,7 @@ public class MainActivity extends Activity {
         }else {
             myGLRenderer.setGrey(eye,0,255);
         }
-        myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos),
-              learn.getOptotypePixels(chart));
+        myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
         if(test){
              restardTask(LONG_DELAY);
         }
@@ -1507,22 +1506,22 @@ public class MainActivity extends Activity {
             if(noContrastLeftResult==""){
                 noContrastLeftResult="no reading";
             }else{
-                noContrastLeftResult=learn.getLogMFromMunit(noContrastLeftResult);
+                noContrastLeftResult=learn.getPixelsFromMunit(noContrastLeftResult);
             }
             if(noContrastRightResult==""){
                 noContrastRightResult="no reading";
             }else{
-                noContrastRightResult=learn.getLogMFromMunit(noContrastRightResult);
+                noContrastRightResult=learn.getPixelsFromMunit(noContrastRightResult);
             }
             if(contrastLeftResult==""){
                 contrastLeftResult="no reading";
             }else{
-                contrastLeftResult=learn.getLogMFromMunit(contrastLeftResult);
+                contrastLeftResult=learn.getPixelsFromMunit(contrastLeftResult);
             }
             if(contrastRightResult==""){
                 contrastRightResult="no reading";
             }else{
-                contrastRightResult=learn.getLogMFromMunit(contrastRightResult);
+                contrastRightResult=learn.getPixelsFromMunit(contrastRightResult);
             }
 
             setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult,

@@ -33,7 +33,11 @@ public class LearnMachine {
             {20f,   1.3f, 80f,  23.26f, 116.18f, 14f, 250f, 250f},
             {25f,   1.4f, 100f, 29.08f, 145.40f, 15f, 250f, 250f},
             {30f,   1.5f, 125f, 34.89f, 174.45f, 16f, 250f, 250f},
-            {40f,   1.6f, 160f, 46.52f, 232.60f, 17f, 250f, 250f}
+            {40f,   1.6f, 160f, 46.52f, 232.60f, 17f, 250f, 250f}//other form there is not real convertion
+//            {50f,   1.7f, 180f, 50.52f, 300.60f, 18f, 250f, 250f},
+//            {60f,   1.8f, 200f, 60.52f, 350.60f, 19f, 250f, 250f},
+//            {70f,   1.9f, 230f, 70.52f, 400.60f, 20f, 250f, 250f},
+//            {80f,   2.0f, 280f, 75.52f, 450.60f, 21f, 250f, 250f}
     };
 
     //represent charts series: random "down", "up", "left", "right" string in array of 4 by series
@@ -361,14 +365,28 @@ public class LearnMachine {
     }
 
     /**
-     * @param  contrastRightResult in M-init
+     * @param  result in M-init
      * @return logM in String
      */
-    public String getLogMFromMunit(String contrastRightResult) {
+    public String getLogMFromMunit(String result) {
         for(int j=0; j<optotypes.size();j++){
             float[] array=  optotypes.get(j);
-            if(array[2]==Float.parseFloat(contrastRightResult)){
+            if(array[2]==Float.parseFloat(result)){
                 return String.valueOf(array[1]);
+            }
+        }
+        return "no reading";
+    }
+
+    /**
+     * @param  result in M-init
+     * @return pixels in String
+     */
+    public String getPixelsFromMunit(String result) {
+        for(int j=0; j<optotypes.size();j++){
+            float[] array=  optotypes.get(j);
+            if(array[2]==Float.parseFloat(result)){
+                return String.valueOf((int)array[5]);
             }
         }
         return "no reading";

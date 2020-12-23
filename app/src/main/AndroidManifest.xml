@@ -67,6 +67,10 @@
          test 2 , the low 2.5% contrast test, foreground pixel value ( of the letter E)  is 250( light grey)  and all background pixel value is 255 (white)  for the entire test .
          contrast.txt for modification
        -->
+
+    <!-- ver 603
+        -result on pixels
+     -->
         <uses-feature android:glEsVersion="0x00020000"  android:required="true" />
 
         <uses-permission android:name="android.permission.BLUETOOTH" />
