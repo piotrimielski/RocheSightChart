@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
-    android:versionCode="603"
-    android:versionName="603">
+    android:versionCode="604"
+    android:versionName="604">
     <!--   https://docs.google.com/document/d/1AkM6-cOKtRr1uyR1m7HLclhdrWvQFJRwb73fYn5sx3A/edit?usp=sharing -->
     <!--   ver 100 - generate chart with picture-->
     <!--   ver 200 - generate C into texture-->
@@ -68,7 +68,7 @@
          contrast.txt for modification
        -->
 
-    <!-- ver 603
+    <!-- ver 604
         -result on pixels
      -->
         <uses-feature android:glEsVersion="0x00020000"  android:required="true" />
