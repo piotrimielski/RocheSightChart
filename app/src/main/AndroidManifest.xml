@@ -73,7 +73,7 @@
      -->
     <!-- ver 605
         -broadcast message to SP
-        -result -2 if stop without end -1 if no reading
+        -result: if stop without end nothing to send to server 0 if no reading
      -->
         <uses-feature android:glEsVersion="0x00020000"  android:required="true" />
 
