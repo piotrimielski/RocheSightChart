@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
@@ -53,6 +54,7 @@ import java.util.List;
 import java.util.Locale;
 import static android.os.SystemClock.sleep;
 import static com.givevision.rochesightchart.Util.LOG_TAG_MAIN;
+import static com.givevision.rochesightchart.Util.TAG;
 import static java.lang.System.exit;
 
 
@@ -126,6 +128,9 @@ public class MainActivity extends Activity {
     private  static int FIRST_CHART_RIGHT_EYE=0;
     private  static int GREY_ORG_E=125;
     private  static int GREY_ORG_SQUARE=126;
+
+    private static final String BROADCAST_START_APP_ACTION="start app action";
+    private static final String START_APP_RESULT = "app response" ;
 
     private int chart=0;
     private int chartPos=-1;
@@ -618,6 +623,8 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "onResume");
         }
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BROADCAST_START_APP_ACTION);
         /*
          * The activity must call the GL surface view's
          * onResume() on activity onResume().
@@ -698,14 +705,14 @@ public class MainActivity extends Activity {
         if (requestQueue != null) {
             requestQueue.cancelAll(Util.LOG_TAG_MAIN);
         }
-        if(startedByPackage==null){
-            WifiManager wifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-            if (wifiManager.isWifiEnabled()) {
-                wifiManager.setWifiEnabled(false);
-            }
-        }else{
-
-        }
+//        if(startedByPackage==null){
+//            WifiManager wifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+//            if (wifiManager.isWifiEnabled()) {
+//                wifiManager.setWifiEnabled(false);
+//            }
+//        }else{
+//
+//        }
 
         handler.removeCallbacks(runnableCode);
         handler0.removeCallbacks(runnableCode0);
@@ -895,15 +902,17 @@ public class MainActivity extends Activity {
             step2=false;
             test=false;
             learn.clearResult();
-            if(startedByPackage!=null){
+            if(startedByPackage!=null) {
                 stopTask(true);
-                say("we will start SightPlus now",true,false);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        startExternalApp(startedByPackage);
-                    }
-                },SHORT_DELAY);
+                say("we will start SightPlus now", true, false);
+            }
+            startExternalApp(startedByPackage);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                },SHORT_DELAY);
 //                new Handler().postDelayed(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -911,11 +920,11 @@ public class MainActivity extends Activity {
 //                        System.exit(0);
 //                    }
 //                },LONG_DELAY);
-            }else {
-                myGLRenderer.setChart(-1, -2, "", 0);
-                handler.postDelayed(runnableCode, 2 * LONG_DELAY);
-                isProcessing = false;
-            }
+//            }else {
+//                myGLRenderer.setChart(-1, -2, "", 0);
+//                handler.postDelayed(runnableCode, 2 * LONG_DELAY);
+//                isProcessing = false;
+//            }
         }else if(step1 ){
             say("",false,false);
             isProcessing=true;
@@ -1536,19 +1545,20 @@ public class MainActivity extends Activity {
                 Log.d(LOG_TAG_MAIN, "startedByPackage="+ startedByPackage);}
             if(startedByPackage!=null){
                 say("we will start SightPlus now",true,true);
+//                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 1);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         startExternalApp(startedByPackage);
                     }
                 },SHORT_DELAY);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        finish();
-//                        System.exit(0);
-//                    }
-//                },LONG_DELAY);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                        System.exit(-1);
+                    }
+                },SHORT_DELAY);
             }
 
 //            }
@@ -1766,19 +1776,36 @@ public class MainActivity extends Activity {
     }
 
     private void startExternalApp(String app ) {
-        boolean isInstalled = isPackageInstalled(app, this.getPackageManager());
-        if(isInstalled){
-//			memorizeState();
-            PackageManager pm = getPackageManager();
-            Intent intent = pm.getLaunchIntentForPackage(startedByPackage);
-            intent.putExtra("startedByPackage","com.givevision.rochesightchart" );
-            startActivity(intent);
-            startedByPackage =null;
-            finish();
-            System.exit(0);
-        }else {
-            Log.e(LOG_TAG_MAIN, "application to start not found");
-        }
+        sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 2);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+                System.exit(-1);
+            }
+        },SHORT_DELAY);
+
+//        boolean isInstalled = isPackageInstalled(app, this.getPackageManager());
+//        if(isInstalled){
+////			memorizeState();
+//            PackageManager pm = getPackageManager();
+//            Intent intent = pm.getLaunchIntentForPackage(startedByPackage);
+//            intent.putExtra("startedByPackage","com.givevision.rochesightchart" );
+//            startActivity(intent);
+//            startedByPackage =null;
+//            finish();
+//            System.exit(0);
+//        }else {
+//            Log.e(LOG_TAG_MAIN, "application to start not found");
+//        }
+    }
+
+    public void sendBroadcastToActivity(String action, String code, int result) {
+        Intent new_intent = new Intent();
+        new_intent.setAction(action);
+        new_intent.putExtra(code,result);
+        sendBroadcast(new_intent);
+        Log.i(TAG, "Broadcast sent to Activity action= "+action+ " code= "+code+ " result= "+result);
     }
 }
 
