@@ -389,6 +389,7 @@ public class LearnMachine {
                 return String.valueOf((int)array[5]);
             }
         }
-        return "no reading";
+//        return "no reading"; 0=no reading, -1 stop
+        return result;
     }
 }
