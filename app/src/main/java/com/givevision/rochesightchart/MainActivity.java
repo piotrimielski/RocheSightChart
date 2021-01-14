@@ -814,6 +814,7 @@ public class MainActivity extends Activity {
 ////        }else
         if(keyCode==Util.KEY_POWER  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)) {
             say("",false,false);
+
             //start app
             if (step1 || step2 || test) {
                 return true;
@@ -839,6 +840,10 @@ public class MainActivity extends Activity {
             pixelNbr_left=1;
             pixelNbr_right=1;
             pixelNbr=1;
+            noContrastLeftResult="";
+            contrastLeftResult="";
+            noContrastRightResult="";
+            contrastRightResult="";
             if (!newUser) {
                 setText("", "");
                 step1 = false;
@@ -1556,7 +1561,12 @@ public class MainActivity extends Activity {
             if(contrastRightResult==""){
                 contrastRightResult="-1";
             }
-            //insert in database contrast tests
+            if (Util.DEBUG) {
+                Log.d(LOG_TAG_MAIN, "test end test= "+test+" ok= "+ok
+                    +" left:  noContrastLeftResult= "+ noContrastLeftResult+ " contrastLeftResult= "+ contrastLeftResult
+                    +" right:  noContrastRightResult= "+ noContrastRightResult+ " contrastRightResult= "+ contrastRightResult);}
+
+        //insert in database contrast tests
             AsyncTask.execute( new Runnable() {
                 @Override
                 public void run() {
@@ -1569,10 +1579,6 @@ public class MainActivity extends Activity {
                     handler0.postDelayed(runnableCode0, 100);
                 }
             });
-            noContrastLeftResult="";
-            contrastLeftResult="";
-            noContrastRightResult="";
-            contrastRightResult="";
         }
         chart=-1;
         eye=-2;
@@ -1587,13 +1593,7 @@ public class MainActivity extends Activity {
                     startExternalApp(startedByPackage);
                 }
             },SHORT_DELAY);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    finish();
-                    System.exit(-1);
-                }
-            },SHORT_DELAY);
+
         }
         handler.removeCallbacks(runnableCode);
         handler.postDelayed(runnableCode, LONG_DELAY+LONG_DELAY);
