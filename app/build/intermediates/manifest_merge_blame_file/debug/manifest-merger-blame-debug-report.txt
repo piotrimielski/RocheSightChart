@@ -103,7 +103,7 @@
 101    -->
 102    <!--
 103         ver 607
-104        - result send to server 0 for no reading -1 for stopped manually
+104        - bug resolution for results with stopped test
 105    -->
 106    <uses-feature
 106-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:84:9-83

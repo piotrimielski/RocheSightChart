@@ -101,7 +101,7 @@
     -->
     <!--
          ver 607
-        - result send to server 0 for no reading -1 for stopped manually
+        - bug resolution for results with stopped test
     -->
     <uses-feature
         android:glEsVersion="0x00020000"

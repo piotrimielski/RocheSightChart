@@ -42,20 +42,26 @@ public class AcuityRepository {
             Log.i(Util.LOG_TAG_DB, "insert acuity: userId:"+userId+" contrast:"+contrast
                      +" leftEye:"+leftEye+" rightEye:"+rightEye);
         }
-        new AsyncTask<Void, Void, Void>() {
+        AsyncTask.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
                 gvDatabase.acuityDao().insertAcuity(acuity);
-                return null;
             }
-        }.execute();
+        });
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                gvDatabase.acuityDao().insertAcuity(acuity);
+//                return null;
+//            }
+//        }.execute();
 
     }
 
     private void updateAcuityInDB(final int id, final boolean inDB) {
-        new AsyncTask<Void, Void, Void>() {
+        AsyncTask.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
                 Date currentTime = new Date(Calendar.getInstance().getTimeInMillis());
                 final Acuity acuity=  getAcuityById(id);
                 acuity.setModifiedAt(currentTime);
@@ -64,9 +70,22 @@ public class AcuityRepository {
                 if (Util.DEBUG) {
                     Log.i(Util.LOG_TAG_DB, "update acuity");
                 }
-                return null;
             }
-        }.execute();
+        });
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                Date currentTime = new Date(Calendar.getInstance().getTimeInMillis());
+//                final Acuity acuity=  getAcuityById(id);
+//                acuity.setModifiedAt(currentTime);
+//                acuity.setInServer(inDB);
+//                gvDatabase.acuityDao().updateAcuity(acuity);
+//                if (Util.DEBUG) {
+//                    Log.i(Util.LOG_TAG_DB, "update acuity");
+//                }
+//                return null;
+//            }
+//        }.execute();
     }
 
     public List<Acuity> getAllAcuities() {
@@ -112,31 +131,49 @@ public class AcuityRepository {
     }
 
      public void deleteAcuitiesTable() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                gvDatabase.acuityDao().deleteAcuityTable();
-                if (Util.DEBUG) {
-                    Log.d(TAG, "PictureRepository:: deleteAcuities Table");
-                }
-                return null;
-            }
-        }.execute();
+         AsyncTask.execute(new Runnable() {
+             @Override
+             public void run() {
+                 gvDatabase.acuityDao().deleteAcuityTable();
+                 if (Util.DEBUG) {
+                     Log.d(TAG, "PictureRepository:: deleteAcuities Table");
+                 }
+             }
+         });
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                gvDatabase.acuityDao().deleteAcuityTable();
+//                if (Util.DEBUG) {
+//                    Log.d(TAG, "PictureRepository:: deleteAcuities Table");
+//                }
+//                return null;
+//            }
+//        }.execute();
     }
 
     public void deleteAcuityById(final int id) {
         final Acuity acuity = getAcuityById(id);
         if (acuity != null) {
-            new AsyncTask<Void, Void, Void>() {
+            AsyncTask.execute(new Runnable() {
                 @Override
-                protected Void doInBackground(Void... voids) {
+                public void run() {
                     gvDatabase.acuityDao().deleteAcuity(acuity);
                     if (Util.DEBUG) {
                         Log.d(TAG, "PictureRepository:: delete Acuity");
                     }
-                    return null;
                 }
-            }.execute();
+            });
+//            new AsyncTask<Void, Void, Void>() {
+//                @Override
+//                protected Void doInBackground(Void... voids) {
+//                    gvDatabase.acuityDao().deleteAcuity(acuity);
+//                    if (Util.DEBUG) {
+//                        Log.d(TAG, "PictureRepository:: delete Acuity");
+//                    }
+//                    return null;
+//                }
+//            }.execute();
         }
     }
 
