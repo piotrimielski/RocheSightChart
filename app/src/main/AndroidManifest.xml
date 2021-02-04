@@ -81,9 +81,12 @@
     <!-- ver 607
         - bug resolution for results with stopped test
      -->
-    <!-- ver 607
+    <!-- ver 608
         - removing warning AsyncTask in AcuityRepository
+        - add test contrast_1
+
      -->
+    
         <uses-feature android:glEsVersion="0x00020000"  android:required="true" />
 
         <uses-permission android:name="android.permission.BLUETOOTH" />

@@ -50,6 +50,8 @@ Click on the power button of your controller to start."</string>
     <string name="action_controller_test_info1" >"First left eye,
         push the joystick in the same direction as the E is facing, up, down, left or right."</string>
     <string name="action_controller_test_info2" >"Well done, now the right eye"</string>
+    <string name="action_controller_test_info3" >"Now the contrast test"</string>
+    <string name="action_controller_test_info4" >"Now the last contrast test"</string>
     <string name="action_reset_user">"Data has been cleared, user reset"</string>
     <string name="end_test" >"All done! Your results have been recorded."</string>
     <string name="result_left_info" >"For the left eye vision is"</string>

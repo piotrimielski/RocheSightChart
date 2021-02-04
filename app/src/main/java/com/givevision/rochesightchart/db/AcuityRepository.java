@@ -8,7 +8,6 @@ import androidx.room.Room;
 
 import com.givevision.rochesightchart.Util;
 
-import java.io.File;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
@@ -26,7 +25,7 @@ public class AcuityRepository {
         gvDatabase = Room.databaseBuilder(context, GiveVisionDatabase.class, DB_NAME).build();
     }
 
-    public void insertAcuity(int userId, boolean contrast, String leftEye,String rightEye) {
+    public void insertAcuity(int userId, boolean contrast, String leftEye, String rightEye) {
         Date currentTime = new Date(Calendar.getInstance().getTimeInMillis());
 
         final Acuity acuity = new Acuity();

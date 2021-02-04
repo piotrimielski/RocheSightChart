@@ -59,8 +59,14 @@ import static com.givevision.rochesightchart.Util.TAG;
 //https://cmusphinx.github.io/wiki/tutorialandroid/
 
 public class MainActivity extends Activity {
-    private static  int GREY_E = 250;
-    private static  int GREY_B = 255;
+    //5% contrast – this is with background 186 and foreground 178 pixel intensities
+    private static  int GREY_E = 178;
+    private static  int GREY_B = 186;
+    //2.5% contrast, with background 186 and foreground 182
+    private static  int GREY_E_1 = 182;
+    private static  int GREY_B_1 = 186;
+    private static  int WHITE = 255;
+    private static  int BLACK = 0;
     private static Context context;
     public static final String CONF_PATH = Environment.getExternalStorageDirectory()+ "/GiveVision/contrast.txt";
     /* Named searches allow to quickly reconfigure the decoder */
@@ -81,6 +87,8 @@ public class MainActivity extends Activity {
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO21 = "controller calibration info21";
     private static final String ACTION_CONTROLLER_TEST_INFO1 = "controller test info1";
     private static final String ACTION_CONTROLLER_TEST_INFO2 = "controller test info2";
+    private static final String ACTION_CONTROLLER_TEST_INFO3 = "controller test info3";
+    private static final String ACTION_CONTROLLER_TEST_INFO4 = "controller test info4";
     private static final String ACTION_CALIBRATION_CHECK = "calibration check";
     private static final String ACTION_CONTROLLER = "controller";
     private static final String ACTION_VOICE = "voice";
@@ -134,9 +142,13 @@ public class MainActivity extends Activity {
     private int chartPos=-1;
     private boolean learning=false;
     private int eye=-1; //0-left 1-right -1-double
+    private boolean isNoContrast=false;
     private boolean isContrast=false;
+    private boolean isContrast_1=false;
     private String contrastLeftResult;
     private String contrastRightResult;
+    private String contrast_1LeftResult;
+    private String contrast_1RightResult;
     private String noContrastLeftResult;
     private String noContrastRightResult;
     private int greyE;
@@ -290,7 +302,7 @@ public class MainActivity extends Activity {
      * @param delay start runnable code 1 with defined delay
      * @return
      */
-    void restardTask(int delay) {
+    void restartTask(int delay) {
         handler.removeCallbacks(runnableCode);
         handler0.removeCallbacks(runnableCode0);
         isTimerStart=false;
@@ -499,6 +511,8 @@ public class MainActivity extends Activity {
         captions.put(ACTION_CONTROLLER_TEST_INFO, R.string.action_controller_test_info);
         captions.put(ACTION_CONTROLLER_TEST_INFO1, R.string.action_controller_test_info1);
         captions.put(ACTION_CONTROLLER_TEST_INFO2, R.string.action_controller_test_info2);
+        captions.put(ACTION_CONTROLLER_TEST_INFO3, R.string.action_controller_test_info3);
+        captions.put(ACTION_CONTROLLER_TEST_INFO4, R.string.action_controller_test_info4);
         captions.put(ACTION_VOICE_TEST_INFO, R.string.action_voice_test_info);
         captions.put(ACTION_RESET_USER, R.string.action_reset_user);
         captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
@@ -650,23 +664,23 @@ public class MainActivity extends Activity {
         handler0.removeCallbacks(runnableCode0);
         handler0.postDelayed(runnableCode0, KEY_DELAY);
 
-        //read sequences of chart from 1 to 17
-        ArrayList<String> lists= Util.readConfigFile(CONF_PATH);
-        if(lists!=null){
-            if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_MAIN, "seq= "+lists.size());
-            }
-            String str=lists.get(0);
-            Log.i(Util.LOG_TAG_MAIN, "str= "+str);
-            String[] arrayOfString=str.split(",");
-            GREY_E= Integer.parseInt(arrayOfString[0]);
-            GREY_B= Integer.parseInt(arrayOfString[1]);
-            ArrayList<Integer> list =new ArrayList<Integer>();
-        }else{
-            if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_MAIN, "contrast static");
-            }
-        }
+        //read CONTRAST LEVEL from file
+//        ArrayList<String> lists= Util.readConfigFile(CONF_PATH);
+//        if(lists!=null){
+//            if (Util.DEBUG) {
+//                Log.i(Util.LOG_TAG_MAIN, "seq= "+lists.size());
+//            }
+//            String str=lists.get(0);
+//            Log.i(Util.LOG_TAG_MAIN, "str= "+str);
+//            String[] arrayOfString=str.split(",");
+//            GREY_E= Integer.parseInt(arrayOfString[0]);
+//            GREY_B= Integer.parseInt(arrayOfString[1]);
+//            ArrayList<Integer> list =new ArrayList<Integer>();
+//        }else{
+//            if (Util.DEBUG) {
+//                Log.i(Util.LOG_TAG_MAIN, "contrast static");
+//            }
+//        }
     }
 
     /**
@@ -865,7 +879,7 @@ public class MainActivity extends Activity {
                 eye = -1;
                 myGLRenderer.setCalibrationImage(3);
                 nextChart();
-                restardTask(LONG_DELAY);
+                restartTask(LONG_DELAY);
             } else {
                 myGLRenderer.setCalibrationImage(2);
                 myGLRenderer.setCharacter(1); //circle with gaps character
@@ -1115,7 +1129,7 @@ public class MainActivity extends Activity {
                 eye=-1;
                 myGLRenderer.setCalibrationImage(3);
                 nextChart();
-                restardTask(LONG_DELAY);
+                restartTask(LONG_DELAY);
             }
         }else if(keyCode==Util.KEY_UP && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
@@ -1237,191 +1251,168 @@ public class MainActivity extends Activity {
      * @return
      */
     private void nextChart() {
-        chartPos=0;
-        err=0;
-        good=0;
-        if(eye==-1){
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_KEY, "nextChart started");
+        }
+        chartPos = 0;
+        err = 0;
+        good = 0;
+        if (eye == -1) {
             //start new test with left eye
-            eye=0;
-            isContrast=false;
-            chart=Util.getSharedPreferences(context).getInt(Util.PREF_LEFT_START,FIRST_CHART_LEFT_EYE);
-            totalLengthStringArray=learn.getSizeChartsPos(chart);
-            if(!isContrast){
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true,false);
-            }
+            eye = 0;
+            isNoContrast = true;
+            isContrast = false;
+            isContrast_1 = false;
+
+            chart = Util.getSharedPreferences(context).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE);
+            totalLengthStringArray = learn.getSizeChartsPos(chart);
+            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true, false);
             learn.clearResult();
-        }else{
-            if(learn.isResultOk(chart,eye)){
-                chart++;
-                if(chart>=totalLengthCharts){
-                    //go to next eye or is not contrast test go to contrast test
-                    if(!isContrast){
-                        //first test with contrast done
-                        //go to contrast test for left or right eye
-                        //memorise no contrast test
-                        if (eye == 0) {
-                            noContrastLeftResult=learn.getEyeResult(eye);
-                            chart=Util.getSharedPreferences(context).getInt(Util.PREF_LEFT_START,FIRST_CHART_LEFT_EYE);
-                        }else if(eye==1){
-                            noContrastRightResult=learn.getEyeResult(eye);
-                            chart=Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START,FIRST_CHART_RIGHT_EYE);
-                            if (Util.DEBUG) {
-                                Log.d(LOG_TAG_MAIN, "Result noContrastLeftResult= " + noContrastLeftResult
-                                        + " contrastLeftResult= " + contrastLeftResult);
-                            }
-                            //insert in database no contrast tests
-                            AsyncTask.execute( new Runnable() {
-                                @Override
-                                public void run() {
-                                    handler0.removeCallbacks(runnableCode0);
-                                    int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-                                    if(userId>-1){
-                                        acuityRepository.insertAcuity(userId, false,noContrastLeftResult,noContrastRightResult);
-                                    }
-                                    handler0.postDelayed(runnableCode0, 100);
-                                }
-                            });
-                        }
-                        totalLengthStringArray=learn.getSizeChartsPos(chart);
-                        learn.clearResult();
-                        isContrast=true;
-                    }else{
-                        //second test with contrast done
-                        //memorise no contrast test
-                        //go to contrast test for right eye or end test
-                        if (eye == 0) {
-                            contrastLeftResult=learn.getEyeResult(eye);
-                            isContrast=false;
-                        }else if(eye==1){
-                            contrastRightResult=learn.getEyeResult(eye);
-                            //insert in database contrast tests
-                            AsyncTask.execute( new Runnable() {
-                                @Override
-                                public void run() {
-                                    handler0.removeCallbacks(runnableCode0);
-                                    int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-                                    if(userId>-1){
-                                        acuityRepository.insertAcuity(userId, true,contrastLeftResult,contrastRightResult);
-                                    }
-                                    handler0.postDelayed(runnableCode0, 100);
-                                }
-                            });
-                            endOfTest(true);
-                            return;
-                        }
-                        chart= totalLengthCharts;
-                    }
-                }
-            }else{
-                //go to next eye or is not contrast test go to contrast test
-                if(!isContrast){
-                    //first test with contrast done
-                    //go to contrast test for left or right eye
+        } else {
+            chart++;
+            //all chart was done or error
+            if (chart >= totalLengthCharts || !learn.isResultOk(chart-1, eye)) {
+                if (isNoContrast) {
+                    //first no contrast test done
                     //memorise no contrast test
                     if (eye == 0) {
-                        noContrastLeftResult=learn.getEyeResult(eye);
-                        chart=Util.getSharedPreferences(context).getInt(Util.PREF_LEFT_START,FIRST_CHART_LEFT_EYE);
-                    }else if(eye==1){
-                        noContrastRightResult=learn.getEyeResult(eye);
-                        chart=Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START,FIRST_CHART_RIGHT_EYE);
+                        noContrastLeftResult = learn.getEyeResult(eye);
+                        eye=1;
+                        chart = Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                        totalLengthStringArray = learn.getSizeChartsPos(chart);
+                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                    } else if (eye == 1) {
+                        noContrastRightResult = learn.getEyeResult(eye);
                         if (Util.DEBUG) {
                             Log.d(LOG_TAG_MAIN, "Result noContrastLeftResult= " + noContrastLeftResult
                                     + " contrastLeftResult= " + contrastLeftResult);
                         }
                         //insert in database no contrast tests
-                        AsyncTask.execute( new Runnable() {
+                        AsyncTask.execute(new Runnable() {
                             @Override
                             public void run() {
                                 handler0.removeCallbacks(runnableCode0);
-                                int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-                                if(userId>-1){
-                                    acuityRepository.insertAcuity(userId, false,noContrastLeftResult,noContrastRightResult);
+                                int userId = Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID, -1);
+                                if (userId > -1) {
+                                    acuityRepository.insertAcuity(userId, false, noContrastLeftResult, noContrastRightResult);
                                 }
                                 handler0.postDelayed(runnableCode0, 100);
                             }
                         });
+                        //go to contrast test for left or right eye
+                        chart = 0;
+                        eye=0;
+                        isNoContrast = false;
+                        isContrast = true;
+                        isContrast_1 = false;
+                        totalLengthStringArray = learn.getSizeChartsPos(chart);
+                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO3)), true, false);
+                        learn.clearResult();
                     }
-                    totalLengthStringArray=learn.getSizeChartsPos(chart);
-                    learn.clearResult();
-                    isContrast=true;
-                }else{
+                } else if (isContrast) {
+                    //first  contrast test done
+                    //memorise contrast test
+                    if (eye == 0) {
+                        contrastLeftResult = learn.getEyeResult(eye);
+                        chart = 0;
+                        eye=1;
+                        totalLengthStringArray = learn.getSizeChartsPos(chart);
+                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                    } else if (eye == 1) {
+                        contrastRightResult = learn.getEyeResult(eye);
+                        if (Util.DEBUG) {
+                            Log.d(LOG_TAG_MAIN, "Result noContrastLeftResult= " + noContrastLeftResult
+                                    + " contrastLeftResult= " + contrastLeftResult);
+                        }
+                        //insert in database contrast tests
+                        AsyncTask.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                handler0.removeCallbacks(runnableCode0);
+                                int userId = Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID, -1);
+                                if (userId > -1) {
+                                    acuityRepository.insertAcuity(userId, false, contrastLeftResult, contrastRightResult);
+                                }
+                                handler0.postDelayed(runnableCode0, 100);
+                            }
+                        });
+                        if(chart>=totalLengthCharts){
+                            //go to contrast_1 test for left or right eye
+                            chart = 0;
+                            eye=0;
+                            isNoContrast = false;
+                            isContrast = false;
+                            isContrast_1 = true;
+                            totalLengthStringArray = learn.getSizeChartsPos(chart);
+                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
+                            learn.clearResult();
+                        }else{
+                            learn.clearResult();
+                            isNoContrast = false;
+                            isContrast = false;
+                            isContrast_1 = false;
+                            endOfTest(true);
+                            return;
+                        }
+                    }
+                } else if(isContrast_1){
                     //second test with contrast done
                     //memorise no contrast test
                     //go to contrast test for right eye or end test
                     if (eye == 0) {
-                        contrastLeftResult=learn.getEyeResult(eye);
-                        isContrast=false;
-                    }else if(eye==1){
-                        contrastRightResult=learn.getEyeResult(eye);
+                        contrast_1LeftResult = learn.getEyeResult(eye);
+                        chart=0;
+                        eye=1;
+                        totalLengthStringArray = learn.getSizeChartsPos(chart);
+                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                    } else if (eye == 1) {
+                        contrast_1RightResult = learn.getEyeResult(eye);
                         //insert in database contrast tests
-                        AsyncTask.execute( new Runnable() {
+                        AsyncTask.execute(new Runnable() {
                             @Override
                             public void run() {
                                 handler0.removeCallbacks(runnableCode0);
-                                int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-                                if(userId>-1){
-                                    acuityRepository.insertAcuity(userId, true,contrastLeftResult,contrastRightResult);
+                                int userId = Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID, -1);
+                                if (userId > -1) {
+                                    acuityRepository.insertAcuity(userId, true, contrast_1LeftResult, contrast_1RightResult);
                                 }
                                 handler0.postDelayed(runnableCode0, 100);
                             }
                         });
+                        learn.clearResult();
+                        isNoContrast = false;
+                        isContrast = false;
+                        isContrast_1 = false;
                         endOfTest(true);
                         return;
                     }
-                    chart= totalLengthCharts;
                 }
             }
         }
 
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_KEY, "eye= " + eye +" totalLengthCharts= " + totalLengthCharts +
-                    " chart=" + chart + " totalLengthStringArray=" + totalLengthStringArray );
+            Log.i(Util.LOG_TAG_KEY, "eye= " + eye + " totalLengthCharts= " + totalLengthCharts +
+                    " chart=" + chart + " totalLengthStringArray=" + totalLengthStringArray);
         }
         setInfo("test started");
-        if(chart>=totalLengthCharts){
-            if(eye<1){
-                //go to right eye
-                chart=Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START,FIRST_CHART_RIGHT_EYE);
-                eye=1;
-                setText("","");
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true,false);
-            }
-//            else {
-//                contrastRightResult=learn.getEyeResult(eye);
-//                //insert in database contrast tests
-//                AsyncTask.execute( new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        handler0.removeCallbacks(runnableCode0);
-//                        int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-//                        if(userId>-1){
-//                            acuityRepository.insertAcuity(userId, true,contrastLeftResult,contrastRightResult);
-//                        }
-//                        handler0.postDelayed(runnableCode0, 0);
-//                    }
-//                });
-//                setText("","");
-//                endOfTest();
-//                return;
-//            }
+        if (isNoContrast) {
+            greyE = BLACK;//(int) learn.getOptotypeEgrey(chart);
+            greySquare = WHITE; //(int) learn.getOptotypeSquaregrey(chart);
+        } else if (isContrast) {
+            greyE = GREY_E;
+            greySquare = GREY_B;
+        } else if (isContrast_1){
+            greyE = GREY_E_1;
+            greySquare = GREY_B_1;
         }
-        //new chart test
-//      toneL.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
         setText("","");
-        totalLengthStringArray=learn.getSizeChartsPos(chart);
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_KEY, "eye= " + eye +" chart=" + chart);
         }
-        greyE = GREY_E;//(int) learn.getOptotypeEgrey(chart);
-        greySquare = GREY_B; //(int) learn.getOptotypeSquaregrey(chart);
-        if(isContrast){
-            myGLRenderer.setGrey(eye,greyE,greySquare);
-        }else {
-            myGLRenderer.setGrey(eye,0,255);
-        }
+        myGLRenderer.setGrey(eye,greyE,greySquare);
         myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
         if(test){
-             restardTask(LONG_DELAY);
+             restartTask(LONG_DELAY);
         }
     }
 
@@ -1432,12 +1423,9 @@ public class MainActivity extends Activity {
      * @return
      */
     private void resultChart(String result) {
-        if(chart==-1){
-            return;
-        }
-        stopTask(true);
 //        setText(result,"");
         if(chart>-1 && chart<=totalLengthCharts-1){
+            stopTask(true);
             if(chartPos<=totalLengthStringArray-1){
                 //test in the position
 //                int r=learn.setResult(chart, chartPos, result,eye);
@@ -1472,14 +1460,15 @@ public class MainActivity extends Activity {
                     if(chartPos>totalLengthStringArray-1){
                         nextChart();
                         return;
-                    }
-                    //chartPos was -2 before this procedure
-                    if(chartPos==-1){
-                        //no test
-                        myGLRenderer.setChart(-1, eye, "", learn.getOptotypePixels(0));
                     }else{
-                        //test
-                        myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+                        //chartPos was -2 before this procedure
+                        if(chartPos==-1){
+                            //no test
+                            myGLRenderer.setChart(-1, eye, "", learn.getOptotypePixels(0));
+                        }else{
+                            //test
+                            myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+                        }
                     }
                 }
             }else{
@@ -1490,7 +1479,7 @@ public class MainActivity extends Activity {
                 return;
             }
             if(test){
-                restardTask(LONG_DELAY);
+                restartTask(LONG_DELAY);
             }
         }
     }
@@ -1514,8 +1503,10 @@ public class MainActivity extends Activity {
         say("end of test",false,false);
         if (Util.DEBUG) {
             Log.d(LOG_TAG_MAIN, "test end test= "+test+" ok= "+ok+" eye= "+eye
-                    +" left:  noContrastLeftResult= "+ noContrastLeftResult+ " contrastLeftResult= "+ contrastLeftResult
-                    + " right:  noContrastRightResult= "+ noContrastRightResult+ " contrastRightResult= "+ contrastRightResult);}
+                    +" left:  noContrastLeftResult= "+ noContrastLeftResult+
+                    " contrastLeftResult= "+ contrastLeftResult + " contrast_1LeftResult= "+ contrast_1LeftResult
+                    + " right:  noContrastRightResult= "+ noContrastRightResult+
+                    " contrastRightResult= "+ contrastRightResult+ " contrast_1RightResult= "+ contrast_1RightResult);}
         if(test && ok){
             if(noContrastLeftResult==""){
 //                noContrastLeftResult="no reading";
@@ -1538,10 +1529,12 @@ public class MainActivity extends Activity {
                 contrastRightResult=learn.getPixelsFromMunit(contrastRightResult);
             }
 
-            setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult,
-                    "right eye: "+noContrastRightResult +" / " +contrastRightResult);
-            say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+" "+noContrastLeftResult +" and " +contrastLeftResult, true,false);
-            say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+noContrastRightResult +" and " +contrastRightResult, true,false);
+            setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult+" / " +contrast_1LeftResult,
+                    "right eye: "+noContrastRightResult +" / " +contrastRightResult+" / " +contrast_1RightResult);
+            say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+" "+noContrastLeftResult +
+                    " contrast test " +contrastLeftResult+" and " +contrast_1LeftResult, true,false);
+            say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+noContrastRightResult +
+                    " contrast test " +contrastRightResult +" and " +contrast_1RightResult, true,false);
             noContrastLeftResult="";
             contrastLeftResult="";
             noContrastRightResult="";
