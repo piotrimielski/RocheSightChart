@@ -233,7 +233,7 @@ public class LearnMachine {
     }
     /**
      * @param eye
-     * @return result
+     * @return result in Approximate M-units
      */
     public String getEyeResult(int eye){
         int resultOkPos=-1;

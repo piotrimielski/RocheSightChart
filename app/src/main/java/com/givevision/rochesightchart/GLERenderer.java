@@ -14,7 +14,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
     private static final int MAX_XY_DELTA = 200;//in pixel
     private static final float Y_POSITION = 0.5f;
     private static final int ORG_RADIUS = 150;
-    private static final float CORRECTION = 5f; //pixels /mm if phone 25mm from lens 1.875
+    private static final float CORRECTION = 4f; //pixels /mm if phone 25mm from lens 1.875
     private int radius;
     private static float YELLOW_COLOR[] = {0.976f, 0.694f, 0.015f, 1f};
     private static float GREEN_COLOR[] = {0.0f, 1f, 0.0f, 1f};

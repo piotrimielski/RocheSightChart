@@ -92,10 +92,17 @@ public class MainActivity extends Activity {
     private static final String ACTION_CALIBRATION_CHECK = "calibration check";
     private static final String ACTION_CONTROLLER = "controller";
     private static final String ACTION_VOICE = "voice";
+    private static final int NEXT_CHART_FOR_MANUAL_STOP=-1;
+    private static final int NEXT_CHART_FOR_ERROR=0;
+    private static final int NEXT_CHART_FOR_GOOD=1;
+    private static final int NEXT_CHART_FOR_NO_READING=2;
+    private static final int NEXT_CHART_FOR_NEW_TEST=3;
+    private static final int NEXT_CHART_FOR_NEW_LEVEL=4;
 
     private boolean step1=false;
     private boolean step2=false;
     private boolean test=false;
+    private boolean isDoubleTouche;
     private RelativeLayout   relativeLayout  ;
     private boolean isReadyForSpeech;
     /* Used to handle permission request */
@@ -207,7 +214,7 @@ public class MainActivity extends Activity {
         public void run() {
             if(isSecondPeriod){
                 stopTask(false);
-                nextChart();
+                nextChart(NEXT_CHART_FOR_NO_READING);
 //                resultChart("error");
             }
         }
@@ -281,6 +288,7 @@ public class MainActivity extends Activity {
         }
     };
 
+
     /**
      * stop the background tasks
      * @param
@@ -328,13 +336,13 @@ public class MainActivity extends Activity {
     private void initControls() {
         if (fakeControls) {
             findViewById(R.id.controls).setVisibility(View.VISIBLE);
-            findViewById(R.id.up).setOnClickListener(view -> mainDispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, Util.KEY_UP)));
-            findViewById(R.id.down).setOnClickListener(view -> mainDispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, Util.KEY_DOWN)));
-            findViewById(R.id.trigger).setOnClickListener(view -> mainDispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, Util.KEY_TRIGGER)));
-            findViewById(R.id.left).setOnClickListener(view -> mainDispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, Util.KEY_LEFT)));
-            findViewById(R.id.right).setOnClickListener(view -> mainDispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, Util.KEY_RIGHT)));
-            findViewById(R.id.power).setOnClickListener(view -> mainDispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, Util.KEY_POWER)));
-            findViewById(R.id.back).setOnClickListener(view -> mainDispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, Util.KEY_BACK)));
+            findViewById(R.id.up).setOnClickListener(view -> mainDispatchKeyEvent(KeyEvent.ACTION_DOWN, Util.KEY_UP));
+            findViewById(R.id.down).setOnClickListener(view -> mainDispatchKeyEvent(KeyEvent.ACTION_DOWN, Util.KEY_DOWN));
+            findViewById(R.id.trigger).setOnClickListener(view -> mainDispatchKeyEvent(KeyEvent.ACTION_UP, Util.KEY_TRIGGER));
+            findViewById(R.id.left).setOnClickListener(view -> mainDispatchKeyEvent(KeyEvent.ACTION_DOWN, Util.KEY_LEFT));
+            findViewById(R.id.right).setOnClickListener(view -> mainDispatchKeyEvent(KeyEvent.ACTION_DOWN, Util.KEY_RIGHT));
+            findViewById(R.id.power).setOnClickListener(view -> mainDispatchKeyEvent(KeyEvent.ACTION_UP, Util.KEY_POWER));
+            findViewById(R.id.back).setOnClickListener(view -> mainDispatchKeyEvent(KeyEvent.ACTION_UP, Util.KEY_BACK));
         } else {
             findViewById(R.id.controls).setVisibility(View.GONE);
         }
@@ -651,6 +659,7 @@ public class MainActivity extends Activity {
         myGLRenderer.setChart(-1, -2, "", 0);
         learn =new LearnMachine(this);
         totalLengthCharts=learn.getSizeCharts();
+        isProcessing=false;
         chart=-1;
         chartPos=-1;
         eye=-1;
@@ -767,58 +776,66 @@ public class MainActivity extends Activity {
      * @return boolean event validation
      */
     @Override
-    public boolean
-    dispatchKeyEvent(KeyEvent event) {
+    public boolean dispatchKeyEvent(KeyEvent event) {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "dispatchKeyEvent keyCode: select: "+event.getKeyCode()+" action: "+event.getAction()
                     +" newUser: "+newUser+ " isProcessing= "+isProcessing);
         }
-        if(isProcessing){
+        if(isProcessing && !isDoubleTouche && !step1){
             return true;
         }
         int keyCode=event.getKeyCode();
-        int keyEvent=event.getAction();
+        int keyAction=event.getAction();
         int keyCodeRead;
-        if(test && (keyCode==Util.KEY_RIGHT || keyCode==Util.KEY_LEFT || keyCode==Util.KEY_UP || keyCode==Util.KEY_DOWN)){
-            if(!isTouchProcessing && listOfTouchs.size()>=Util.KEY_NBR){
-                isTouchProcessing=true;
-                int up=Collections.frequency(listOfTouchs,Util.KEY_UP);
-                int down= Collections.frequency(listOfTouchs,Util.KEY_DOWN);
-                int left=Collections.frequency(listOfTouchs,Util.KEY_LEFT);
-                int right=Collections.frequency(listOfTouchs,Util.KEY_RIGHT);
-                if(up>down && up>left && up>right){
-                    keyCodeRead=up;
-                }else if(down>up && down>left && down>right){
-                    keyCodeRead=down;
-                }else if(left>up && left>down && left>right){
-                    keyCodeRead=left;
-                }else if(right>up && right>down && right>left){
-                    keyCodeRead=right;
-                    isTouchProcessing=false;
-                    return mainDispatchKeyEvent(new KeyEvent(keyCodeRead,KeyEvent.ACTION_DOWN));
-                }else{
-                    if(!isTouchProcessing){
-                        listOfTouchs.add(keyCode);
-                    }
-                    return true;
-                }
-            }
+        if((step2 || (!step1 && !step2 && !test)) &&
+                (keyCode==Util.KEY_TRIGGER && keyAction==KeyEvent.ACTION_DOWN)){
+            isDoubleTouche=true;
+        }else if(keyCode==Util.KEY_TRIGGER && keyAction==KeyEvent.ACTION_UP){
+            isDoubleTouche=false;
         }
 
-        return mainDispatchKeyEvent(event);
+        //TODO:: test for good button touched
+//        if(test && (keyCode==Util.KEY_RIGHT || keyCode==Util.KEY_LEFT || keyCode==Util.KEY_UP || keyCode==Util.KEY_DOWN)){
+//            if(!isTouchProcessing && listOfTouchs.size()>=Util.KEY_NBR){
+//                isTouchProcessing=true;
+//                int up=Collections.frequency(listOfTouchs,Util.KEY_UP);
+//                int down= Collections.frequency(listOfTouchs,Util.KEY_DOWN);
+//                int left=Collections.frequency(listOfTouchs,Util.KEY_LEFT);
+//                int right=Collections.frequency(listOfTouchs,Util.KEY_RIGHT);
+//                if(up>down && up>left && up>right){
+//                    keyCodeRead=up;
+//                }else if(down>up && down>left && down>right){
+//                    keyCodeRead=down;
+//                }else if(left>up && left>down && left>right){
+//                    keyCodeRead=left;
+//                }else if(right>up && right>down && right>left){
+//                    keyCodeRead=right;
+//                    isTouchProcessing=false;
+//                    return mainDispatchKeyEvent(new KeyEvent(keyCodeRead,KeyEvent.ACTION_DOWN));
+//                }else{
+//                    if(!isTouchProcessing){
+//                        listOfTouchs.add(keyCode);
+//                    }
+//                    return true;
+//                }
+//            }
+//        }
+
+        return mainDispatchKeyEvent(keyCode,keyAction);
     }
 
-    private boolean mainDispatchKeyEvent(KeyEvent event) {
-        int keyCode=event.getKeyCode();
-        int keyEvent=event.getAction();
+    /**
+     * controller button action
+     * @param keyCode
+     * @param keyAction
+     * @return boolean true for key acceptation
+     */
+    private boolean mainDispatchKeyEvent(int keyCode, int keyAction) {
 
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                isProcessing=false;
-            }}, 1000);
         if (Util.DEBUG) {
-            Log.i(LOG_TAG_MAIN, "keyCode: select: "+event.getKeyCode()+" action: "+event.getAction()
-                    +" newUser: "+newUser);
+            Log.i(LOG_TAG_MAIN, "mainDispatchKeyEvent keyCode: select: "+keyCode+" action: "+keyAction
+                    +" isDoubleTouche: "+isDoubleTouche +" newUser: "+newUser+
+                    " step1= "+step1+" step2= "+step2+" test= "+test);
         }
         //TODO:: removed for test
 ////        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP && (!step1 && !step2 && !test)){
@@ -826,7 +843,8 @@ public class MainActivity extends Activity {
 ////            say(getResources().getString(captions.get(CHARTS_SEARCH)), false);
 ////            isProcessing=false;
 ////        }else
-        if(keyCode==Util.KEY_POWER  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)) {
+        if(keyCode==Util.KEY_POWER  && (keyAction == KeyEvent.ACTION_UP || fakeControls)) {
+            isProcessing = true;
             say("",false,false);
 
             //start app
@@ -840,7 +858,6 @@ public class MainActivity extends Activity {
             err = 0;
             good = 0;
             isAppStarted = true;
-            isProcessing = true;
             myGLRenderer.setChart(-1, -2, "", 0);
             learn.clearResult();
             myGLRenderer.resetUser(newUser);
@@ -856,8 +873,10 @@ public class MainActivity extends Activity {
             pixelNbr=1;
             noContrastLeftResult="";
             contrastLeftResult="";
+            contrast_1LeftResult="";
             noContrastRightResult="";
             contrastRightResult="";
+            contrast_1RightResult="";
             if (!newUser) {
                 setText("", "");
                 step1 = false;
@@ -878,8 +897,7 @@ public class MainActivity extends Activity {
                 myGLRenderer.setRightCenterY(y);
                 eye = -1;
                 myGLRenderer.setCalibrationImage(3);
-                nextChart();
-                restartTask(LONG_DELAY);
+                nextChart(NEXT_CHART_FOR_NEW_TEST);
             } else {
                 myGLRenderer.setCalibrationImage(2);
                 myGLRenderer.setCharacter(1); //circle with gaps character
@@ -895,58 +913,63 @@ public class MainActivity extends Activity {
                 test = false;
             }
             isProcessing = false;
-        }  else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)
+        }  else if(keyCode==Util.KEY_UP  && (keyAction == KeyEvent.ACTION_UP || fakeControls)
                 && (step1==false && step2==false && test==false)){
-            say("",false,false);
-            isAppStarted=false;
-            stopTask(true);
+            if(isDoubleTouche){
+                isProcessing = true;
+                if (Util.DEBUG) {
+                    Log.i(Util.LOG_TAG_KEY, "KEY_UP");
+                }
+                say("",false,false);
+                isAppStarted=false;
+                stopTask(true);
+                isProcessing=true;
+                newUser=true;
+                acuityRepository.newInstallation();
+                say(getResources().getString(captions.get(ACTION_RESET_USER)), false,false);
+                myGLRenderer.setChart(-1, -2, "", 0);
+                resetPreferences(newUser);
+                step1=false;
+                step2=false;
+                test=false;
+                handler.postDelayed(runnableCode, 2*LONG_DELAY);//
+                learn.clearResult();
+                isProcessing=false;
+                isDoubleTouche=false;
+            }
+        }else if(keyCode==Util.KEY_BACK  && (keyAction == KeyEvent.ACTION_UP || fakeControls)
+                && (step1==false && step2==false && test==false)){
+                isProcessing = true;
+                endOfTest(false);
+                isProcessing = false;
+        }else if(keyCode==Util.KEY_BACK && (step1==true || step2==true)
+                && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             isProcessing=true;
-            newUser=true;
-            acuityRepository.newInstallation();
-            say(getResources().getString(captions.get(ACTION_RESET_USER)), false,false);
-            myGLRenderer.setChart(-1, -2, "", 0);
-            resetPreferences(newUser);
-            step1=false;
-            step2=false;
-            test=false;
-            handler.postDelayed(runnableCode, 2*LONG_DELAY);
-            isProcessing=false;
-        }else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
-            isProcessing=true;
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
+            }
             isAppStarted=false;
             stopTask(true);
             say("test stopped", false,false);
             endOfTest(false);
-//            step1=false;
-//            step2=false;
-//            test=false;
-//            learn.clearResult();
-//            if(startedByPackage!=null) {
-//                stopTask(true);
-//                say("we will start SightPlus now", true, false);
-//            }
-//            startExternalApp(startedByPackage);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                },SHORT_DELAY);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        finish();
-//                        System.exit(0);
-//                    }
-//                },LONG_DELAY);
-//            }else {
-//                myGLRenderer.setChart(-1, -2, "", 0);
-//                handler.postDelayed(runnableCode, 2 * LONG_DELAY);
-//                isProcessing = false;
-//            }
-        }else if(step1 ){
-            say("",false,false);
+            isProcessing=false;
+        }else if(keyCode==Util.KEY_BACK && (test==true)
+                && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             isProcessing=true;
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
+            }
+//            isProcessing=true;
+            isAppStarted=false;
+            stopTask(true);
+            say("test stopped", false,false);
+            nextChart(NEXT_CHART_FOR_MANUAL_STOP);
+            isProcessing=false;
+//            endOfTest(false);
+        }else if(step1 ){
+            isProcessing=true;
+            say("",false,false);
+//            isProcessing=true;
             greyE_left=GREY_ORG_E;
             greyE_right=GREY_ORG_E;
             greyE=GREY_ORG_E;
@@ -956,16 +979,45 @@ public class MainActivity extends Activity {
             pixelNbr_left=1;
             pixelNbr_right=1;
             pixelNbr=1;
-            calibration1(keyCode, keyEvent);
+            calibration1(keyCode, keyAction);
             isProcessing=false;
         }else if(step2){
-            isProcessing=true;
-            calibration2(keyCode, keyEvent);
-            isProcessing=false;
+            if(isDoubleTouche){
+                if(keyCode==Util.KEY_UP && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
+                    if (Util.DEBUG) {
+                        Log.i(Util.LOG_TAG_KEY, "calibration2 isDoubleTouche KEY_UP");
+                    }
+                    isProcessing=true;
+                    //memorize eye to put no testing
+                    if(eyeCalibration==1 && Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==0){
+                        Util.upDatePref(this, Util.PREF_BLIND_EYE, 2);
+                    }else {
+                        Util.upDatePref(this, Util.PREF_BLIND_EYE, eyeCalibration);
+                    }
+//                    if(eyeCalibration==0){
+//                        eyeCalibration=1;
+//                    }else{
+//                        eyeCalibration=-1;
+//                    }
+                    if (Util.DEBUG) {
+                        Log.i(Util.LOG_TAG_KEY, "calibration2 isDoubleTouche KEY_UP blind= "+
+                                Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1));
+                    }
+                    isProcessing=false;
+                    isDoubleTouche=false;
+                }
+            }else{
+                if (Util.DEBUG) {
+                    Log.i(Util.LOG_TAG_KEY, "calibration2");
+                }
+                isProcessing=true;
+                calibration2(keyCode, keyAction);
+                isProcessing=false;
+            }
         }else if(test){
             isProcessing=true;
             if(isReady){
-                test(keyCode, keyEvent);
+                test(keyCode, keyAction);
             }
             isProcessing=false;
         }
@@ -987,22 +1039,26 @@ public class MainActivity extends Activity {
             Util.upDatePref(this,Util.PREF_LEFT_START,100);
             Util.upDatePref(this,Util.PREF_RIGHT_START,100);
             Util.upDatePref(this,Util.PREF_USER_ID,-1);
+            Util.upDatePref(this, Util.PREF_BLIND_EYE,-1);
+            Util.postData(context, acuityRepository, imei,null);
         }
         noContrastLeftResult="";
         contrastLeftResult="";
+        contrast_1LeftResult="";
         noContrastRightResult="";
         contrastRightResult="";
+        contrast_1RightResult="";
         //learn.clearResult();
     }
 
     /**
      * calibration of position of circle
      * @param keyCode key code from controller
-     * @param keyEvent key code from controller
+     * @param keyAction key code from controller
      * @return
      */
-    private void calibration1(int keyCode, int keyEvent){
-        if(keyCode==Util.KEY_TRIGGER && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
+    private void calibration1(int keyCode, int keyAction){
+        if(keyCode==Util.KEY_TRIGGER && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
             }
@@ -1078,7 +1134,7 @@ public class MainActivity extends Activity {
                 myGLRenderer.setLeftPositionX(5f);
                 myGLRenderer.setRightPositionX(5f);
             }
-        }else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
+        }else if(keyCode==Util.KEY_BACK  && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
             }
@@ -1088,19 +1144,20 @@ public class MainActivity extends Activity {
     /**
      * calibration of sizes of chart to use
      * @param keyCode key code from controller
-     * @param keyEvent key code from controller
+     * @param keyAction key code from controller
      * @return
      */
-    private void calibration2(int keyCode, int keyEvent){
-        if(keyCode==Util.KEY_TRIGGER && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
+    private void calibration2(int keyCode, int keyAction){
+        if(keyCode==Util.KEY_TRIGGER && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER chart= "+chart);
+                Log.i(Util.LOG_TAG_KEY, "calibration2 KEY_TRIGGER chart= "+chart+
+                        " eyeCalibration= "+ eyeCalibration);
             }
             if(eyeCalibration==0){
                 if(chart>2 && chart<totalLengthCharts-1){
                     chart=chart-2;
                 }else if(chart>=totalLengthCharts-1){
-                    chart=totalLengthCharts-4;
+                    chart=totalLengthCharts-3;
                 }else{
                     chart=0;
                 }
@@ -1120,20 +1177,19 @@ public class MainActivity extends Activity {
                 if(chart>2 && chart<totalLengthCharts-1){
                     chart=chart-2;
                 }else if(chart>=totalLengthCharts-1){
-                    chart=totalLengthCharts-4;
+                    chart=totalLengthCharts-3;
                 }else{
                     chart=0;
                 }
                 Util.upDatePref(this, Util.PREF_RIGHT_START,chart);
-                newUser=false;
                 eye=-1;
+                newUser=false;
                 myGLRenderer.setCalibrationImage(3);
-                nextChart();
-                restartTask(LONG_DELAY);
+                nextChart(NEXT_CHART_FOR_NEW_TEST);
             }
-        }else if(keyCode==Util.KEY_UP && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
+        }else if(keyCode==Util.KEY_UP && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_KEY, "KEY_UP chart= "+chart+ " OptotypePixels= "+ learn.getOptotypePixels(chart));
+                Log.i(Util.LOG_TAG_KEY, " calibration2 KEY_UP chart= "+chart+ " OptotypePixels= "+ learn.getOptotypePixels(chart));
             }
             chart=chart-1;
             if(chart <0){
@@ -1145,9 +1201,9 @@ public class MainActivity extends Activity {
                 myGLRenderer.setChart(chart,eye,"all", learn.getOptotypePixels(chart) );
             }
 //            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
-        }else if(keyCode==Util.KEY_DOWN && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
+        }else if(keyCode==Util.KEY_DOWN && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_KEY, "KEY_DOWN chart= "+chart + " OptotypePixels= "+ learn.getOptotypePixels(chart));
+                Log.i(Util.LOG_TAG_KEY, "calibration2 KEY_DOWN chart= "+chart + " OptotypePixels= "+ learn.getOptotypePixels(chart));
             }
             chart=chart+1;
             if(chart > totalLengthCharts-1){
@@ -1159,20 +1215,21 @@ public class MainActivity extends Activity {
                 myGLRenderer.setChart(chart,eye,"all", learn.getOptotypePixels(chart) );
             }
 //            say(getResources().getString(captions.get(ACTION_CALIBRATION_CHECK)), false);
-        }else if(keyCode==Util.KEY_LEFT  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
+        }else if(keyCode==Util.KEY_LEFT  && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_LEFT");
             }
 
-        }else if(keyCode==Util.KEY_RIGHT && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
+        }else if(keyCode==Util.KEY_RIGHT && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_RIGHT");
             }
 
-        }else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
+        }else if(keyCode==Util.KEY_BACK  && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
             }
+
             endOfTest(false);
         }
     }
@@ -1232,121 +1289,176 @@ public class MainActivity extends Activity {
                 public void run() {
                     isReady=true;
                 }}, KEY_DELAY);
-        }else if(keyCode==Util.KEY_BACK  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
-            isReady=false;
-            if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_KEY, "KEY_BACK");
-            }
-            endOfTest(true);
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    isReady=true;
-                }}, KEY_DELAY);
         }
     }
     /**
      * new chart sizes or stop test
      * @param
      * @param
+     * @param nextChartFor
      * @return
      */
-    private void nextChart() {
+    private void nextChart(int nextChartFor) {
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_KEY, "nextChart started");
+            Log.i(Util.LOG_TAG_KEY, "nextChart nextChartFor= "+nextChartFor+
+                    " eye= "+ eye+  " chartPos= "+ chartPos+ " chart= "+chart+
+                    " err= "+err +" good= "+good +
+                    " blind= "+Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1));
         }
-        chartPos = 0;
+
         err = 0;
         good = 0;
         if (eye == -1) {
-            //start new test with left eye
-            eye = 0;
+            if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==0){
+                //start with right eye
+                eye = 1;
+                chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+            }else if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==2){
+                //blind end of test
+                endOfTest(false);
+                return;
+            }else{
+                //start with left eye
+                eye = 0;
+                chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true, false);
+            }
+            chartPos=0;
             isNoContrast = true;
             isContrast = false;
             isContrast_1 = false;
-
-            chart = Util.getSharedPreferences(context).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE);
             totalLengthStringArray = learn.getSizeChartsPos(chart);
-            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true, false);
             learn.clearResult();
         } else {
             chart++;
-            //all chart was done or error
-            if (chart >= totalLengthCharts || !learn.isResultOk(chart-1, eye)) {
-                if (isNoContrast) {
-                    //first no contrast test done
-                    //memorise no contrast test
-                    if (eye == 0) {
-                        noContrastLeftResult = learn.getEyeResult(eye);
-                        eye=1;
-                        chart = Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
-                        totalLengthStringArray = learn.getSizeChartsPos(chart);
-                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
-                    } else if (eye == 1) {
-                        noContrastRightResult = learn.getEyeResult(eye);
-                        if (Util.DEBUG) {
-                            Log.d(LOG_TAG_MAIN, "Result noContrastLeftResult= " + noContrastLeftResult
-                                    + " contrastLeftResult= " + contrastLeftResult);
+            //all charts for the contrast's level was done or error
+            if (chart >= totalLengthCharts || !learn.isResultOk(chart-1, eye) ||
+                    nextChartFor==NEXT_CHART_FOR_NEW_LEVEL) {
+                if (Util.DEBUG) {
+                    Log.i(Util.LOG_TAG_KEY, "nextChart go to next ChartFor= "+nextChartFor+
+                            " eye= "+ eye+  " chartPos= "+ chartPos+ " chart= "+chart+
+                            " err= "+err +" good= "+good);
+                }
+                if (eye == 0) {
+                    if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==1){
+                        endOfTest(true);
+                        return;
+                    }else if (isNoContrast) {
+                        //first no contrast test done
+                        //memorise no contrast test
+                        if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
+                            noContrastLeftResult = "-1" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
+                            noContrastLeftResult = "0" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_ERROR || nextChartFor==NEXT_CHART_FOR_GOOD){
+                            noContrastLeftResult = learn.getEyeResult(eye);
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_LEVEL){
+
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_TEST){
+
                         }
-                        //insert in database no contrast tests
-                        AsyncTask.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                handler0.removeCallbacks(runnableCode0);
-                                int userId = Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID, -1);
-                                if (userId > -1) {
-                                    acuityRepository.insertAcuity(userId, false, noContrastLeftResult, noContrastRightResult);
-                                }
-                                handler0.postDelayed(runnableCode0, 100);
-                            }
-                        });
-                        //go to contrast test for left or right eye
-                        chart = 0;
-                        eye=0;
-                        isNoContrast = false;
-                        isContrast = true;
-                        isContrast_1 = false;
+                        if(nextChartFor==NEXT_CHART_FOR_GOOD){
+                            //go to next contrast level
+                            chart = 0;
+                            eye=0;
+                            isNoContrast = false;
+                            isContrast = true;
+                            isContrast_1 = false;
+                        }else{
+                            //go to next eye
+                            chart = Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                            eye=1;
+                            isNoContrast = true;
+                            isContrast = false;
+                            isContrast_1 = false;
+                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                        }
                         totalLengthStringArray = learn.getSizeChartsPos(chart);
-                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO3)), true, false);
                         learn.clearResult();
-                    }
-                } else if (isContrast) {
-                    //first  contrast test done
-                    //memorise contrast test
-                    if (eye == 0) {
-                        contrastLeftResult = learn.getEyeResult(eye);
-                        chart = 0;
-                        eye=1;
-                        totalLengthStringArray = learn.getSizeChartsPos(chart);
-                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
-                    } else if (eye == 1) {
-                        contrastRightResult = learn.getEyeResult(eye);
-                        if (Util.DEBUG) {
-                            Log.d(LOG_TAG_MAIN, "Result noContrastLeftResult= " + noContrastLeftResult
-                                    + " contrastLeftResult= " + contrastLeftResult);
+                    }else if (isContrast){
+                        //contrast test done
+                        //memorise contrast test
+                        if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
+                            contrastLeftResult = "-1" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
+                            contrastLeftResult = "0" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_ERROR || nextChartFor==NEXT_CHART_FOR_GOOD){
+                            contrastLeftResult = learn.getEyeResult(eye);
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_LEVEL){
+
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_TEST){
+
                         }
-                        //insert in database contrast tests
-                        AsyncTask.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                handler0.removeCallbacks(runnableCode0);
-                                int userId = Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID, -1);
-                                if (userId > -1) {
-                                    acuityRepository.insertAcuity(userId, false, contrastLeftResult, contrastRightResult);
-                                }
-                                handler0.postDelayed(runnableCode0, 100);
-                            }
-                        });
-                        if(chart>=totalLengthCharts){
-                            //go to contrast_1 test for left or right eye
+                        if(nextChartFor==NEXT_CHART_FOR_GOOD){
+                            //go to next contrast level
                             chart = 0;
                             eye=0;
                             isNoContrast = false;
                             isContrast = false;
                             isContrast_1 = true;
-                            totalLengthStringArray = learn.getSizeChartsPos(chart);
-                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
-                            learn.clearResult();
                         }else{
+                            //go to next eye
+                            chart = Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                            eye=1;
+                            isNoContrast = true;
+                            isContrast = false;
+                            isContrast_1 = false;
+                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                        }
+                        totalLengthStringArray = learn.getSizeChartsPos(chart);
+                        learn.clearResult();
+                    }else if (isContrast_1){
+                        //contrast_1 test done
+                        //memorise contrast_1 test
+                        if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
+                            contrast_1LeftResult = "-1" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
+                            contrast_1LeftResult = "0" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_ERROR || nextChartFor==NEXT_CHART_FOR_GOOD){
+                            contrast_1LeftResult = learn.getEyeResult(eye);
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_LEVEL){
+
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_TEST){
+
+                        }
+                        //go to next eye
+                        chart = Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                        eye=1;
+                        isNoContrast = true;
+                        isContrast = false;
+                        isContrast_1 = false;
+                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                        totalLengthStringArray = learn.getSizeChartsPos(chart);
+                        learn.clearResult();
+                    }
+                }else if (eye == 1) {
+                    if (isNoContrast) {
+                        if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
+                            noContrastRightResult = "-1" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
+                            noContrastRightResult = "0" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_ERROR || nextChartFor==NEXT_CHART_FOR_GOOD){
+                            noContrastRightResult = learn.getEyeResult(eye);
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_LEVEL){
+
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_TEST){
+
+                        }
+                        //insert in database no contrast tests
+                        if(noContrastLeftResult!="" || noContrastRightResult!=""){
+                            insertAcuity(0, noContrastLeftResult, noContrastRightResult);
+                        }
+                        if(nextChartFor==NEXT_CHART_FOR_GOOD){
+                            //go to next contrast level
+                            chart = 0;
+                            eye=1;
+                            isNoContrast = false;
+                            isContrast = true;
+                            isContrast_1 = false;
+
+                        }else{
+                            //end test
                             learn.clearResult();
                             isNoContrast = false;
                             isContrast = false;
@@ -1354,31 +1466,55 @@ public class MainActivity extends Activity {
                             endOfTest(true);
                             return;
                         }
-                    }
-                } else if(isContrast_1){
-                    //second test with contrast done
-                    //memorise no contrast test
-                    //go to contrast test for right eye or end test
-                    if (eye == 0) {
-                        contrast_1LeftResult = learn.getEyeResult(eye);
-                        chart=0;
-                        eye=1;
-                        totalLengthStringArray = learn.getSizeChartsPos(chart);
-                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
-                    } else if (eye == 1) {
-                        contrast_1RightResult = learn.getEyeResult(eye);
-                        //insert in database contrast tests
-                        AsyncTask.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                handler0.removeCallbacks(runnableCode0);
-                                int userId = Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID, -1);
-                                if (userId > -1) {
-                                    acuityRepository.insertAcuity(userId, true, contrast_1LeftResult, contrast_1RightResult);
-                                }
-                                handler0.postDelayed(runnableCode0, 100);
-                            }
-                        });
+                    }else if (isContrast){
+                        if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
+                            contrastRightResult = "-1" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
+                            contrastRightResult = "0" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_ERROR || nextChartFor==NEXT_CHART_FOR_GOOD){
+                            contrastRightResult = learn.getEyeResult(eye);
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_LEVEL){
+
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_TEST){
+
+                        }
+                        //insert in database no contrast tests
+                        if(contrastLeftResult!="" || contrastRightResult!=""){
+                            insertAcuity(1, contrastLeftResult, contrastRightResult);
+                        }
+                        if(nextChartFor==NEXT_CHART_FOR_GOOD){
+                            //go to next contrast level
+                            chart = 0;
+                            eye=1;
+                            isNoContrast = false;
+                            isContrast = false;
+                            isContrast_1 = true;
+                        }else{
+                            //end test
+                            learn.clearResult();
+                            isNoContrast = false;
+                            isContrast = false;
+                            isContrast_1 = false;
+                            endOfTest(true);
+                            return;
+                        }
+                    }else if (isContrast_1){
+                        if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
+                            contrast_1RightResult = "-1" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
+                            contrast_1RightResult = "0" ;
+                        }else if(nextChartFor==NEXT_CHART_FOR_ERROR || nextChartFor==NEXT_CHART_FOR_GOOD){
+                            contrast_1RightResult = learn.getEyeResult(eye);
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_LEVEL){
+
+                        }else if(nextChartFor==NEXT_CHART_FOR_NEW_TEST){
+
+                        }
+                        //insert in database no contrast tests
+                        if(contrast_1LeftResult!="" || contrast_1RightResult!=""){
+                            insertAcuity(2, contrast_1LeftResult, contrast_1RightResult);
+                        }
+                        //end test
                         learn.clearResult();
                         isNoContrast = false;
                         isContrast = false;
@@ -1391,8 +1527,8 @@ public class MainActivity extends Activity {
         }
 
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_KEY, "eye= " + eye + " totalLengthCharts= " + totalLengthCharts +
-                    " chart=" + chart + " totalLengthStringArray=" + totalLengthStringArray);
+            Log.i(Util.LOG_TAG_KEY, "nextChart isNoContrast= " + isNoContrast + " isContrast= " + isContrast +
+                    " isContrast_1=" + isContrast_1);
         }
         setInfo("test started");
         if (isNoContrast) {
@@ -1407,13 +1543,33 @@ public class MainActivity extends Activity {
         }
         setText("","");
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_KEY, "eye= " + eye +" chart=" + chart);
+            Log.i(Util.LOG_TAG_KEY, "nextChart myGLRenderer eye= " + eye
+                    +" chart=" + chart +" chartPos=" + chartPos);
         }
         myGLRenderer.setGrey(eye,greyE,greySquare);
         myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
         if(test){
              restartTask(LONG_DELAY);
         }
+    }
+
+    /**
+     * insert acuity to local database
+     * @param test (0-nocontrast, 1-contrast 5%, 2-contrast 2.5%)
+     * @param leftResult (numbre of pixels, 0 no reading, -1 stop manually test, -2 stop manually
+     * @param rightResult (numbre of pixels, 0 no reading, -1 stop manually test, -2 stop manually
+     * @return
+     */
+    private void insertAcuity(int test, String leftResult, String rightResult) {
+        handler0.removeCallbacks(runnableCode0);
+        int userId = Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID, -1);
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_KEY, "insertAcuity userId= " + userId);
+        }
+        if (userId > -1) {
+            acuityRepository.insertAcuity(userId, test, leftResult, rightResult);
+        }
+        handler0.postDelayed(runnableCode0, 100);
     }
 
     /**
@@ -1426,16 +1582,16 @@ public class MainActivity extends Activity {
 //        setText(result,"");
         if(chart>-1 && chart<=totalLengthCharts-1){
             stopTask(true);
-            if(chartPos<=totalLengthStringArray-1){
+            if(chartPos>-1 && chartPos<=totalLengthStringArray-1){
                 //test in the position
 //                int r=learn.setResult(chart, chartPos, result,eye);
                 if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_KEY, "result= "+result+" chart= "+chart+
+                    Log.i(Util.LOG_TAG_KEY, "resultChart result= "+result+" chart= "+chart+
                             " chartPos= "+chartPos+" totalLengthStringArray= "+totalLengthStringArray);
                 }
                 //result card
                 if(learn.setResult(chart, chartPos, result,eye)<1){
-                    //if error (-1 or 0)
+                    //if error (-1 if !eye(0,1) or 0)
                     err=err+1;
                     toneL.startTone(ToneGenerator.TONE_DTMF_0,200);
                 }else{
@@ -1444,25 +1600,30 @@ public class MainActivity extends Activity {
                     toneH.startTone(ToneGenerator.TONE_DTMF_1,200);
                 }
                 if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_KEY, "good= "+good+"err= "+err+" result= "+result+" chart= "+chart+
+                    Log.i(Util.LOG_TAG_KEY, "resultChart good= "+good+" err= "+err+" result= "+result+" chart= "+chart+
                             " chartPos= "+chartPos+" totalLengthStringArray= "+totalLengthStringArray);
                 }
                 if(err>=2 || good>=3){
-                    myGLRenderer.setChart(-1, -2, "", 0);
+                    myGLRenderer.setChart(chart, eye, "", 0);
                     sleep(1000);
-                    nextChart();
+                    chartPos=0;
+                    if(err>=2) {
+                        nextChart(NEXT_CHART_FOR_ERROR);
+                    }else{
+                        nextChart(NEXT_CHART_FOR_GOOD);
+                    }
                     return;
                 }else{
                     chartPos++;
-                    myGLRenderer.setChart(-1, -2, "", 0);
+                    myGLRenderer.setChart(chart, eye, "", 0);
                     sleep(1000);
                     //end of card in this sizes
                     if(chartPos>totalLengthStringArray-1){
-                        nextChart();
+                        nextChart(NEXT_CHART_FOR_NEW_LEVEL);
                         return;
                     }else{
                         //chartPos was -2 before this procedure
-                        if(chartPos==-1){
+                        if(chartPos<0){
                             //no test
                             myGLRenderer.setChart(-1, eye, "", learn.getOptotypePixels(0));
                         }else{
@@ -1475,7 +1636,7 @@ public class MainActivity extends Activity {
                 //go next level the chart or stop
                 myGLRenderer.setChart(-1, -2, "", 0);
                 sleep(1000);
-                nextChart();
+                nextChart(NEXT_CHART_FOR_NEW_LEVEL);
                 return;
             }
             if(test){
@@ -1502,58 +1663,76 @@ public class MainActivity extends Activity {
         setInfo("end of test");
         say("end of test",false,false);
         if (Util.DEBUG) {
-            Log.d(LOG_TAG_MAIN, "test end test= "+test+" ok= "+ok+" eye= "+eye
+            Log.d(LOG_TAG_MAIN, "endOfTest test= "+test+" ok= "+ok+" eye= "+eye
                     +" left:  noContrastLeftResult= "+ noContrastLeftResult+
                     " contrastLeftResult= "+ contrastLeftResult + " contrast_1LeftResult= "+ contrast_1LeftResult
                     + " right:  noContrastRightResult= "+ noContrastRightResult+
                     " contrastRightResult= "+ contrastRightResult+ " contrast_1RightResult= "+ contrast_1RightResult);}
         if(test && ok){
-            if(noContrastLeftResult==""){
+            if(noContrastLeftResult=="" || noContrastLeftResult=="0" || noContrastLeftResult=="-1" || noContrastLeftResult=="-2" ){
 //                noContrastLeftResult="no reading";
             }else{
                 noContrastLeftResult=learn.getPixelsFromMunit(noContrastLeftResult);
             }
-            if(noContrastRightResult==""){
+            if(noContrastRightResult==""  || noContrastRightResult=="0" || noContrastRightResult=="-1" || noContrastRightResult=="-2" ){
 //                noContrastRightResult="no reading";
             }else{
                 noContrastRightResult=learn.getPixelsFromMunit(noContrastRightResult);
             }
-            if(contrastLeftResult==""){
+            if(contrastLeftResult=="" || contrastLeftResult=="0" || contrastLeftResult=="-1" || contrastLeftResult=="-2"){
 //                contrastLeftResult="no reading";
             }else{
                 contrastLeftResult=learn.getPixelsFromMunit(contrastLeftResult);
             }
-            if(contrastRightResult==""){
+            if(contrastRightResult=="" || contrastRightResult=="0" || contrastRightResult=="-1" || contrastRightResult=="-2"){
 //                contrastRightResult="no reading";
             }else{
                 contrastRightResult=learn.getPixelsFromMunit(contrastRightResult);
+            }
+            if(contrast_1LeftResult=="" || contrast_1LeftResult=="0" || contrast_1LeftResult=="-1" || contrast_1LeftResult=="-2"){
+//                contrastLeftResult="no reading";
+            }else{
+                contrast_1LeftResult=learn.getPixelsFromMunit(contrast_1LeftResult);
+            }
+            if(contrast_1RightResult=="" || contrast_1RightResult=="0" || contrast_1RightResult=="-1" || contrast_1RightResult=="-2"){
+//                contrastRightResult="no reading";
+            }else{
+                contrast_1RightResult=learn.getPixelsFromMunit(contrastRightResult);
             }
 
             setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult+" / " +contrast_1LeftResult,
                     "right eye: "+noContrastRightResult +" / " +contrastRightResult+" / " +contrast_1RightResult);
             say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+" "+noContrastLeftResult +
-                    " contrast test " +contrastLeftResult+" and " +contrast_1LeftResult, true,false);
+                    ", " +contrastLeftResult+", " +contrast_1LeftResult, true,false);
             say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+noContrastRightResult +
-                    " contrast test " +contrastRightResult +" and " +contrast_1RightResult, true,false);
+                    ", " +contrastRightResult +", " +contrast_1RightResult, true,false);
             noContrastLeftResult="";
             contrastLeftResult="";
             noContrastRightResult="";
             contrastRightResult="";
         }else{
-//            setText("","");
-//            setInfo("Preparing the test");
-            if(noContrastLeftResult==""){
-                noContrastLeftResult="-1";
-            }
-            if(noContrastRightResult==""){
-                noContrastRightResult="-1";
-            }
-            if(contrastLeftResult==""){
-                contrastLeftResult="-1";
-            }
-            if(contrastRightResult==""){
-                contrastRightResult="-1";
-            }
+            setText("","");
+            setInfo("Preparing the test");
+            noContrastLeftResult="-2";
+            noContrastLeftResult="-2";
+//            if(noContrastLeftResult==""){
+//                noContrastLeftResult="-2";
+//            }
+//            if(noContrastRightResult==""){
+//                noContrastLeftResult="-2";
+//            }
+//            if(contrastLeftResult==""){
+//                contrastLeftResult="-2";
+//            }
+//            if(contrastRightResult==""){
+//                contrastRightResult="-2";
+//            }
+//            if(contrast_1LeftResult==""){
+//                contrast_1LeftResult="-2";
+//            }
+//            if(contrast_1RightResult==""){
+//                contrast_1RightResult="-2";
+//            }
             if (Util.DEBUG) {
                 Log.d(LOG_TAG_MAIN, "test end test= "+test+" ok= "+ok
                     +" left:  noContrastLeftResult= "+ noContrastLeftResult+ " contrastLeftResult= "+ contrastLeftResult
@@ -1566,8 +1745,9 @@ public class MainActivity extends Activity {
                     handler0.removeCallbacks(runnableCode0);
                     int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
                     if(userId>-1){
-                        acuityRepository.insertAcuity(userId, false,noContrastLeftResult,noContrastRightResult);
-                        acuityRepository.insertAcuity(userId, true,contrastLeftResult,contrastRightResult);
+                        acuityRepository.insertAcuity(userId, 0,noContrastLeftResult,noContrastRightResult);
+//                        acuityRepository.insertAcuity(userId, 1,contrastLeftResult,contrastRightResult);
+//                        acuityRepository.insertAcuity(userId, 2,contrast_1LeftResult,contrast_1RightResult);
                     }
                     handler0.postDelayed(runnableCode0, 100);
                 }
@@ -1576,7 +1756,7 @@ public class MainActivity extends Activity {
         chart=-1;
         eye=-2;
         if (Util.DEBUG) {
-            Log.d(LOG_TAG_MAIN, "startedByPackage="+ startedByPackage);}
+            Log.d(LOG_TAG_MAIN, "endOfTest startedByPackage="+ startedByPackage);}
         if(startedByPackage!=null){
             say("we will start SightPlus now",true,true);
 //                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 1);
@@ -1586,37 +1766,53 @@ public class MainActivity extends Activity {
                     startExternalApp(startedByPackage);
                 }
             },SHORT_DELAY);
-
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+//                isProcessing=false;
+                    finish();
+                    System.exit(-1);
+                }
+            },LONG_DELAY);
+            isAppStarted=false;
+            step2=false;
+            step1=false;
+            test=false;
+            isContrast=false;
+            isContrast_1=false;
+            return;
         }
-        handler.removeCallbacks(runnableCode);
-        handler.postDelayed(runnableCode, LONG_DELAY+LONG_DELAY);
+//        handler.removeCallbacks(runnableCode);
+//        handler.postDelayed(runnableCode, LONG_DELAY+LONG_DELAY);
         isAppStarted=false;
         step2=false;
         step1=false;
         test=false;
         isContrast=false;
+        isContrast_1=false;
     }
 
-    private void insertAcuity() {
-        AsyncTask.execute( new Runnable() {
-            @Override
-            public void run() {
-                if (Util.DEBUG) {
-                    Log.d(LOG_TAG_MAIN, "Result noContrastLeftResult= " + noContrastLeftResult
-                            + " contrastLeftResult= " + contrastLeftResult);
-                    Log.d(LOG_TAG_MAIN, "Result noContrastRightResult= " + noContrastRightResult
-                            + " contrastRightResult= " + contrastRightResult);
-                }
-                handler0.removeCallbacks(runnableCode0);
-                int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-                if(userId>-1){
-                    acuityRepository.insertAcuity(userId, false,noContrastLeftResult,noContrastRightResult);
-                    acuityRepository.insertAcuity(userId, true,contrastLeftResult,contrastRightResult);
-                }
-                handler0.postDelayed(runnableCode0, SHORT_DELAY);
-            }
-        });
-    }
+//    private void insertAcuity(int nextChartFor, int i, String contrastLeftResult, String contrastRightResult) {
+//        AsyncTask.execute( new Runnable() {
+//            @Override
+//            public void run() {
+//                if (Util.DEBUG) {
+//                    Log.d(LOG_TAG_MAIN, "Result noContrastLeftResult= " + noContrastLeftResult
+//                            + " contrastLeftResult= " + MainActivity.this.contrastLeftResult);
+//                    Log.d(LOG_TAG_MAIN, "Result noContrastRightResult= " + noContrastRightResult
+//                            + " contrastRightResult= " + MainActivity.this.contrastRightResult);
+//                }
+//                handler0.removeCallbacks(runnableCode0);
+//                int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
+//                if(userId>-1){
+//                    acuityRepository.insertAcuity(userId, 0,noContrastLeftResult,noContrastRightResult);
+//                    acuityRepository.insertAcuity(userId, 1, MainActivity.this.contrastLeftResult, MainActivity.this.contrastRightResult);
+//                    acuityRepository.insertAcuity(userId, 2,contrast_1LeftResult,contrast_1RightResult);
+//                }
+//                handler0.postDelayed(runnableCode0, SHORT_DELAY);
+//            }
+//        });
+//    }
 
     /**
      * speak service
@@ -1798,13 +1994,7 @@ public class MainActivity extends Activity {
 
     private void startExternalApp(String app ) {
         sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 2);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-                System.exit(-1);
-            }
-        },SHORT_DELAY);
+
 
 //        boolean isInstalled = isPackageInstalled(app, this.getPackageManager());
 //        if(isInstalled){

@@ -17,7 +17,7 @@ public class Acuity {
     private int userId;
 
     @ColumnInfo(name = "contrast")
-    private boolean contrast;
+    private int contrast; //modified boolean to int in version 2.
 
     @ColumnInfo(name = "left_eye")
     private String leftEye;
@@ -52,11 +52,11 @@ public class Acuity {
         this.userId = userId;
     }
 
-    public boolean getContrast() {
+    public int getContrast() {
         return contrast;
     }
 
-    public void setContrast(boolean contrast) {
+    public void setContrast(int contrast) {
         this.contrast = contrast;
     }
 

@@ -22,10 +22,12 @@ public class AcuityRepository {
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_DB, "create database");
         }
-        gvDatabase = Room.databaseBuilder(context, GiveVisionDatabase.class, DB_NAME).build();
+        gvDatabase = Room.databaseBuilder(context, GiveVisionDatabase.class, DB_NAME)
+                .fallbackToDestructiveMigration()
+                .build();
     }
 
-    public void insertAcuity(int userId, boolean contrast, String leftEye, String rightEye) {
+    public void insertAcuity(int userId, int contrast, String leftEye, String rightEye) {
         Date currentTime = new Date(Calendar.getInstance().getTimeInMillis());
 
         final Acuity acuity = new Acuity();

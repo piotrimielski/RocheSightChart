@@ -1,8 +1,8 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="com.givevision.rochesightchart"
-4    android:versionCode="607"
-5    android:versionName="607" >
+4    android:versionCode="608"
+5    android:versionName="608" >
 6
 7    <uses-sdk
 8        android:minSdkVersion="24"
@@ -105,117 +105,124 @@
 103         ver 607
 104        - bug resolution for results with stopped test
 105    -->
-106    <uses-feature
-106-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:84:9-83
-107        android:glEsVersion="0x00020000"
-107-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:84:23-55
-108        android:required="true" />
-108-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:84:57-80
-109
-110    <uses-permission android:name="android.permission.BLUETOOTH" />
-110-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:86:9-72
-110-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:86:26-69
-111    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-111-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:87:9-85
-111-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:87:26-82
-112    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-112-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:88:9-83
-112-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:88:26-81
-113    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-113-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:89:9-75
-113-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:89:26-72
-114    <uses-permission android:name="android.permission.WAKE_LOCK" />
-114-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:90:9-72
-114-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:90:26-69
-115    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-115-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:91:9-80
-115-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:91:26-77
-116    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-116-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:92:9-80
-116-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:92:26-77
-117    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-117-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:93:9-82
-117-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:93:26-80
-118    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-118-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:94:9-82
-118-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:94:26-80
-119    <uses-permission android:name="android.permission.INTERNET" />
-119-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:95:9-70
-119-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:95:26-68
-120    <uses-permission android:name="android.permission.NETWORK_STATE" />
-120-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:96:9-75
-120-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:96:26-73
-121    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-121-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:97:9-78
-121-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:97:26-76
-122
-123    <!--
-124         @SystemApi @hide Allows an application to modify any wifi configuration, even if created
-125         by another application. Once reconfigured the original creator cannot make any further
-126         modifications.
-127         <p>Not for use by third-party applications.
-128          application needs to be signed by the platform key or be privileged
-129    -->
-130    <!-- <permission android:name="android.permission.OVERRIDE_WIFI_CONFIG" -->
-131    <!-- android:protectionLevel="signature|privileged" /> -->
-132    <application
-132-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:106:9-122:23
-133        android:allowBackup="true"
-133-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:109:13-39
-134        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-134-->[androidx.core:core:1.1.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\baa1ceabdb85c37edf8e128c7929f8d4\core-1.1.0\AndroidManifest.xml:24:18-86
-135        android:debuggable="true"
-136        android:extractNativeLibs="false"
-137        android:icon="@mipmap/ic_launcher"
-137-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:110:13-47
-138        android:label="@string/app_name"
-138-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:111:13-45
-139        android:roundIcon="@mipmap/ic_launcher_round"
-139-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:112:13-58
-140        android:screenOrientation="landscape"
-140-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:107:13-50
-141        android:supportsRtl="true"
-141-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:113:13-39
-142        android:testOnly="true"
-143        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-143-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:108:13-77
-144        <activity
-144-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:115:13-121:24
-145            android:name="com.givevision.rochesightchart.MainActivity"
-145-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:115:23-51
-146            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation|orientation" >
-146-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:116:17-111
-147            <intent-filter>
-147-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:117:17-120:33
-148                <action android:name="android.intent.action.MAIN" />
-148-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:118:21-73
-148-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:118:29-70
-149
-150                <category android:name="android.intent.category.LAUNCHER" />
-150-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:119:21-81
-150-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:119:31-78
-151            </intent-filter>
-152        </activity>
-153
-154        <service
-154-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:25:9-28:40
-155            android:name="androidx.room.MultiInstanceInvalidationService"
-155-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:26:13-74
-156            android:directBootAware="true"
-156-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:27:13-43
-157            android:exported="false" />
-157-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:28:13-37
-158
-159        <provider
-159-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:23:9-27:43
-160            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-160-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:24:13-79
-161            android:authorities="com.givevision.rochesightchart.lifecycle-process"
-161-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:25:13-69
-162            android:exported="false"
-162-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:26:13-37
-163            android:multiprocess="true" />
-163-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:27:13-40
-164    </application>
+106    <!--
+107         ver 608
+108        - removing warning AsyncTask in AcuityRepository
+109        - add test contrast_1
+110        - modification in db for contrast_1
+111    -->
+112
+113    <uses-feature
+113-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:90:9-83
+114        android:glEsVersion="0x00020000"
+114-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:90:23-55
+115        android:required="true" />
+115-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:90:57-80
+116
+117    <uses-permission android:name="android.permission.BLUETOOTH" />
+117-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:92:9-72
+117-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:92:26-69
+118    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+118-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:93:9-85
+118-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:93:26-82
+119    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+119-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:94:9-83
+119-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:94:26-81
+120    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+120-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:95:9-75
+120-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:95:26-72
+121    <uses-permission android:name="android.permission.WAKE_LOCK" />
+121-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:96:9-72
+121-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:96:26-69
+122    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+122-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:97:9-80
+122-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:97:26-77
+123    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+123-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:98:9-80
+123-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:98:26-77
+124    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+124-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:99:9-82
+124-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:99:26-80
+125    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+125-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:100:9-82
+125-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:100:26-80
+126    <uses-permission android:name="android.permission.INTERNET" />
+126-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:101:9-70
+126-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:101:26-68
+127    <uses-permission android:name="android.permission.NETWORK_STATE" />
+127-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:102:9-75
+127-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:102:26-73
+128    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+128-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:103:9-78
+128-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:103:26-76
+129
+130    <!--
+131         @SystemApi @hide Allows an application to modify any wifi configuration, even if created
+132         by another application. Once reconfigured the original creator cannot make any further
+133         modifications.
+134         <p>Not for use by third-party applications.
+135          application needs to be signed by the platform key or be privileged
+136    -->
+137    <!-- <permission android:name="android.permission.OVERRIDE_WIFI_CONFIG" -->
+138    <!-- android:protectionLevel="signature|privileged" /> -->
+139    <application
+139-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:112:9-128:23
+140        android:allowBackup="true"
+140-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:115:13-39
+141        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+141-->[androidx.core:core:1.1.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\baa1ceabdb85c37edf8e128c7929f8d4\core-1.1.0\AndroidManifest.xml:24:18-86
+142        android:debuggable="true"
+143        android:extractNativeLibs="false"
+144        android:icon="@mipmap/ic_launcher"
+144-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:116:13-47
+145        android:label="@string/app_name"
+145-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:117:13-45
+146        android:roundIcon="@mipmap/ic_launcher_round"
+146-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:118:13-58
+147        android:screenOrientation="landscape"
+147-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:113:13-50
+148        android:supportsRtl="true"
+148-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:119:13-39
+149        android:testOnly="true"
+150        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+150-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:114:13-77
+151        <activity
+151-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:121:13-127:24
+152            android:name="com.givevision.rochesightchart.MainActivity"
+152-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:121:23-51
+153            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation|orientation" >
+153-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:122:17-111
+154            <intent-filter>
+154-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:123:17-126:33
+155                <action android:name="android.intent.action.MAIN" />
+155-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:124:21-73
+155-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:124:29-70
+156
+157                <category android:name="android.intent.category.LAUNCHER" />
+157-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:125:21-81
+157-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:125:31-78
+158            </intent-filter>
+159        </activity>
+160
+161        <service
+161-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:25:9-28:40
+162            android:name="androidx.room.MultiInstanceInvalidationService"
+162-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:26:13-74
+163            android:directBootAware="true"
+163-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:27:13-43
+164            android:exported="false" />
+164-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:28:13-37
 165
-166</manifest>
+166        <provider
+166-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:23:9-27:43
+167            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+167-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:24:13-79
+168            android:authorities="com.givevision.rochesightchart.lifecycle-process"
+168-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:25:13-69
+169            android:exported="false"
+169-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:26:13-37
+170            android:multiprocess="true" />
+170-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:27:13-40
+171    </application>
+172
+173</manifest>

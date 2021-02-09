@@ -50,11 +50,13 @@ public class Util {
     protected static final String PREF_RIGHT_CALIBRATION_Y = "right eye calibration y";
     protected static final String PREF_LEFT_START = "left eye chart start";
     protected static final String PREF_RIGHT_START = "right eye chart start";
+    protected static final String PREF_BLIND_EYE = "blind eye"; //0-left, 1-right, 2-both
     protected static final String MyPREFERENCES = "my preferences";
     protected static final String PREF_M_LEFT = "M-Unit left";
     protected static final String PREF_M_RIGHT = "M-Unit right";
     protected static final String PREF_RESULT_OF_4_LEFT = "result of 4 left";
     protected static final String PREF_RESULT_OF_4_RIGHT = "result of 4 right";
+
     private static SharedPreferences sharedpreferences;
     public static final int KEY_POWER = 100;
     public static final int KEY_TRIGGER = 96;
@@ -164,11 +166,7 @@ public class Util {
             if(acuity!=null){
                 object.put("appID", acuity.getId());
                 object.put("userID", acuity.getUserId());
-                if(acuity.getContrast()){
-                    object.put("contrast", 1);
-                }else{
-                    object.put("contrast", 0);
-                }
+                object.put("contrast", acuity.getContrast());
                 object.put("userID", acuity.getUserId());
                 object.put("createdAt", getDateTime(acuity.getCreatedAt()));
                 object.put("left", acuity.getLeftEye());

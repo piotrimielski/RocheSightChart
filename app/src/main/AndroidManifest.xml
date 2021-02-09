@@ -84,7 +84,9 @@
     <!-- ver 608
         - removing warning AsyncTask in AcuityRepository
         - add test contrast_1
-
+        - modification in db for contrast_1
+        - modification nextchart structure
+        - stop calibration2 and reset by double button (trigger + UP)
      -->
     
         <uses-feature android:glEsVersion="0x00020000"  android:required="true" />

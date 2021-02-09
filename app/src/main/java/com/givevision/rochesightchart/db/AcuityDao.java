@@ -5,6 +5,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
  */
 @Dao
 public interface AcuityDao {
+
     @Insert
     void insertAcuity(Acuity acuity);
 
