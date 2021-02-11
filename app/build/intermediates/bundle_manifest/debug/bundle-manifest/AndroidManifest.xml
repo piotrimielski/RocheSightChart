@@ -108,6 +108,8 @@
         - removing warning AsyncTask in AcuityRepository
         - add test contrast_1
         - modification in db for contrast_1
+        - modification nextchart structure
+        - stop calibration2 and reset by double button (trigger + UP)
     -->
 
     <uses-feature
@@ -146,7 +148,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="landscape"
         android:supportsRtl="true"
-        android:testOnly="true"
         android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         <activity
             android:name="com.givevision.rochesightchart.MainActivity"

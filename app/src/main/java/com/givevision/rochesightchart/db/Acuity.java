@@ -17,7 +17,16 @@ public class Acuity {
     private int userId;
 
     @ColumnInfo(name = "contrast")
-    private int contrast; //modified boolean to int in version 2.
+    private int contrast; //modified boolean to int in version 2. (0-1-2)
+
+    @ColumnInfo(name = "duration")
+    private int duration; //added in version 3.
+
+    @ColumnInfo(name = "left_eye_first")
+    private String leftEyeFirst; //added in version 3.
+
+    @ColumnInfo(name = "right_eye_first")
+    private String rightEyeFirst; //added in version 3.
 
     @ColumnInfo(name = "left_eye")
     private String leftEye;
@@ -55,9 +64,27 @@ public class Acuity {
     public int getContrast() {
         return contrast;
     }
-
     public void setContrast(int contrast) {
         this.contrast = contrast;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getLeftEyeFirst() {
+        return leftEyeFirst;
+    }
+    public void setLeftEyeFirst(String leftEyeFirst) {
+        this.leftEyeFirst = leftEyeFirst;
+    }
+
+    public String getRightEyeFirst() {return rightEyeFirst;}
+    public void setRightEyeFirst(String rightEyeFirst) {
+        this.rightEyeFirst = rightEyeFirst;
     }
 
     public String getLeftEye() {

@@ -7,7 +7,7 @@ import androidx.room.TypeConverters;
 /**
  * @author Piotr
  */
-@Database(entities = {Acuity.class}, version = 2, exportSchema = false)
+@Database(entities = {Acuity.class}, version = 3, exportSchema = false)
 @TypeConverters({TimestampConverter.class})
 public abstract class GiveVisionDatabase extends RoomDatabase {
     public abstract AcuityDao acuityDao();

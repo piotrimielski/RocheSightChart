@@ -47,7 +47,7 @@ import com.givevision.rochesightchart.db.AcuityRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -145,6 +145,7 @@ public class MainActivity extends Activity {
     private static final String BROADCAST_START_APP_ACTION="start app action";
     private static final String START_APP_RESULT = "app response" ;
 
+    private long startTest=0;
     private int chart=0;
     private int chartPos=-1;
     private boolean learning=false;
@@ -266,6 +267,9 @@ public class MainActivity extends Activity {
                                                 +" id=  "+ acuity.getId()
                                                 +" userId=  "+ acuity.getUserId()
                                                 +" contrast=  "+ acuity.getContrast()
+                                                +" duration=  "+ acuity.getDuration()
+                                                +" leftEyeFirst=  "+ acuity.getLeftEyeFirst()
+                                                +" rightEyeFirst=  "+ acuity.getRightEyeFirst()
                                                 +" leftEye=  "+ acuity.getLeftEye()
                                                 +" rightEye=  "+ acuity.getRightEye()
                                                 +" createdAt=  "+ acuity.getCreatedAt()
@@ -287,7 +291,6 @@ public class MainActivity extends Activity {
             }
         }
     };
-
 
     /**
      * stop the background tasks
@@ -663,7 +666,7 @@ public class MainActivity extends Activity {
         chart=-1;
         chartPos=-1;
         eye=-1;
-        if(Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START,100)==100){
+        if(Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START,100)==100){
             newUser=true;
         }else{
             newUser=false;
@@ -851,6 +854,7 @@ public class MainActivity extends Activity {
             if (step1 || step2 || test) {
                 return true;
             }
+            startTest=Calendar.getInstance().getTimeInMillis();
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_POWER");
             }
@@ -887,12 +891,12 @@ public class MainActivity extends Activity {
                 setInfo("Test running");
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
                 myGLRenderer.setCharacter(2); //E character
-                float x = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_X, 0f);
-                float y = Util.getSharedPreferences(context).getFloat(Util.PREF_LEFT_CALIBRATION_Y, 0f);
+                float x = Util.getSharedPreferences(this).getFloat(Util.PREF_LEFT_CALIBRATION_X, 0f);
+                float y = Util.getSharedPreferences(this).getFloat(Util.PREF_LEFT_CALIBRATION_Y, 0f);
                 myGLRenderer.setLeftCenterX(x);
                 myGLRenderer.setLeftCenterY(y);
-                x = Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_X, 0f);
-                y = Util.getSharedPreferences(context).getFloat(Util.PREF_RIGHT_CALIBRATION_Y, 0f);
+                x = Util.getSharedPreferences(this).getFloat(Util.PREF_RIGHT_CALIBRATION_X, 0f);
+                y = Util.getSharedPreferences(this).getFloat(Util.PREF_RIGHT_CALIBRATION_Y, 0f);
                 myGLRenderer.setRightCenterX(x);
                 myGLRenderer.setRightCenterY(y);
                 eye = -1;
@@ -1367,7 +1371,7 @@ public class MainActivity extends Activity {
                             isContrast_1 = false;
                         }else{
                             //go to next eye
-                            chart = Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
                             eye=1;
                             isNoContrast = true;
                             isContrast = false;
@@ -1399,7 +1403,7 @@ public class MainActivity extends Activity {
                             isContrast_1 = true;
                         }else{
                             //go to next eye
-                            chart = Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
                             eye=1;
                             isNoContrast = true;
                             isContrast = false;
@@ -1423,7 +1427,7 @@ public class MainActivity extends Activity {
 
                         }
                         //go to next eye
-                        chart = Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                        chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
                         eye=1;
                         isNoContrast = true;
                         isContrast = false;
@@ -1447,7 +1451,10 @@ public class MainActivity extends Activity {
                         }
                         //insert in database no contrast tests
                         if(noContrastLeftResult!="" || noContrastRightResult!=""){
-                            insertAcuity(0, noContrastLeftResult, noContrastRightResult);
+                            insertAcuity(0, startTest,
+                                    Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE),
+                                    Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE),
+                                    noContrastLeftResult, noContrastRightResult);
                         }
                         if(nextChartFor==NEXT_CHART_FOR_GOOD){
                             //go to next contrast level
@@ -1480,7 +1487,9 @@ public class MainActivity extends Activity {
                         }
                         //insert in database no contrast tests
                         if(contrastLeftResult!="" || contrastRightResult!=""){
-                            insertAcuity(1, contrastLeftResult, contrastRightResult);
+                            insertAcuity(1, startTest,
+                                    FIRST_CHART_LEFT_EYE,FIRST_CHART_RIGHT_EYE,
+                                    contrastLeftResult, contrastRightResult);
                         }
                         if(nextChartFor==NEXT_CHART_FOR_GOOD){
                             //go to next contrast level
@@ -1512,7 +1521,9 @@ public class MainActivity extends Activity {
                         }
                         //insert in database no contrast tests
                         if(contrast_1LeftResult!="" || contrast_1RightResult!=""){
-                            insertAcuity(2, contrast_1LeftResult, contrast_1RightResult);
+                            insertAcuity(2, startTest,
+                                    FIRST_CHART_LEFT_EYE,FIRST_CHART_RIGHT_EYE,
+                                    contrast_1LeftResult, contrast_1RightResult);
                         }
                         //end test
                         learn.clearResult();
@@ -1555,19 +1566,28 @@ public class MainActivity extends Activity {
 
     /**
      * insert acuity to local database
-     * @param test (0-nocontrast, 1-contrast 5%, 2-contrast 2.5%)
-     * @param leftResult (numbre of pixels, 0 no reading, -1 stop manually test, -2 stop manually
-     * @param rightResult (numbre of pixels, 0 no reading, -1 stop manually test, -2 stop manually
+     * @param contrast (0-nocontrast, 1-contrast 5%, 2-contrast 2.5%)
+     * @param startTest time used for finish the test
+     * @param leftFirst numbre of pixels in first chart
+     * @param rightFirst numbre of pixels in first chart
+     * @param leftResult numbre of pixels, 0 no reading, -1 stop manually test, -2 stop manually
+     * @param rightResult numbre of pixels, 0 no reading, -1 stop manually test, -2 stop manually
      * @return
      */
-    private void insertAcuity(int test, String leftResult, String rightResult) {
+    private void insertAcuity(int contrast, long startTest, int leftFirst, int rightFirst,
+                              String leftResult, String rightResult) {
         handler0.removeCallbacks(runnableCode0);
-        int userId = Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID, -1);
+        int duration= (int) ((Calendar.getInstance().getTimeInMillis()-startTest)/1000);
+        int userId = Util.getSharedPreferences(this).getInt(Util.PREF_USER_ID, -1);
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_KEY, "insertAcuity userId= " + userId);
+            Log.i(Util.LOG_TAG_KEY, "insertAcuity userId= " + userId+ " duration= "+duration);
         }
         if (userId > -1) {
-            acuityRepository.insertAcuity(userId, test, leftResult, rightResult);
+            acuityRepository.insertAcuity(userId,
+                    contrast, duration,
+                    String.valueOf(learn.getOptotypePixels(leftFirst)),
+                    String.valueOf(learn.getOptotypePixels(rightFirst)),
+                    leftResult, rightResult);
         }
         handler0.postDelayed(runnableCode0, 100);
     }
@@ -1743,12 +1763,19 @@ public class MainActivity extends Activity {
                 @Override
                 public void run() {
                     handler0.removeCallbacks(runnableCode0);
-                    int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
-                    if(userId>-1){
-                        acuityRepository.insertAcuity(userId, 0,noContrastLeftResult,noContrastRightResult);
-//                        acuityRepository.insertAcuity(userId, 1,contrastLeftResult,contrastRightResult);
-//                        acuityRepository.insertAcuity(userId, 2,contrast_1LeftResult,contrast_1RightResult);
-                    }
+                    insertAcuity(0, startTest,
+                            Util.getSharedPreferences(context).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE),
+                            Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE),
+                            noContrastLeftResult, noContrastRightResult);
+//                    int userId=Util.getSharedPreferences(context).getInt(Util.PREF_USER_ID,-1);
+//                    if(userId>-1){
+//                        acuityRepository.insertAcuity(userId, 0, duration,
+//                                String.valueOf(learn.getOptotypePixels(FIRST_CHART_LEFT_EYE)),
+//                                String.valueOf(learn.getOptotypePixels(FIRST_CHART_RIGHT_EYE)),
+//                                noContrastLeftResult,noContrastRightResult);
+////                        acuityRepository.insertAcuity(userId, 1,contrastLeftResult,contrastRightResult);
+////                        acuityRepository.insertAcuity(userId, 2,contrast_1LeftResult,contrast_1RightResult);
+//                    }
                     handler0.postDelayed(runnableCode0, 100);
                 }
             });

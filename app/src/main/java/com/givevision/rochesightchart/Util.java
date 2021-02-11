@@ -167,10 +167,12 @@ public class Util {
                 object.put("appID", acuity.getId());
                 object.put("userID", acuity.getUserId());
                 object.put("contrast", acuity.getContrast());
-                object.put("userID", acuity.getUserId());
-                object.put("createdAt", getDateTime(acuity.getCreatedAt()));
+                object.put("duration", acuity.getDuration());
+                object.put("leftFirst", acuity.getLeftEyeFirst());
+                object.put("rightFirst", acuity.getRightEyeFirst());
                 object.put("left", acuity.getLeftEye());
                 object.put("right", acuity.getRightEye());
+                object.put("createdAt", getDateTime(acuity.getCreatedAt()));
                 object.put("imei",imei);
                 str = Integer.toString(acuity.getId()) + Integer.toString(acuity.getUserId()) +
                         acuity.getLeftEye() + acuity.getRightEye()+ imei;

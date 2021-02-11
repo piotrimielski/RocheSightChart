@@ -27,18 +27,21 @@ public class AcuityRepository {
                 .build();
     }
 
-    public void insertAcuity(int userId, int contrast, String leftEye, String rightEye) {
+    public void insertAcuity(int userId, int contrast, int duration,
+                             String leftEyeFirst, String rightEyeFirst, String leftEye, String rightEye) {
         Date currentTime = new Date(Calendar.getInstance().getTimeInMillis());
 
         final Acuity acuity = new Acuity();
         acuity.setUserId(userId);
         acuity.setContrast(contrast);
-        acuity.setContrast(contrast);
+        acuity.setDuration(duration);
+        acuity.setLeftEyeFirst(leftEyeFirst);
+        acuity.setRightEyeFirst(rightEyeFirst);
+        acuity.setLeftEye(leftEye);
+        acuity.setRightEye(rightEye);
         acuity.setInServer(false);
         acuity.setCreatedAt(currentTime);
         acuity.setModifiedAt(currentTime);
-        acuity.setLeftEye(leftEye);
-        acuity.setRightEye(rightEye);
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_DB, "insert acuity: userId:"+userId+" contrast:"+contrast
                      +" leftEye:"+leftEye+" rightEye:"+rightEye);
