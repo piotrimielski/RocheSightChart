@@ -27,34 +27,26 @@ in the yellow circle, start by left side. You have 2 seconds for each circle.</s
     <string name="action_size_left">"left eye"</string>
     <string name="action_size_right">"right eye"</string>
     <string name="action_test_reminder">"use the joystick to make decision"</string>
-<!-- ver 304-->
+
     <string name="charts">"This is a vision test.
 It will just take a few minutes.
 Click on the power button of your controller to start."</string>
-    <string name="action_calibration" >"moving the objects to the center of your vision.
-        First left eye,"</string>
-    <string name="action_controller_calibration_info1">"
-        move the joystick left, right, up or down until the object is in the center of your vision
-        then click on the trigger button."</string>
-    <string name="action_controller_calibration_info11">"Well done, now right eye"</string>
-    <string name="action_controller_size">"Finding the smallest size you can see.
-        First left eye,"</string>
-    <string name="action_controller_size_info2">"
-        move the joystick up or down to make the circle as small as you can still see four gaps in the circle
-        then press the trigger."</string>
-    <string name="action_controller_size_info21">"Well done, now right eye"</string>
-    <string name="action_controller_contrast">"Finding the best contrast for the smallest E character,"</string>
-    <string name="action_controller_contrast_info">"
-        move the joystick up or down to find the best contrast, left or right to change the sizes of E character"</string>
-    <string name="action_controller_test_info">"The final test is starting now"</string>
+    <string name="action_calibration" >"Calibration phase."</string>
+    <string name="action_controller_calibration_info1">"Move the joystick left, right, up or down to position the circle in your field of view. Hold the trigger button and push the joystick up if you can’t see anything or click on the trigger button to validate the position. "</string>
+    <string name="action_controller_calibration_info11">"First left eye."</string>
+    <string name="action_controller_calibration_info12">"Good, now right eye"</string>
+    <string name="action_controller_size">"Move the joystick down to make the circle small as long as you can still see its four gaps. Click on the trigger button to validate the smallest size you can see."</string>
+    <string name="action_controller_size_info2">"First the left eye."</string>
+    <string name="action_controller_size_info21">"Good, now right eye"</string>
+    <string name="action_controller_test_info">"The eye chart is starting now"</string>
     <string name="action_controller_test_info1" >"First left eye,
-        push the joystick in the same direction as the E is facing, up, down, left or right."</string>
+       push the joystick in the same direction as the E is facing, up, down, left or right. If you can no longer see, just wait"</string>
     <string name="action_controller_test_info2" >"Well done, now the right eye"</string>
-    <string name="action_controller_test_info3" >"Now the contrast test"</string>
-    <string name="action_controller_test_info4" >"Now the last contrast test"</string>
-    <string name="action_reset_user">"Data has been cleared, user reset"</string>
-    <string name="end_test" >"All done! Your results have been recorded."</string>
-    <string name="result_left_info" >"For the left eye vision is"</string>
-    <string name="result_right_info" >"For the right eye vision is"</string>
+    <string name="action_answer" >"Use the joystick to give your answers."</string>
+    <string name="action_reset_user">"Data has been cleared, calibration reset"</string>
+    <string name="exit_test" >"Exiting eye chart. SightPlus is starting."</string>
+    <string name="end_test" >"Well done! Your results have been recorded."</string>
+    <string name="result_left_info" >"For the left eye, result is"</string>
+    <string name="result_right_info" >"For the right eye, result is"</string>
     <string name="no_result" >"No reading"</string>
 </resources>

@@ -91,6 +91,7 @@
     <!-- ver 609
         - added duration, left eye first, right eye first charts in DB
         - modification on information sent to server added (duration, left eye first, right eye first)
+        - scripts modification, 
      -->
     
         <uses-feature android:glEsVersion="0x00020000"  android:required="true" />
