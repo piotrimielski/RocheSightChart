@@ -955,6 +955,7 @@ string abc_searchview_description_voice
 string abc_shareactionprovider_share_with
 string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
+string action_answer
 string action_calibration
 string action_calibration_check
 string action_calibration_left
@@ -962,16 +963,13 @@ string action_calibration_right
 string action_controller
 string action_controller_calibration_info1
 string action_controller_calibration_info11
-string action_controller_contrast
-string action_controller_contrast_info
+string action_controller_calibration_info12
 string action_controller_size
 string action_controller_size_info2
 string action_controller_size_info21
 string action_controller_test_info
 string action_controller_test_info1
 string action_controller_test_info2
-string action_controller_test_info3
-string action_controller_test_info4
 string action_reset_user
 string action_size_left
 string action_size_right
@@ -984,6 +982,7 @@ string app_name
 string charts
 string digits_caption
 string end_test
+string exit_test
 string forecast_caption
 string kws_caption
 string menu_caption

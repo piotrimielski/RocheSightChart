@@ -215,7 +215,9 @@ public class MainActivity extends Activity {
         public void run() {
             if(isSecondPeriod){
                 stopTask(false);
-                nextChart(NEXT_CHART_FOR_NO_READING);
+                good=0;
+                err=0;
+                nextChart(NEXT_CHART_FOR_ERROR);
 //                resultChart("error");
             }
         }
@@ -1335,7 +1337,6 @@ public class MainActivity extends Activity {
                 if (Util.DEBUG) {
                     Log.i(Util.LOG_TAG_KEY, "nextChart go to next ChartFor= "+nextChartFor+
                             " eye= "+ eye+  " chartPos= "+ chartPos+ " chart= "+chart+
-                            " err= "+err +" good= "+good +
                             " isNoContrast= "+isNoContrast+ " isContrast= "+isContrast+" isContrast_1= "+isContrast_1);
                 }
                 if (eye == 0) {
@@ -1595,8 +1596,9 @@ public class MainActivity extends Activity {
                     " isContrast_1=" + isContrast_1);
         }
         setInfo("test started");
-        err = 0;
-        good = 0;
+        chartPos=0;
+        good=0;
+        err=0;
         if (isNoContrast) {
             greyE = BLACK;//(int) learn.getOptotypeEgrey(chart);
             greySquare = WHITE; //(int) learn.getOptotypeSquaregrey(chart);
@@ -1675,13 +1677,13 @@ public class MainActivity extends Activity {
                     toneH.startTone(ToneGenerator.TONE_DTMF_1,200);
                 }
                 if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_KEY, "resultChart good= "+good+" err= "+err+" result= "+result+" chart= "+chart+
+                    Log.i(Util.LOG_TAG_KEY, "resultChart good= "+good+" err= "+
+                            err+" result= "+result+" chart= "+chart+
                             " chartPos= "+chartPos+" totalLengthStringArray= "+totalLengthStringArray);
                 }
                 if(err>=2 || good>=3){
                     myGLRenderer.setChart(chart, eye, "", 0);
                     sleep(1000);
-                    chartPos=0;
                     if(err>=2) {
                         nextChart(NEXT_CHART_FOR_ERROR);
                     }else{
@@ -1694,10 +1696,16 @@ public class MainActivity extends Activity {
                     sleep(1000);
                     //end of card in this sizes
                     if(chartPos>totalLengthStringArray-1){
+                        if (Util.DEBUG) {
+                            Log.i(Util.LOG_TAG_KEY, "resultChart NEXT_CHART_FOR_NEW_LEVEL chartPos= "+chartPos);
+                        }
                         nextChart(NEXT_CHART_FOR_NEW_LEVEL);
                         return;
                     }else{
                         //chartPos was -2 before this procedure
+                        if (Util.DEBUG) {
+                            Log.i(Util.LOG_TAG_KEY, "resultChart myGLRenderer chartPos= "+chartPos);
+                        }
                         if(chartPos<0){
                             //no test
                             myGLRenderer.setChart(-1, eye, "", learn.getOptotypePixels(0));
@@ -1708,6 +1716,9 @@ public class MainActivity extends Activity {
                     }
                 }
             }else{
+                if (Util.DEBUG) {
+                    Log.i(Util.LOG_TAG_KEY, "resultChart NEXT_CHART_FOR_NEW_LEVEL 2");
+                }
                 //go next level the chart or stop
                 myGLRenderer.setChart(-1, -2, "", 0);
                 sleep(1000);
@@ -1861,6 +1872,7 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.d(LOG_TAG_MAIN, "endOfTest startedByPackage="+ startedByPackage);}
         if(startedByPackage!=null){
+            isProcessing=true;
             say("we will start SightPlus now",true,true);
 //                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 1);
             new Handler().postDelayed(new Runnable() {
