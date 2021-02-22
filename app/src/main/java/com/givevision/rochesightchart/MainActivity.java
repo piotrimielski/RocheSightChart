@@ -1340,10 +1340,7 @@ public class MainActivity extends Activity {
                             " isNoContrast= "+isNoContrast+ " isContrast= "+isContrast+" isContrast_1= "+isContrast_1);
                 }
                 if (eye == 0) {
-                    if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==1){
-                        endOfTest(true);
-                        return;
-                    }else if (isNoContrast) {
+                    if (isNoContrast) {
                         //first no contrast test done
                         //memorise no contrast test
                         if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
@@ -1406,13 +1403,18 @@ public class MainActivity extends Activity {
                             isContrast = false;
                             isContrast_1 = true;
                         }else{
-                            //go to next eye
-                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
-                            eye=1;
-                            isNoContrast = true;
-                            isContrast = false;
-                            isContrast_1 = false;
-                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                            if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==1){
+                                endOfTest(true);
+                                return;
+                            }else{
+                                //go to next eye
+                                chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                                eye=1;
+                                isNoContrast = true;
+                                isContrast = false;
+                                isContrast_1 = false;
+                                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                            }
                         }
                         totalLengthStringArray = learn.getSizeChartsPos(chart);
                         learn.clearResult();
@@ -1430,15 +1432,20 @@ public class MainActivity extends Activity {
                         }else if(nextChartFor==NEXT_CHART_FOR_NEW_TEST){
 
                         }
-                        //go to next eye
-                        chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
-                        eye=1;
-                        isNoContrast = true;
-                        isContrast = false;
-                        isContrast_1 = false;
-                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
-                        totalLengthStringArray = learn.getSizeChartsPos(chart);
-                        learn.clearResult();
+                        if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==1){
+                            endOfTest(true);
+                            return;
+                        }else{
+                            //go to next eye
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                            eye=1;
+                            isNoContrast = true;
+                            isContrast = false;
+                            isContrast_1 = false;
+                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                            totalLengthStringArray = learn.getSizeChartsPos(chart);
+                            learn.clearResult();
+                        }
                     }
                 }else if (eye == 1) {
                     if (isNoContrast) {

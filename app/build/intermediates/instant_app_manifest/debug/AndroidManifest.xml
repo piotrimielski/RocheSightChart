@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
     android:targetSandboxVersion="2"
-    android:versionCode="609"
-    android:versionName="609" >
+    android:versionCode="610"
+    android:versionName="610" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -116,6 +116,11 @@
          ver 609
         - added duration, left eye first, right eye first charts in DB
         - modification on information sent to server added (duration, left eye first, right eye first)
+        - scripts modification,
+    -->
+    <!--
+         ver 610
+        - Bug result on waiting procedure
     -->
 
     <uses-feature

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
-    android:versionCode="610"
-    android:versionName="610">
+    android:versionCode="611"
+    android:versionName="611">
     <!--   https://docs.google.com/document/d/1AkM6-cOKtRr1uyR1m7HLclhdrWvQFJRwb73fYn5sx3A/edit?usp=sharing -->
     <!--   ver 100 - generate chart with picture-->
     <!--   ver 200 - generate C into texture-->
@@ -95,6 +95,9 @@
      -->
     <!-- ver 610
         - Bug result on waiting procedure
+     -->
+    <!-- ver 611
+        - Bug left blend eye on nextchart
      -->
 
 
