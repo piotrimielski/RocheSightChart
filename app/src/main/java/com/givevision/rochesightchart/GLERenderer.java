@@ -147,7 +147,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
         }else if(chart==-1){
             radius=ORG_RADIUS;
         }else{
-            radius=200;
+            radius=540;
         }
 
         if (Util.DEBUG) {

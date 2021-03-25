@@ -55,4 +55,7 @@ public interface AcuityDao {
 
     @Query("UPDATE acuities SET in_server=1 WHERE id=:appID;")
     void upDateInServerByAppId(int appID);
+
+    @Query("SELECT * FROM acuities WHERE contrast =:contrast ORDER BY id DESC LIMIT 3")
+    List<Acuity> getBestAcuities(int contrast);
 }

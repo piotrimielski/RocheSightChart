@@ -78,14 +78,14 @@ public class LearnMachine {
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_LEARN, "constructor optotypes sizes= "+optotypes.size()+ " charts sizes= "+charts.size());        }
 
-//        for(int m=0; m<optotypes.size();m++){
-//            Log.i(Util.LOG_TAG_LEARN, "optotypes done= "+m);
-//            String[] chart=charts.get(m);
-//            for(int n=0; n<NBR_OF_CHARACTERS; n++){
-//                if (Util.DEBUG) {
-//                    Log.i(Util.LOG_TAG_LEARN, "serie= "+m+" chart= "+n+" value= "+chart[n]);        }
-//            }
-//        }
+        for(int m=0; m<optotypes.size();m++){
+            Log.i(Util.LOG_TAG_LEARN, "optotypes done= "+m);
+            String[] chart=charts.get(m);
+            for(int n=0; n<NBR_OF_CHARACTERS; n++){
+                if (Util.DEBUG) {
+                    Log.i(Util.LOG_TAG_LEARN, "chart= "+m+" caracter= "+n+" value= "+chart[n]);        }
+            }
+        }
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_LEARN, "constructor done"); }
     }
@@ -170,7 +170,7 @@ public class LearnMachine {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_LEARN, "getResult = "+result+ " chart= "+chart +" eye= "+eye);
             }
-            if(result>=3){
+            if(result>=4){
                 return true;
             }
         }else{
@@ -181,7 +181,7 @@ public class LearnMachine {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_LEARN, "getResult = "+result+ " chart= "+chart +" eye= "+eye);
             }
-            if(result>=3){
+            if(result>=4){
                 return true;
             }
         }
@@ -231,6 +231,32 @@ public class LearnMachine {
             return "no reading";
         }
     }
+
+    /**
+     * @param eye
+     * @return position
+     */
+    public int getPosWrongResult(int eye,int chart){
+        if(eye==0){
+            //find last position of wrong respanse
+            int[] array=results_left.get(chart);
+            for (int p=0; p<array.length; p++){
+                if(array[p]==0){
+                    return p;
+                }
+            }
+        }else if(eye==1){
+            //find last position of wrong respanse
+            int[] array=results_right.get(chart);
+            for (int p=0; p<array.length; p++){
+                if(array[p]==0){
+                    return p;
+                }
+            }
+        }
+        return -1;
+    }
+
     /**
      * @param eye
      * @return result in Approximate M-units

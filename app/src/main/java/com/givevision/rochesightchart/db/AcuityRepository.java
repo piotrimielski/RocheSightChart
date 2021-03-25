@@ -99,6 +99,32 @@ public class AcuityRepository {
         return gvDatabase.acuityDao().getAllAcuities();
     }
 
+    public float[] getBestAcuity(int contrast) {
+        if (Util.DEBUG) {
+            Log.i(Util.LOG_TAG_DB, "getBestAcuity");
+        }
+        float[] bests= {0,0};
+        List<Acuity> list=gvDatabase.acuityDao().getBestAcuities(contrast);
+        for (Acuity acuity : list) {
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_DB, "getBestAcuity acuities= "+acuity.getLeftEye());
+            }
+            if(acuity.getLeftEye()!=null){
+                String left=acuity.getLeftEye();
+                if(Float.parseFloat(left)>bests[0]){
+                    bests[0]=Float.parseFloat(left);
+                }
+            }
+            if(acuity.getRightEye()!=null){
+                String right=acuity.getRightEye();
+                if(Float.parseFloat(right)>bests[1]){
+                    bests[1]=Float.parseFloat(right);
+                }
+            }
+        }
+        return bests;
+    }
+
     public List<Acuity> getAcuitiesByUserId(int userId) {
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_DB, "get acuities by user id");

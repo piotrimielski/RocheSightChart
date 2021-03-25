@@ -39,9 +39,13 @@ Click on the power button of your controller to start."</string>
     <string name="action_controller_size_info2">"First the left eye."</string>
     <string name="action_controller_size_info21">"Good, now right eye"</string>
     <string name="action_controller_test_info">"The eye chart is starting now"</string>
-    <string name="action_controller_test_info1" >"First left eye,
-       push the joystick in the same direction as the E is facing, up, down, left or right. If you can no longer see, just wait"</string>
+    <string name="action_controller_test_info1" >"First left eye"</string>
+    <string name="action_controller_test_info11" >"Right eye"</string>
+    <string name="action_controller_test_info12" >"Push the joystick in the same direction as the E is facing, up, down, left or right. If you can no longer see, just click on the trigger button"</string>
     <string name="action_controller_test_info2" >"Well done, now the right eye"</string>
+    <string name="action_controller_test_info3" >"Well done, now the contrast test"</string>
+    <string name="action_controller_test_info4" >"Well done, now the last test"</string>
+    <string name="action_controller_test_info5" >"the test start now"</string>
     <string name="action_answer" >"Use the joystick to give your answers."</string>
     <string name="action_reset_user">"Data has been cleared, calibration reset"</string>
     <string name="exit_test" >"Exiting eye chart. SightPlus is starting."</string>
