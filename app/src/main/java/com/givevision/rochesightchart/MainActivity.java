@@ -204,28 +204,29 @@ public class MainActivity extends Activity {
     private Runnable runnableCode1 = new Runnable() {
         @Override
         public void run() {
-            if(isTimerStart) {
-                isTimerStart=false;
+//            if(isTimerStart) {
+//                isTimerStart=false;
                 say(getResources().getString(captions.get(ACTION_TEST_REMINDER)), false,false);
-                handler2.removeCallbacks(runnableCode2);
-                handler2.postDelayed(runnableCode2, SHORT_DELAY);
-                isSecondPeriod=true;
-            }
+//                handler2.removeCallbacks(runnableCode2);
+//                handler2.postDelayed(runnableCode2, SHORT_DELAY);
+//                isSecondPeriod=true;
+//            }
+            handler1.postDelayed(runnableCode1, LONG_DELAY);
         }
     };
     //   test go next
-    private Runnable runnableCode2 = new Runnable() {
-        @Override
-        public void run() {
-            if(isSecondPeriod){
-//                stopTask(false);
-                good=0;
-                err=0;
-                nextChart(NEXT_CHART_FOR_ERROR);
-//                resultChart("error");
-            }
-        }
-    };
+//    private Runnable runnableCode2 = new Runnable() {
+//        @Override
+//        public void run() {
+//            if(isSecondPeriod){
+////                stopTask(false);
+//                good=0;
+//                err=0;
+//                nextChart(NEXT_CHART_FOR_ERROR);
+////                resultChart("error");
+//            }
+//        }
+//    };
     //   first massage reminder
     private Runnable runnableCode = new Runnable() {
         @Override
@@ -269,7 +270,7 @@ public class MainActivity extends Activity {
                                 if(!acuity.getInServer()){
                                     Util.postData(context, acuityRepository, imei,acuity);
                                     if (Util.DEBUG) {
-                                        Log.i(LOG_TAG_MAIN, "acuity found: "
+                                        Log.i(LOG_TAG_MAIN, "runnableCode0 acuity found: "
                                                 +" id=  "+ acuity.getId()
                                                 +" userId=  "+ acuity.getUserId()
                                                 +" contrast=  "+ acuity.getContrast()
@@ -293,7 +294,7 @@ public class MainActivity extends Activity {
                 }
             }
             if (Util.DEBUG) {
-                Log.i(LOG_TAG_MAIN, " isOnline= "+isInternetAvailable(context));
+                Log.i(LOG_TAG_MAIN, "runnableCode0 isOnline= "+isInternetAvailable(context));
             }
         }
     };
@@ -312,7 +313,7 @@ public class MainActivity extends Activity {
         isTimerStart=false;
         handler1.removeCallbacks(runnableCode1);
         isSecondPeriod=false;
-        handler2.removeCallbacks(runnableCode2);
+//        handler2.removeCallbacks(runnableCode2);
     }
 
     /**
@@ -752,7 +753,7 @@ public class MainActivity extends Activity {
         handler.removeCallbacks(runnableCode);
         handler0.removeCallbacks(runnableCode0);
         handler1.removeCallbacks(runnableCode1);
-        handler2.removeCallbacks(runnableCode2);
+//        handler2.removeCallbacks(runnableCode2);
 
         if(mTTS !=null){
             mTTS.stop();
@@ -1229,6 +1230,12 @@ public class MainActivity extends Activity {
             err=0;
             learn.clearResult();
             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
+            if(Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, 100)==100){
+                Util.upDatePref(this,Util.PREF_LEFT_START,0);
+            }
+            if(Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, 100)==100){
+                Util.upDatePref(this,Util.PREF_RIGHT_START,0);
+            }
             if(chart>1) {
                 goToTest(chart - 2);
             }else{

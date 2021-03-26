@@ -36,7 +36,7 @@ public class GLESprite {
     private int mPixelNbr;
 
     public GLESprite(float[] color, int eye, float delta) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "constructor");
         }
         mColor = color;
@@ -319,7 +319,7 @@ public class GLESprite {
     }
 
     private static int linkProgram(int vertexShaderId, int fragmentShaderId) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "linkProgram");
         }
         final int programObjectId = GLES20.glCreateProgram();
@@ -340,10 +340,10 @@ public class GLESprite {
 
         if (linkStatus[0] == 0) {
             // If it failed, delete the program object. glDeleteProgram(programObjectId);
-            if (Util.DEBUG) {
+//            if (Util.DEBUG_SPRITE) {
                 Log.e(Util.LOG_TAG_RENDERING, "Could not link program: ");
                 Log.e(Util.LOG_TAG_RENDERING, GLES20.glGetProgramInfoLog(programObjectId));
-            }
+//            }
             GLES20.glDeleteProgram(programObjectId);
             return 0;
         }
@@ -351,7 +351,7 @@ public class GLESprite {
     }
 
     private static boolean validateProgram(int programObjectId) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "validateProgram");
         }
         GLES20.glValidateProgram(programObjectId);
@@ -361,21 +361,21 @@ public class GLESprite {
     }
 
     private static int compileVertexShader(String shaderCode) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "compileVertexShader");
         }
         return compileShader(GLES20.GL_VERTEX_SHADER, shaderCode);
     }
 
     private static int compileFragmentShader(String shaderCode) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "compileFragmentShader");
         }
         return compileShader(GLES20.GL_FRAGMENT_SHADER, shaderCode);
     }
 
     private static int compileShader(int type, String shaderCode) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "compileShader");
         }
         final int shaderObjectId = GLES20.glCreateShader(type);
@@ -420,42 +420,42 @@ public class GLESprite {
     }
 
     public float getCenterX() {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "getCenterX "+ mCenterX);
         }
         return mCenterX;
     }
 
     public void setCenterX(float centerX) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "setCenterX "+ centerX);
         }
         mCenterX = centerX;
     }
 
     public float getCenterY() {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "getCenterY");
         }
         return mCenterY;
     }
 
     public void setCenterY(float centerY) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "setCenterY");
         }
         mCenterY = centerY;
     }
 
     public float getRadius() {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "getRadius mRadius= "+mRadius);
         }
         return mRadius;
     }
 
     public void setRadius(float radius) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE, "setRadius radius= "+radius);
         }
         this.mRadius = radius;
@@ -473,14 +473,14 @@ public class GLESprite {
     }
 
     public void setChart(int c) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE,"setChart: mChart= "+c);
         }
         this.mChart=c;
     }
 
     public void setGrey(int e, int s) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE,"setGrey: mGreyE= "+e+" mGreySquare= "+s);
         }
         this.mGreyE=e;
@@ -488,14 +488,14 @@ public class GLESprite {
     }
 
     public void setColor(float[] c) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE,"setColor: mColor= "+c);
         }
         mColor= c;
     }
 
     public void setPixelNbr(int pixelNbr) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_SPRITE) {
             Log.i(Util.LOG_TAG_SPRITE,"setPixelNbr: mPixelNbr= "+pixelNbr);
         }
         mPixelNbr= pixelNbr;

@@ -34,6 +34,9 @@ public class Util {
     public static final String TAG = "GLUtil";
 
     public static final boolean DEBUG = true;
+    public static final boolean DEBUG_SPRITE = false;
+    public static final boolean DEBUG_RENDERER = false;
+    public static final boolean DEBUG_LEARN = false;
     public static final String LOG_TAG_MAIN = "MainActivity";
     public static final String LOG_TAG_KEY = "keyAction";
     public static final String LOG_TAG_RECOGNITION = "Recognition";

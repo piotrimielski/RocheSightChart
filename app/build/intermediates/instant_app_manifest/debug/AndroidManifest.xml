@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
     android:targetSandboxVersion="2"
-    android:versionCode="610"
-    android:versionName="610" >
+    android:versionCode="620"
+    android:versionName="620" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -121,6 +121,20 @@
     <!--
          ver 610
         - Bug result on waiting procedure
+    -->
+    <!--
+         ver 611
+        - Bug left blend eye on nextchart
+    -->
+    <!--
+         ver 620
+        - Calibration:
+            replace the circle by the E,
+            Start each step of the test by  the calibration2 phase for size of E,
+            two right answer makes E smaller BY TWO PIXELS.  if one right and one wrong repeat the same size. If two wrong stops test,
+            In calibration1 the choice of one eye blind
+
+        -
     -->
 
     <uses-feature

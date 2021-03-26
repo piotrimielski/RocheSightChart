@@ -38,7 +38,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
     private int mCharacter=1;
 
     public GLERenderer(MainActivity mainActivity) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "constructor");
         }
         radius=ORG_RADIUS;
@@ -46,7 +46,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "onSurfaceCreated");
         }
         GLES20.glClearColor(.1f, .1f, .1f, 1);
@@ -57,7 +57,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "onSurfaceChanged width= ");
         }
         GLES20.glViewport(0, 0, width, height);
@@ -81,7 +81,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
         mSpriteRight.setChart(chart);
         mSpriteLeft.setGrey(greyE,greySquare);
         mSpriteRight.setGrey(greyE,greySquare);
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "onSurfaceChanged width= "+width+ " height= "+height+
                     " leftBlobX= " + leftBlobX + " leftBlobY= " + leftBlobY +
                     " rightBlobX= " + rightBlobX+ " rightBlobY= "+rightBlobY);
@@ -105,7 +105,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
     }
 
     public void setGrey(int eye, int e, int s){
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "setGrey E= "+
                     e + " square= " + s + " eye= " + eye);
         }
@@ -119,7 +119,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
     }
 
     public void setChart(int c, int e, String learnChart, float optotypeOuterDiameter) {
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "setChart chart= "+
                     c + " eye= " + e + " learnChart= "+learnChart);
         }
@@ -150,7 +150,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
             radius=540;
         }
 
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "setChart Sprite chart= "+
                     c + " radius= " + radius + " optotypeOuterDiameter= "+(int) optotypeOuterDiameter);
         }
@@ -166,7 +166,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
 
     public void setLeftPositionX(float delta) {
         int d= (int) (leftBlobX-mSpriteLeft.getCenterX());
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "setLeftPositionX d= "+d+" delta= "+delta);
         }
         if(delta>0){
@@ -182,7 +182,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
 
     public void setRightPositionX(float delta) {
         int d= (int) (rightBlobX-mSpriteRight.getCenterX());
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "setRightPositionX d= "+d+" delta= "+delta);
         }
         if(delta<0){
@@ -198,7 +198,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
 
     public void setLeftPositionY(float delta) {
         int d= (int) (leftBlobY-mSpriteLeft.getCenterY());
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "setLeftPositionY d= "+d+" delta= "+delta);
         }
         if(delta>0){
@@ -214,7 +214,7 @@ public class GLERenderer implements GLSurfaceView.Renderer{
 
     public void setRightPositionY(float delta) {
         int d= (int) (rightBlobY-mSpriteRight.getCenterY());
-        if (Util.DEBUG) {
+        if (Util.DEBUG_RENDERER) {
             Log.i(Util.LOG_TAG_RENDERING, "setRightPositionY d= "+d+" delta= "+delta);
         }
         if(delta<0){

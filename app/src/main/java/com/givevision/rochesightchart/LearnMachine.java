@@ -62,7 +62,7 @@ public class LearnMachine {
 //            optotypes.add(optotype);
 ////            Log.i(Util.LOG_TAG_LEARN, "optotypes created= "+i);
 //        }
-        if (Util.DEBUG) {
+        if (Util.DEBUG_LEARN) {
             Log.i(Util.LOG_TAG_LEARN, "constructor optotypes sizes= "+optotypes.size());        }
         Random r = new Random();
         String[] array=new String [] {"down", "up", "left", "right"};
@@ -75,18 +75,18 @@ public class LearnMachine {
             }
             charts.add(j, chart);
         }
-        if (Util.DEBUG) {
+        if (Util.DEBUG_LEARN) {
             Log.i(Util.LOG_TAG_LEARN, "constructor optotypes sizes= "+optotypes.size()+ " charts sizes= "+charts.size());        }
 
         for(int m=0; m<optotypes.size();m++){
             Log.i(Util.LOG_TAG_LEARN, "optotypes done= "+m);
             String[] chart=charts.get(m);
             for(int n=0; n<NBR_OF_CHARACTERS; n++){
-                if (Util.DEBUG) {
+                if (Util.DEBUG_LEARN) {
                     Log.i(Util.LOG_TAG_LEARN, "chart= "+m+" caracter= "+n+" value= "+chart[n]);        }
             }
         }
-        if (Util.DEBUG) {
+        if (Util.DEBUG_LEARN) {
             Log.i(Util.LOG_TAG_LEARN, "constructor done"); }
     }
 
@@ -97,7 +97,7 @@ public class LearnMachine {
      */
     public int getSizeChartsPos(int chart){
         String [] array=charts.get(chart);
-        if (Util.DEBUG) {
+        if (Util.DEBUG_LEARN) {
             Log.i(Util.LOG_TAG_LEARN, "getSizeChartsPos= "+array.length);        }
         return array.length;
     }
@@ -107,7 +107,7 @@ public class LearnMachine {
      * @return sizes
      */
     public int getSizeCharts(){
-        if (Util.DEBUG) {
+        if (Util.DEBUG_LEARN) {
             Log.i(Util.LOG_TAG_LEARN, "getSizeCharts= "+charts.size());        }
         return charts.size();
     }
@@ -149,7 +149,7 @@ public class LearnMachine {
                 result=-1;
             }
         }
-        if (Util.DEBUG) {
+        if (Util.DEBUG_LEARN) {
             Log.i(Util.LOG_TAG_LEARN, "eye= "+eye+" chart= "+chart + " pos= "+pos+
                     " value= "+arrayChart[pos]+" said= "+said +" result= "+result);
         }
@@ -167,7 +167,7 @@ public class LearnMachine {
             for(int i=0; i<array.length;i++){
                 result=result+ array[i];
             }
-            if (Util.DEBUG) {
+            if (Util.DEBUG_LEARN) {
                 Log.i(Util.LOG_TAG_LEARN, "getResult = "+result+ " chart= "+chart +" eye= "+eye);
             }
             if(result>=4){
@@ -178,7 +178,7 @@ public class LearnMachine {
             for(int i=0; i<array.length;i++){
                 result=result+ array[i];
             }
-            if (Util.DEBUG) {
+            if (Util.DEBUG_LEARN) {
                 Log.i(Util.LOG_TAG_LEARN, "getResult = "+result+ " chart= "+chart +" eye= "+eye);
             }
             if(result>=4){
