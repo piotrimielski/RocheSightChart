@@ -105,20 +105,25 @@ public class AcuityRepository {
         }
         float[] bests= {0,0};
         List<Acuity> list=gvDatabase.acuityDao().getBestAcuities(contrast);
-        for (Acuity acuity : list) {
-            if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_DB, "getBestAcuity acuities= "+acuity.getLeftEye());
-            }
-            if(acuity.getLeftEye()!=null){
-                String left=acuity.getLeftEye();
-                if(Float.parseFloat(left)>bests[0]){
-                    bests[0]=Float.parseFloat(left);
+        if(list.size()<3){
+            bests[0]=-1;
+            bests[1]=-1;
+        }else{
+            for (Acuity acuity : list) {
+                if (Util.DEBUG) {
+                    Log.i(Util.LOG_TAG_DB, "getBestAcuity acuities= "+acuity.getLeftEye());
                 }
-            }
-            if(acuity.getRightEye()!=null){
-                String right=acuity.getRightEye();
-                if(Float.parseFloat(right)>bests[1]){
-                    bests[1]=Float.parseFloat(right);
+                if(acuity.getLeftEye()!=null){
+                    String left=acuity.getLeftEye();
+                    if(Float.parseFloat(left)>bests[0]){
+                        bests[0]=Float.parseFloat(left);
+                    }
+                }
+                if(acuity.getRightEye()!=null){
+                    String right=acuity.getRightEye();
+                    if(Float.parseFloat(right)>bests[1]){
+                        bests[1]=Float.parseFloat(right);
+                    }
                 }
             }
         }

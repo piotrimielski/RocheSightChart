@@ -1958,13 +1958,18 @@ public class MainActivity extends Activity {
             while(bestAcuities==null){
 
             }
-            if(Math.abs(bestAcuities[0]-Float.parseFloat(noContrastLeftResult))>4 ||
-                    Math.abs(bestAcuities[1]-Float.parseFloat(noContrastRightResult))>4){
-                toRepeatTest=true;
-                say(getResources().getString(captions.get(ACTION_REPEAT_TEST)), true,true);
-            }else{
+            if(bestAcuities[0]==-1 && bestAcuities[1]==-1){
                 toRepeatTest=false;
+            }else{
+                if(Math.abs(bestAcuities[0]-Float.parseFloat(noContrastLeftResult))>4 ||
+                        Math.abs(bestAcuities[1]-Float.parseFloat(noContrastRightResult))>4){
+                    toRepeatTest=true;
+                    say(getResources().getString(captions.get(ACTION_REPEAT_TEST)), true,true);
+                }else{
+                    toRepeatTest=false;
+                }
             }
+
 //            noContrastLeftResult="";
 //            contrastLeftResult="";
 //            noContrastRightResult="";
