@@ -975,6 +975,7 @@ string action_controller_test_info2
 string action_controller_test_info3
 string action_controller_test_info4
 string action_controller_test_info5
+string action_repeat_test
 string action_reset_user
 string action_size_left
 string action_size_right

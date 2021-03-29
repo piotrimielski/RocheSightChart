@@ -38,13 +38,13 @@ Click on the power button of your controller to start."</string>
     <string name="action_controller_size">"Move the joystick down to make the circle small as long as you can still see its four gaps. Click on the trigger button to validate the smallest size you can see."</string>
     <string name="action_controller_size_info2">"First the left eye."</string>
     <string name="action_controller_size_info21">"Good, now right eye"</string>
-    <string name="action_controller_test_info">"The eye chart is starting now"</string>
+    <string name="action_controller_test_info">"the eye chart is starting now by calibrate the high contrast test"</string>
     <string name="action_controller_test_info1" >"First left eye"</string>
     <string name="action_controller_test_info11" >"Right eye"</string>
     <string name="action_controller_test_info12" >"Push the joystick in the same direction as the E is facing, up, down, left or right. If you can no longer see, just click on the trigger button"</string>
     <string name="action_controller_test_info2" >"Well done, now the right eye"</string>
-    <string name="action_controller_test_info3" >"Well done, now the contrast test"</string>
-    <string name="action_controller_test_info4" >"Well done, now the last test"</string>
+    <string name="action_controller_test_info3" >"well done now calibrate the low contrast test"</string>
+    <string name="action_controller_test_info4" >"Well done, now calibrate the last test"</string>
     <string name="action_controller_test_info5" >"the test start now"</string>
     <string name="action_answer" >"Use the joystick to give your answers."</string>
     <string name="action_reset_user">"Data has been cleared, calibration reset"</string>
@@ -53,4 +53,5 @@ Click on the power button of your controller to start."</string>
     <string name="result_left_info" >"For the left eye, result is"</string>
     <string name="result_right_info" >"For the right eye, result is"</string>
     <string name="no_result" >"No reading"</string>
+    <string name="action_repeat_test">"your test results are different from the previous tests, please repeat the test in 2 hours."</string>
 </resources>

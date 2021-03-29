@@ -96,6 +96,7 @@ public class MainActivity extends Activity {
     private static final String ACTION_CALIBRATION_CHECK = "calibration check";
     private static final String ACTION_CONTROLLER = "controller";
     private static final String ACTION_VOICE = "voice";
+    private static final String ACTION_REPEAT_TEST = "repeat test";
     private static final int NEXT_CHART_FOR_MANUAL_STOP=-1;
     private static final int NEXT_CHART_FOR_ERROR=0;
     private static final int NEXT_CHART_FOR_GOOD=1;
@@ -539,6 +540,7 @@ public class MainActivity extends Activity {
         captions.put(ACTION_RESET_USER, R.string.action_reset_user);
         captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
         captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
+        captions.put(ACTION_REPEAT_TEST, R.string.action_repeat_test);
 //        captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
 //        captions.put(ACTION_CONTROLLER, R.string.action_controller);
 //        captions.put(ACTION_VOICE, R.string.action_voice);
@@ -919,6 +921,9 @@ public class MainActivity extends Activity {
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO11)), true,false);
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO1)), true,false);
                 myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypeOuterDiameter(1));
+//                myGLRenderer.setCharacter(2);
+//                myGLRenderer.setChart(0,eyeCalibration,learn.getChartPosString(0, 0),
+//                        learn.getOptotypePixels(0) );
                 step1 = true;
                 step2 = false;
                 test = false;
@@ -1956,7 +1961,7 @@ public class MainActivity extends Activity {
             if(Math.abs(bestAcuities[0]-Float.parseFloat(noContrastLeftResult))>4 ||
                     Math.abs(bestAcuities[1]-Float.parseFloat(noContrastRightResult))>4){
                 toRepeatTest=true;
-                say("your test results are different from the previous tests, please repeat the test in 2 hours.",true,true);
+                say(getResources().getString(captions.get(ACTION_REPEAT_TEST)), true,true);
             }else{
                 toRepeatTest=false;
             }
