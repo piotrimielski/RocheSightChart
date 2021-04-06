@@ -1203,6 +1203,7 @@ public class MainActivity extends Activity {
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO12)), true,false);
             }else{
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO21)), false,false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), true,false);
             }
         }
 
@@ -1242,7 +1243,8 @@ public class MainActivity extends Activity {
                 Util.upDatePref(this,Util.PREF_RIGHT_START,0);
             }
             if(chart>1) {
-                goToTest(chart - 2);
+                chart=chart-2;
+                goToTest(chart);
             }else{
                 goToTest(0);
             }
@@ -1395,7 +1397,7 @@ public class MainActivity extends Activity {
         } else {
             chart++;
             //all charts for the contrast's level was done or error
-            if (chart >= totalLengthCharts-CHART_OFFSET ||
+            if (chart >= totalLengthCharts ||
                     !learn.isResultOk(chart-1, eye) ||
                     nextChartFor==NEXT_CHART_FOR_NEW_LEVEL) {
                 if (Util.DEBUG) {
@@ -1675,7 +1677,7 @@ public class MainActivity extends Activity {
                 }
                 if(good>=2){//next smaller
                     chart=chart+2;
-                    totalLengthStringArray = learn.getSizeChartsPos(chart);
+//                    totalLengthStringArray = learn.getSizeChartsPos(chart);
                     learn.clearResult();
                     chartPos=0;
                     good=0;
@@ -1684,7 +1686,10 @@ public class MainActivity extends Activity {
                         if (Util.DEBUG) {
                             Log.i(Util.LOG_TAG_KEY, "calibrationResultChart good, go to test");
                         }
-                        goToTest(chart-2);
+                        chart=chart-2;
+                        totalLengthStringArray = learn.getSizeChartsPos(chart);
+                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
+                        goToTest(chart);
                         return;
                     }
                 }else if(good==1 && err==1){ //repeat same calibration
@@ -1700,7 +1705,8 @@ public class MainActivity extends Activity {
                     learn.clearResult();
                     say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
                     if(chart>1) {
-                        goToTest(chart - 2);
+                        chart=chart-2;
+                        goToTest(chart);
                     }else{
                         goToTest(0);
                     }
