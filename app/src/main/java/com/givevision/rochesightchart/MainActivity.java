@@ -922,6 +922,9 @@ public class MainActivity extends Activity {
                 eye = -1;
                 myGLRenderer.setCalibrationImage(3);
                 contrastActive=0;
+                good=0;
+                err=0;
+                learn.clearResult();
                 startCalibration2(0, contrastActive);
             } else {
                 myGLRenderer.setCalibrationImage(2);
@@ -1110,6 +1113,9 @@ public class MainActivity extends Activity {
                 contrastActive=0;
                 Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_X,myGLRenderer.getRightPositionX());
                 Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,myGLRenderer.getRightPositionY());
+                good=0;
+                err=0;
+                learn.clearResult();
                 startCalibration2(0, contrastActive);
 //                say("left eye", true,false);
             }
@@ -1483,6 +1489,9 @@ public class MainActivity extends Activity {
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT1_START, FIRST_CHART_LEFT_EYE_1);
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO3)), true, false);
                         }
+                        good=0;
+                        err=0;
+                        learn.clearResult();
                         startCalibration2(eye, this.contrastActive);
                         return;
 //                        totalLengthStringArray = learn.getSizeChartsPos(chart);
@@ -1524,6 +1533,9 @@ public class MainActivity extends Activity {
                                 this.contrastActive = 2;
                             }
                         }
+                        good=0;
+                        err=0;
+                        learn.clearResult();
                         startCalibration2(eye, this.contrastActive);
                         return;
 //                        totalLengthStringArray = learn.getSizeChartsPos(chart);
@@ -1552,6 +1564,8 @@ public class MainActivity extends Activity {
                             this.contrastActive = 0;
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
                             totalLengthStringArray = learn.getSizeChartsPos(chart);
+                            good=0;
+                            err=0;
                             learn.clearResult();
                             startCalibration2(eye, this.contrastActive);
                             return;
@@ -1581,6 +1595,9 @@ public class MainActivity extends Activity {
                             this.contrastActive = 1;
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT1_START, FIRST_CHART_RIGHT_EYE_1);;
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO3)), true, false);
+                            good=0;
+                            err=0;
+                            learn.clearResult();
                             startCalibration2(eye, this.contrastActive);
                             return;
                         }
@@ -1604,6 +1621,9 @@ public class MainActivity extends Activity {
                             this.contrastActive = 2;
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT2_START, FIRST_CHART_RIGHT_EYE_2);
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
+                            good=0;
+                            err=0;
+                            learn.clearResult();
                             startCalibration2(eye, this.contrastActive);
                             return;
                         }else{
