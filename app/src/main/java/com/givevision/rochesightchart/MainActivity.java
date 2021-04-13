@@ -1254,9 +1254,7 @@ public class MainActivity extends Activity {
                         " eyeCalibration= "+ eyeCalibration);
             }
             //stop calibration go to test
-            good=0;
-            err=0;
-            learn.clearResult();
+
             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
             if (contrastActive == 0) {
                 if(eyeCalibration==0){
@@ -1289,7 +1287,9 @@ public class MainActivity extends Activity {
                     }
                 }
             }
-
+            good=0;
+            err=0;
+            learn.clearResult();
             if(chart>1) {
                 chart=chart-2;
                 goToTest(chart, contrastActive);
@@ -1753,6 +1753,9 @@ public class MainActivity extends Activity {
                         chart=chart-2;
                         totalLengthStringArray = learn.getSizeChartsPos(chart);
                         say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
+                        good=0;
+                        err=0;
+                        learn.clearResult();
                         goToTest(chart, contrastActive);
                         return;
                     }
@@ -1764,10 +1767,10 @@ public class MainActivity extends Activity {
                     if (Util.DEBUG) {
                         Log.i(Util.LOG_TAG_KEY, "calibrationResultChart wrong, go to test");
                     }
+                    say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
                     good=0;
                     err=0;
                     learn.clearResult();
-                    say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
                     if(chart>1) {
                         chart=chart-2;
                         goToTest(chart,contrastActive);
