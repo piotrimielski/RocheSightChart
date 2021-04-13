@@ -142,8 +142,12 @@ public class MainActivity extends Activity {
     private LearnMachine learn;
     private int totalLengthCharts=0;
     private int totalLengthStringArray=0;
-    private  static int FIRST_CHART_LEFT_EYE=0;
-    private  static int FIRST_CHART_RIGHT_EYE=0;
+    private  static int FIRST_CHART_LEFT_EYE_0=0;
+    private  static int FIRST_CHART_RIGHT_EYE_0=0;
+    private  static int FIRST_CHART_LEFT_EYE_1=0;
+    private  static int FIRST_CHART_RIGHT_EYE_1=0;
+    private  static int FIRST_CHART_LEFT_EYE_2=0;
+    private  static int FIRST_CHART_RIGHT_EYE_2=0;
     private  static int GREY_ORG_E=125;
     private  static int GREY_ORG_SQUARE=126;
     private static int CHART_OFFSET=0;
@@ -187,7 +191,9 @@ public class MainActivity extends Activity {
     private int err=0;
     private int good=0;
     private String startedByPackage="";
-    private float[] bestAcuities;
+    private float[] bestAcuities0;
+    private float[] bestAcuities1;
+    private float[] bestAcuities2;
     private boolean toRepeatTest;
     //    // Create the Handler object (on the main thread by default)
     private Handler handler = new Handler();
@@ -679,12 +685,18 @@ public class MainActivity extends Activity {
         chart=-1;
         chartPos=-1;
         eye=-1;
-        if(Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START,100)==100){
+        if(Util.getSharedPreferences(this).getInt(Util.PREF_LEFT0_START,100)==100 ||
+                Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START,100)==100){
             newUser=true;
         }else{
             newUser=false;
         }
-
+        Util.upDatePref(this,Util.PREF_LEFT0_START,FIRST_CHART_LEFT_EYE_0);
+        Util.upDatePref(this,Util.PREF_RIGHT0_START,FIRST_CHART_RIGHT_EYE_0);
+        Util.upDatePref(this,Util.PREF_LEFT1_START,FIRST_CHART_LEFT_EYE_1);
+        Util.upDatePref(this,Util.PREF_RIGHT1_START,FIRST_CHART_RIGHT_EYE_1);
+        Util.upDatePref(this,Util.PREF_LEFT2_START,FIRST_CHART_LEFT_EYE_2);
+        Util.upDatePref(this,Util.PREF_RIGHT2_START,FIRST_CHART_RIGHT_EYE_2);
 
         handler0.removeCallbacks(runnableCode0);
         handler0.postDelayed(runnableCode0, KEY_DELAY);
@@ -910,7 +922,7 @@ public class MainActivity extends Activity {
                 eye = -1;
                 myGLRenderer.setCalibrationImage(3);
                 contrastActive=0;
-                startCalibration2(0);
+                startCalibration2(0, contrastActive);
             } else {
                 myGLRenderer.setCalibrationImage(2);
                 myGLRenderer.setCharacter(1); //circle with gaps character
@@ -982,7 +994,7 @@ public class MainActivity extends Activity {
             isAppStarted=false;
 //            stopTask(true);
             say("test stopped", false,false);
-            nextChart(NEXT_CHART_FOR_MANUAL_STOP);
+            nextChart(NEXT_CHART_FOR_MANUAL_STOP, contrastActive);
             isProcessing=false;
 //            endOfTest(false);
         }else if(step1 ){
@@ -1030,7 +1042,7 @@ public class MainActivity extends Activity {
             }
             isProcessing=true;
             if(isReady){
-                calibration2(keyCode, keyAction);
+                calibration2(keyCode, keyAction,contrastActive);
             }
             isProcessing=false;
         }else if(test){
@@ -1055,8 +1067,12 @@ public class MainActivity extends Activity {
             Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_Y,0f);
             Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_X,0f);
             Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,0f);
-            Util.upDatePref(this,Util.PREF_LEFT_START,100);
-            Util.upDatePref(this,Util.PREF_RIGHT_START,100);
+            Util.upDatePref(this,Util.PREF_LEFT0_START,100);
+            Util.upDatePref(this,Util.PREF_RIGHT0_START,100);
+            Util.upDatePref(this,Util.PREF_LEFT1_START,100);
+            Util.upDatePref(this,Util.PREF_RIGHT1_START,100);
+            Util.upDatePref(this,Util.PREF_LEFT2_START,100);
+            Util.upDatePref(this,Util.PREF_RIGHT2_START,100);
             Util.upDatePref(this,Util.PREF_USER_ID,-1);
             Util.upDatePref(this, Util.PREF_BLIND_EYE,-1);
             Util.postData(context, acuityRepository, imei,null);
@@ -1094,7 +1110,7 @@ public class MainActivity extends Activity {
                 contrastActive=0;
                 Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_X,myGLRenderer.getRightPositionX());
                 Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,myGLRenderer.getRightPositionY());
-                startCalibration2(0);
+                startCalibration2(0, contrastActive);
 //                say("left eye", true,false);
             }
 
@@ -1154,36 +1170,42 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void startCalibration2(int e) {
+    /**
+     * setup calibration2 for different contrast and eye
+     * @param eye to do calibration
+     * @param contrastActive contrast to setup
+     * @return
+     */
+    private void startCalibration2(int eye, int contrastActive) {
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_KEY, "startCalibration2 eyeCalibration= "+e+
+            Log.i(Util.LOG_TAG_KEY, "startCalibration2 eyeCalibration= "+eye+
                    " blind eye= "+ Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)+
-                    " contrastActive= "+contrastActive);
+                    " contrastActive= "+ contrastActive);
         }
         if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==0){
             eyeCalibration=1;
         }else if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==2){
             endOfTest(false);
             return;
-        }else if(e==1 && Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==1){
+        }else if(eye==1 && Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==1){
             endOfTest(true);
             return;
         }else{
-            eyeCalibration=e;
+            eyeCalibration=eye;
         }
 //        isNoContrast=true;
 //        isContrast=false;
 //        isContrast_1=false;
-        if(contrastActive==0){
+        if(contrastActive ==0){
             greyE = BLACK;//(int) learn.getOptotypeEgrey(chart);
             greySquare = WHITE; //(int) learn.getOptotypeSquaregrey(chart);
 
-        }else if(contrastActive==1){
+        }else if(contrastActive ==1){
             greyE = GREY_E;
             greySquare = GREY_B;
-        }else if(contrastActive==2){
-            greyE = GREY_E_1;
-            greySquare = GREY_B_1;
+        }else if(contrastActive ==2){
+            greyE = (int)learn.getOptotypeEgrey(0);
+            greySquare = (int)learn.getOptotypeSquaregrey(0);;
         }
 
         myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
@@ -1192,7 +1214,7 @@ public class MainActivity extends Activity {
         step2=true;
         test=false;
         setInfo("Chart calibration");
-        if(contrastActive==0){
+        if(contrastActive ==0){
             if(eyeCalibration==0){
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true,false);
@@ -1209,7 +1231,6 @@ public class MainActivity extends Activity {
 
         myGLRenderer.setCalibrationImage(1);
         learn.clearResult();
-        eye=-1;
         chart=0;
         myGLRenderer.setCharacter(2);
         chartPos=0;
@@ -1222,9 +1243,10 @@ public class MainActivity extends Activity {
      * calibration of sizes of chart to use
      * @param keyCode key code from controller
      * @param keyAction key code from controller
+     * @param contrastActive can be 0 - no contrast, 1 - contrast 5%, 2 - last test
      * @return
      */
-    private void calibration2(int keyCode, int keyAction){
+    private void calibration2(int keyCode, int keyAction, int contrastActive){
         say("",false,false);
         if(keyCode==Util.KEY_TRIGGER && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
@@ -1236,24 +1258,50 @@ public class MainActivity extends Activity {
             err=0;
             learn.clearResult();
             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
-            if(Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, 100)==100){
-                Util.upDatePref(this,Util.PREF_LEFT_START,0);
+            if (contrastActive == 0) {
+                if(eyeCalibration==0){
+                    if(Util.getSharedPreferences(this).getInt(Util.PREF_LEFT0_START, 100)==100){
+                        Util.upDatePref(this,Util.PREF_LEFT0_START,0);
+                    }
+                }else if(eyeCalibration==1){
+                    if(Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, 100)==100){
+                        Util.upDatePref(this,Util.PREF_RIGHT0_START,0);
+                    }
+                }
+            }else if (contrastActive == 1) {
+                if(eyeCalibration==0){
+                    if(Util.getSharedPreferences(this).getInt(Util.PREF_LEFT1_START, 100)==100){
+                        Util.upDatePref(this,Util.PREF_LEFT1_START,0);
+                    }
+                }else if(eyeCalibration==1){
+                    if(Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT1_START, 100)==100){
+                        Util.upDatePref(this,Util.PREF_RIGHT1_START,0);
+                    }
+                }
+            }else if (contrastActive == 2) {
+                if(eyeCalibration==0){
+                    if(Util.getSharedPreferences(this).getInt(Util.PREF_LEFT2_START, 100)==100){
+                        Util.upDatePref(this,Util.PREF_LEFT2_START,0);
+                    }
+                }else if(eyeCalibration==1){
+                    if(Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT2_START, 100)==100){
+                        Util.upDatePref(this,Util.PREF_RIGHT2_START,0);
+                    }
+                }
             }
-            if(Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, 100)==100){
-                Util.upDatePref(this,Util.PREF_RIGHT_START,0);
-            }
+
             if(chart>1) {
                 chart=chart-2;
-                goToTest(chart);
+                goToTest(chart, contrastActive);
             }else{
-                goToTest(0);
+                goToTest(0, contrastActive);
             }
         }else if(keyCode==Util.KEY_UP && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, " calibration2 KEY_UP chart= "+chart+ " OptotypePixels= "+ learn.getOptotypePixels(chart));
             }
             isReady=false;
-            calibrationResultChart("up");
+            calibrationResultChart("up",contrastActive);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
                     isReady=true;
@@ -1263,7 +1311,7 @@ public class MainActivity extends Activity {
                 Log.i(Util.LOG_TAG_KEY, "calibration2 KEY_DOWN chart= "+chart + " OptotypePixels= "+ learn.getOptotypePixels(chart));
             }
             isReady=false;
-            calibrationResultChart("down");
+            calibrationResultChart("down", contrastActive);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
                     isReady=true;
@@ -1273,7 +1321,7 @@ public class MainActivity extends Activity {
                 Log.i(Util.LOG_TAG_KEY, "KEY_LEFT");
             }
             isReady=false;
-            calibrationResultChart("left");
+            calibrationResultChart("left", contrastActive);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
                     isReady=true;
@@ -1283,7 +1331,7 @@ public class MainActivity extends Activity {
                 Log.i(Util.LOG_TAG_KEY, "KEY_RIGHT");
             }
             isReady=false;
-            calibrationResultChart("right");
+            calibrationResultChart("right", contrastActive);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
                     isReady=true;
@@ -1310,7 +1358,7 @@ public class MainActivity extends Activity {
             }
             //start next test
             //TODO:: for test 2%
-            nextChart(NEXT_CHART_FOR_GOOD);
+            nextChart(NEXT_CHART_FOR_GOOD, contrastActive);
 //            nextChart(NEXT_CHART_FOR_ERROR);
         }else if(keyCode==Util.KEY_UP  && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             isReady=false;
@@ -1360,11 +1408,13 @@ public class MainActivity extends Activity {
      * @param
      * @param
      * @param nextChartFor
+     * @param contrastActive
      * @return
      */
-    private void nextChart(int nextChartFor) {
+    private void nextChart(int nextChartFor, int contrastActive) {
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_KEY, "nextChart nextChartFor= "+nextChartFor+
+                    "contrastActive= " +contrastActive+
                     " eye= "+ eye+  " chartPos= "+ chartPos+ " chart= "+chart+
                     " err= "+err +" good= "+good +
                     " blind= "+Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1));
@@ -1373,7 +1423,7 @@ public class MainActivity extends Activity {
             if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==0){
                 //start with right eye
                 eye = 1;
-                chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0);
 //                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, true);
             }else if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==2){
                 //blind end of test
@@ -1382,16 +1432,15 @@ public class MainActivity extends Activity {
             }else{
                 //start with left or right eye
                 if(eye==-1){
-                    chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE);
+                    chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT0_START, FIRST_CHART_LEFT_EYE_0);
                     eye = 0;
                 }else{
-                    chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_RIGHT_EYE);
+                    chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0);
                     eye = 1;
                 }
 //                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true, true);
             }
             chartPos=0;
-//            contrastActive = 0;
             totalLengthStringArray = learn.getSizeChartsPos(chart);
             learn.clearResult();
         } else {
@@ -1404,10 +1453,10 @@ public class MainActivity extends Activity {
                     Log.i(Util.LOG_TAG_KEY, "nextChart go to next ChartFor= "+nextChartFor+
                             " eye= "+ eye+
                             " chart= "+chart+  " chartPos= "+ chartPos+ " totalLengthCharts= "+totalLengthCharts+
-                            " contrastActive= "+contrastActive);
+                            " contrastActive= "+ contrastActive);
                 }
                 if (eye == 0) {
-                    if (contrastActive==0) {
+                    if (contrastActive ==0) {
                         //first no contrast test done
                         //memorise no contrast test
                         if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
@@ -1424,21 +1473,21 @@ public class MainActivity extends Activity {
                         if(nextChartFor==NEXT_CHART_FOR_NO_READING){
                             //go to next eye
                             eye=1;
-                            contrastActive = 0;
-                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_RIGHT_EYE);
+                            this.contrastActive = 0;
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0);
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
                         }else{
                             //go to next contrast
                             eye=0;
-                            contrastActive = 1;
-                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE);
+                            this.contrastActive = 1;
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT1_START, FIRST_CHART_LEFT_EYE_1);
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO3)), true, false);
                         }
-                        startCalibration2(eye);
+                        startCalibration2(eye, this.contrastActive);
                         return;
 //                        totalLengthStringArray = learn.getSizeChartsPos(chart);
 //                        learn.clearResult();
-                    }else if (contrastActive==1){
+                    }else if (contrastActive ==1){
                         //contrast test done
                         //memorise contrast test
                         if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
@@ -1454,27 +1503,32 @@ public class MainActivity extends Activity {
                         }
                         if(nextChartFor==NEXT_CHART_FOR_GOOD){
                             //go to next contrast level
-                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE);
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT2_START, FIRST_CHART_LEFT_EYE_2);
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
                             eye=0;
-                            contrastActive = 2;
+                            this.contrastActive = 2;
                         }else{
                             if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==1){
                                 endOfTest(true);
                                 return;
                             }else{
                                 //go to next eye
-                                chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
-                                eye=1;
-                                contrastActive = 0;
-//                                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+//                                chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0);
+//                                eye=1;
+//                                this.contrastActive = 0;
+////                                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                                //go to next contrast level
+                                chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT2_START, FIRST_CHART_LEFT_EYE_2);
+                                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
+                                eye=0;
+                                this.contrastActive = 2;
                             }
                         }
-                        startCalibration2(eye);
+                        startCalibration2(eye, this.contrastActive);
                         return;
 //                        totalLengthStringArray = learn.getSizeChartsPos(chart);
 //                        learn.clearResult();
-                    }else if (contrastActive==2){
+                    }else if (contrastActive ==2){
                         //contrast_1 test done
                         //memorise contrast_1 test
                         if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
@@ -1482,7 +1536,7 @@ public class MainActivity extends Activity {
                         }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
                             contrast_1LeftResult = "0" ;
                         }else if(nextChartFor==NEXT_CHART_FOR_ERROR || nextChartFor==NEXT_CHART_FOR_GOOD){
-                            contrast_1LeftResult = learn.getEyeResult(eye);
+                            contrast_1LeftResult = learn.getEyeContrastResult(eye);
                         }else if(nextChartFor==NEXT_CHART_FOR_NEW_LEVEL){
 
                         }else if(nextChartFor==NEXT_CHART_FOR_NEW_TEST){
@@ -1493,18 +1547,18 @@ public class MainActivity extends Activity {
                             return;
                         }else{
                             //go to next eye
-                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0);
                             eye=1;
-                            contrastActive = 0;
+                            this.contrastActive = 0;
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
                             totalLengthStringArray = learn.getSizeChartsPos(chart);
                             learn.clearResult();
-                            startCalibration2(eye);
+                            startCalibration2(eye, this.contrastActive);
                             return;
                         }
                     }
                 }else if (eye == 1) {
-                    if (contrastActive==0) {
+                    if (contrastActive ==0) {
                         if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
                             noContrastRightResult = "-1" ;
                         }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
@@ -1519,20 +1573,20 @@ public class MainActivity extends Activity {
                             //go to next contrast level
                         if(nextChartFor==NEXT_CHART_FOR_NO_READING){
                             learn.clearResult();
-                            contrastActive = -1;
+                            this.contrastActive = -1;
                             endOfTest(true);
                             return;
                         }else{
                             eye=1;
-                            contrastActive = 1;
-                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);;
+                            this.contrastActive = 1;
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT1_START, FIRST_CHART_RIGHT_EYE_1);;
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO3)), true, false);
-                            startCalibration2(eye);
+                            startCalibration2(eye, this.contrastActive);
                             return;
                         }
 //                        totalLengthStringArray = learn.getSizeChartsPos(chart);
 //                        learn.clearResult();
-                    }else if (contrastActive==1){
+                    }else if (contrastActive ==1){
                         if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
                             contrastRightResult = "-1" ;
                         }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
@@ -1547,24 +1601,28 @@ public class MainActivity extends Activity {
                         if(nextChartFor==NEXT_CHART_FOR_GOOD){
                             //go to next contrast level
                             eye=1;
-                            contrastActive = 2;
-                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE);
+                            this.contrastActive = 2;
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT2_START, FIRST_CHART_RIGHT_EYE_2);
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
-                            startCalibration2(eye);
+                            startCalibration2(eye, this.contrastActive);
                             return;
                         }else{
-                            learn.clearResult();
-                            contrastActive = -1;
-                            endOfTest(true);
+//                            learn.clearResult();
+//                            this.contrastActive = -1;
+//                            endOfTest(true);
+                            chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT2_START, FIRST_CHART_RIGHT_EYE_2);
+                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
+                            eye=1;
+                            this.contrastActive = 2;
                             return;
                         }
-                    }else if (contrastActive==2){
+                    }else if (contrastActive ==2){
                         if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
                             contrast_1RightResult = "-1" ;
                         }else if(nextChartFor==NEXT_CHART_FOR_NO_READING){
                             contrast_1RightResult = "0" ;
                         }else if(nextChartFor==NEXT_CHART_FOR_ERROR || nextChartFor==NEXT_CHART_FOR_GOOD){
-                            contrast_1RightResult = learn.getEyeResult(eye);
+                            contrast_1RightResult = learn.getEyeContrastResult(eye);
                         }else if(nextChartFor==NEXT_CHART_FOR_NEW_LEVEL){
 
                         }else if(nextChartFor==NEXT_CHART_FOR_NEW_TEST){
@@ -1572,7 +1630,7 @@ public class MainActivity extends Activity {
                         }
 
 //                        learn.clearResult();
-                        contrastActive = -1;
+                        this.contrastActive = -1;
                         endOfTest(true);
                         return;
                     }
@@ -1581,30 +1639,35 @@ public class MainActivity extends Activity {
         }
 
         if (Util.DEBUG) {
-            Log.i(Util.LOG_TAG_KEY, "nextChart contrastActive= " + contrastActive);
+            Log.i(Util.LOG_TAG_KEY, "nextChart contrastActive= " + this.contrastActive);
         }
         setInfo("test started");
         chartPos=0;
         good=0;
         err=0;
-        if (contrastActive==0) {
+        if (this.contrastActive ==0) {
             greyE = BLACK;//(int) learn.getOptotypeEgrey(chart);
             greySquare = WHITE; //(int) learn.getOptotypeSquaregrey(chart);
-        } else if (contrastActive==1) {
+        } else if (this.contrastActive ==1) {
             greyE = GREY_E;
             greySquare = GREY_B;
-        } else if (contrastActive==2){
-            greyE = GREY_E_1;
-            greySquare = GREY_B_1;
+        } else if (this.contrastActive ==2){
+            greyE = (int)learn.getOptotypeEgrey(chart);
+            greySquare = (int)learn.getOptotypeSquaregrey(chart);;
         }
         setText("","");
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_KEY, "nextChart myGLRenderer eye= " + eye
-                    +" chart=" + chart +" chartPos=" + chartPos);
+                    +" chart=" + chart +" chartPos=" + chartPos+ " this.contrastActive= "+this.contrastActive);
         }
         breakBetween(eye);
         myGLRenderer.setGrey(eye,greyE,greySquare);
-        myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+        if (this.contrastActive ==2){
+            myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(0));
+        }else{
+            myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+        }
+
 //        if(test){
 //             restartTask(LONG_DELAY);
 //        }
@@ -1640,11 +1703,12 @@ public class MainActivity extends Activity {
 
     /**
      * check if test finish
-     * @param result string of user's result
      * @param
+     * @param result string of user's result
+     * @param contrastActive
      * @return
      */
-    private void calibrationResultChart(String result) {
+    private void calibrationResultChart(String result, int contrastActive) {
 //        setText(result,"");
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_KEY, "calibrationResultChart eyeCalibration= "+eyeCalibration+" result= "+result+
@@ -1689,7 +1753,7 @@ public class MainActivity extends Activity {
                         chart=chart-2;
                         totalLengthStringArray = learn.getSizeChartsPos(chart);
                         say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
-                        goToTest(chart);
+                        goToTest(chart, contrastActive);
                         return;
                     }
                 }else if(good==1 && err==1){ //repeat same calibration
@@ -1706,9 +1770,9 @@ public class MainActivity extends Activity {
                     say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
                     if(chart>1) {
                         chart=chart-2;
-                        goToTest(chart);
+                        goToTest(chart,contrastActive);
                     }else{
-                        goToTest(0);
+                        goToTest(0, contrastActive);
                     }
                     return;
                 }else{
@@ -1716,8 +1780,15 @@ public class MainActivity extends Activity {
                 }
                 breakBetween(eyeCalibration);
                 myGLRenderer.setCalibrationImage(3);
-                myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
-                myGLRenderer.setChart(chart, eyeCalibration, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+                if(contrastActive==0 || contrastActive==1){
+                    myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
+                    myGLRenderer.setChart(chart, eyeCalibration, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+                }else{
+                    greyE=(int)learn.getOptotypeEgrey(chart);
+                    greySquare=(int)learn.getOptotypeSquaregrey(chart);
+                    myGLRenderer.setGrey(eyeCalibration,greyE,greySquare);
+                    myGLRenderer.setChart(chart, eyeCalibration, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(0));
+                }
             }else{
                 if (Util.DEBUG) {
                     Log.e(Util.LOG_TAG_KEY, "calibrationResultChart outside the sizes of chart");
@@ -1740,27 +1811,56 @@ public class MainActivity extends Activity {
 
     /**
      * start test after calibration
-     * @param c default chart after calibration
      * @param
+     * @param chart default chart after calibration
+     * @param contrastActive
      * @return
      */
-    private void goToTest(int c){
-        if(eyeCalibration==0){
-            if(c<2){
-                Util.upDatePref(this, Util.PREF_LEFT_START,c);
+    private void goToTest(int chart, int contrastActive){
+        if(eyeCalibration==0 && contrastActive==0){
+            if(chart<2){
+                Util.upDatePref(this, Util.PREF_LEFT0_START,chart);
             }else{
-                Util.upDatePref(this, Util.PREF_LEFT_START,c-2);
+                Util.upDatePref(this, Util.PREF_LEFT0_START,chart-2);
             }
-
             eye=-1;
-        }else if(eyeCalibration==1){
-            if(c<2){
-                Util.upDatePref(this, Util.PREF_RIGHT_START,c);
+        }if(eyeCalibration==0 && contrastActive==1){
+            if(chart<2){
+                Util.upDatePref(this, Util.PREF_LEFT1_START,chart);
             }else{
-                Util.upDatePref(this, Util.PREF_RIGHT_START,c-2);
+                Util.upDatePref(this, Util.PREF_LEFT1_START,chart-2);
+            }
+            eye=-1;
+        }if(eyeCalibration==0 && contrastActive==2){
+            if(chart<2){
+                Util.upDatePref(this, Util.PREF_LEFT2_START,chart);
+            }else{
+                Util.upDatePref(this, Util.PREF_LEFT2_START,chart-2);
+            }
+            eye=-1;
+        }else if(eyeCalibration==1  && contrastActive==0){
+            if(chart<2){
+                Util.upDatePref(this, Util.PREF_RIGHT0_START,chart);
+            }else{
+                Util.upDatePref(this, Util.PREF_RIGHT0_START,chart-2);
+            }
+            eye=-2;
+        }else if(eyeCalibration==1  && contrastActive==1){
+            if(chart<2){
+                Util.upDatePref(this, Util.PREF_RIGHT1_START,chart);
+            }else{
+                Util.upDatePref(this, Util.PREF_RIGHT1_START,chart-2);
+            }
+            eye=-2;
+        }else if(eyeCalibration==1  && contrastActive==2){
+            if(chart<2){
+                Util.upDatePref(this, Util.PREF_RIGHT2_START,chart);
+            }else{
+                Util.upDatePref(this, Util.PREF_RIGHT2_START,chart-2);
             }
             eye=-2;
         }
+
         step2=false;
         test=true;
         eyeCalibration=-1;
@@ -1770,7 +1870,7 @@ public class MainActivity extends Activity {
 //        myGLRenderer.setCharacter(2);
         newUser=false;
         myGLRenderer.setCalibrationImage(3);
-        nextChart(NEXT_CHART_FOR_NEW_TEST);
+        nextChart(NEXT_CHART_FOR_NEW_TEST,contrastActive);
     }
 
     /**
@@ -1812,9 +1912,9 @@ public class MainActivity extends Activity {
 //                    myGLRenderer.setChart(chart, eye, "", 0);
 //                    sleep(1000);
                     if(err>=2) {
-                        nextChart(NEXT_CHART_FOR_ERROR);
+                        nextChart(NEXT_CHART_FOR_ERROR, contrastActive);
                     }else{
-                        nextChart(NEXT_CHART_FOR_GOOD);
+                        nextChart(NEXT_CHART_FOR_GOOD, contrastActive);
                     }
                     return;
                 }else if(err==1 && good==3){
@@ -1825,7 +1925,11 @@ public class MainActivity extends Activity {
                     }
                     breakBetween(eye);
                     myGLRenderer.setGrey(eye,greyE,greySquare);
-                    myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+                    if(contrastActive==2){
+                        myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(0));
+                    }else{
+                        myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+                    }
                 }else{
                     //go to next level
                     if (Util.DEBUG) {
@@ -1839,7 +1943,7 @@ public class MainActivity extends Activity {
                         if (Util.DEBUG) {
                             Log.i(Util.LOG_TAG_KEY, "resultChart NEXT_CHART_FOR_NEW_LEVEL chartPos= "+chartPos);
                         }
-                        nextChart(NEXT_CHART_FOR_NEW_LEVEL);
+                        nextChart(NEXT_CHART_FOR_NEW_LEVEL, contrastActive);
                         return;
                     }else{
                         //chartPos was -2 before this procedure
@@ -1853,7 +1957,11 @@ public class MainActivity extends Activity {
                             //test
                             breakBetween(eye);
                             myGLRenderer.setGrey(eye,greyE,greySquare);
-                            myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+                            if(contrastActive==2){
+                                myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(0));
+                            }else {
+                                myGLRenderer.setChart(chart, eye, learn.getChartPosString(chart, chartPos), learn.getOptotypePixels(chart));
+                            }
                         }
                     }
                 }
@@ -1864,7 +1972,7 @@ public class MainActivity extends Activity {
                 //go next level the chart or stop
                 myGLRenderer.setChart(-1, -2, "", 0);
 //                sleep(1000);
-                nextChart(NEXT_CHART_FOR_NEW_LEVEL);
+                nextChart(NEXT_CHART_FOR_NEW_LEVEL, contrastActive);
                 return;
             }
 //            if(test){
@@ -1891,30 +1999,41 @@ public class MainActivity extends Activity {
         setInfo("end of test");
         say("end of test",false,false);
         if (Util.DEBUG) {
-            Log.d(LOG_TAG_MAIN, "endOfTest test= "+test+" ok= "+ok+" eye= "+eye
-                    +" left:  noContrastLeftResult= "+ noContrastLeftResult+
-                    " contrastLeftResult= "+ contrastLeftResult + " contrast_1LeftResult= "+ contrast_1LeftResult
-                    + " right:  noContrastRightResult= "+ noContrastRightResult+
-                    " contrastRightResult= "+ contrastRightResult+ " contrast_1RightResult= "+ contrast_1RightResult);}
+            Log.d(LOG_TAG_MAIN, "endOfTest test= "+test+" ok= "+ok+" eye= "+eye);
+            Log.d(LOG_TAG_MAIN, "endOfTest left:"
+                    + " noContrastLeftStart= "+ Util.getSharedPreferences(this).getInt(Util.PREF_LEFT0_START, FIRST_CHART_LEFT_EYE_0)
+                    +" noContrastLeftResult= "+ noContrastLeftResult
+                    + " contrastLeftStart= "+ Util.getSharedPreferences(this).getInt(Util.PREF_LEFT1_START, FIRST_CHART_LEFT_EYE_1)
+                    + " contrastLeftResult= "+ contrastLeftResult
+                    + " contrast_1LeftStart= "+ Util.getSharedPreferences(this).getInt(Util.PREF_LEFT2_START, FIRST_CHART_LEFT_EYE_2)
+                    + " contrast_1LeftResult= "+ contrast_1LeftResult);
+            Log.d(LOG_TAG_MAIN, "endOfTest right:"
+                    + " noContrastRightStart= "+ Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0)
+                    +" noContrastRightResult= "+ noContrastRightResult
+                    + " contrastRightStart= "+ Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT1_START, FIRST_CHART_RIGHT_EYE_1)
+                    + " contrastRightResult= "+ contrastRightResult
+                    + " contrast_1RightStart= "+ Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT2_START, FIRST_CHART_RIGHT_EYE_2)
+                    + " contrast_1RightResult= "+ contrast_1RightResult);
+        }
         if(test && ok){
             //insert in database no contrast tests
             if(noContrastLeftResult!="" || noContrastRightResult!=""){
                 insertAcuity(0, startTest,
-                        Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE),
-                        Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE),
+                        Util.getSharedPreferences(this).getInt(Util.PREF_LEFT0_START, FIRST_CHART_LEFT_EYE_0),
+                        Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0),
                         noContrastLeftResult, noContrastRightResult);
             }
             //insert in database contrasts tests
             if(contrastLeftResult!="" || contrastRightResult!=""){
                 insertAcuity(1, startTest,
-                        Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE),
-                        Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE),
+                        Util.getSharedPreferences(this).getInt(Util.PREF_LEFT1_START, FIRST_CHART_LEFT_EYE_1),
+                        Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT1_START, FIRST_CHART_RIGHT_EYE_1),
                         contrastLeftResult, contrastRightResult);
             }
             if(contrast_1LeftResult!="" || contrast_1RightResult!=""){
                 insertAcuity(2, startTest,
-                        Util.getSharedPreferences(this).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE),
-                        Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE),
+                        Util.getSharedPreferences(this).getInt(Util.PREF_LEFT2_START, FIRST_CHART_LEFT_EYE_2),
+                        Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT2_START, FIRST_CHART_RIGHT_EYE_2),
                         contrast_1LeftResult, contrast_1RightResult);
             }
 
@@ -1941,12 +2060,12 @@ public class MainActivity extends Activity {
             if(contrast_1LeftResult=="" || contrast_1LeftResult=="0" || contrast_1LeftResult=="-1" || contrast_1LeftResult=="-2"){
 //                contrastLeftResult="no reading";
             }else{
-                contrast_1LeftResult=learn.getPixelsFromMunit(contrast_1LeftResult);
+//                contrast_1LeftResult=learn.getEyeContrastResult(0);
             }
             if(contrast_1RightResult=="" || contrast_1RightResult=="0" || contrast_1RightResult=="-1" || contrast_1RightResult=="-2"){
 //                contrastRightResult="no reading";
             }else{
-                contrast_1RightResult=learn.getPixelsFromMunit(contrast_1RightResult);
+//                contrast_1RightResult=learn.getEyeContrastResult(1);
             }
 
             setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult+" / " +contrast_1LeftResult,
@@ -1958,17 +2077,17 @@ public class MainActivity extends Activity {
             AsyncTask.execute( new Runnable() {
                 @Override
                 public void run() {
-                    bestAcuities=acuityRepository.getBestAcuity(0);
+                    bestAcuities0=acuityRepository.getBestAcuity(0);
                 }
             });
-            while(bestAcuities==null){
+            while(bestAcuities0==null){
 
             }
-            if(bestAcuities[0]==-1 && bestAcuities[1]==-1){
+            if(bestAcuities0[0]==-1 && bestAcuities0[1]==-1){
                 toRepeatTest=false;
             }else{
-                if(Math.abs(bestAcuities[0]-Float.parseFloat(noContrastLeftResult))>4 ||
-                        Math.abs(bestAcuities[1]-Float.parseFloat(noContrastRightResult))>4){
+                if(Math.abs(bestAcuities0[0]-Float.parseFloat(noContrastLeftResult))>4 ||
+                        Math.abs(bestAcuities0[1]-Float.parseFloat(noContrastRightResult))>4){
                     toRepeatTest=true;
                     say(getResources().getString(captions.get(ACTION_REPEAT_TEST)), true,true);
                 }else{
@@ -1983,20 +2102,38 @@ public class MainActivity extends Activity {
         }else{
             setText("","");
             setInfo("Preparing the test");
-            noContrastLeftResult="-2";
-            noContrastLeftResult="-2";
             if (Util.DEBUG) {
                 Log.d(LOG_TAG_MAIN, "test end test= "+test+" ok= "+ok
-                    +" left:  noContrastLeftResult= "+ noContrastLeftResult+ " contrastLeftResult= "+ contrastLeftResult
-                    +" right:  noContrastRightResult= "+ noContrastRightResult+ " contrastRightResult= "+ contrastRightResult);}
-
-        //insert in database contrast tests
-
-            handler0.removeCallbacks(runnableCode0);
+                        +" left:  noContrastLeftResult= "+ noContrastLeftResult+ " contrastLeftResult= "+ contrastLeftResult
+                        + " contrast1LeftResult= "+ contrast_1LeftResult
+                        +" right:  noContrastRightResult= "+ noContrastRightResult+ " contrastRightResult= "+ contrastRightResult
+                        + " contrast1RightResult= "+ contrast_1RightResult);}
+            //insert in database contrast tests
+            if(contrastActive==0){
+                noContrastLeftResult="-2";
+                noContrastRightResult="-2";
+                handler0.removeCallbacks(runnableCode0);
                 insertAcuity(0, startTest,
-                     Util.getSharedPreferences(context).getInt(Util.PREF_LEFT_START, FIRST_CHART_LEFT_EYE),
-                     Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT_START, FIRST_CHART_RIGHT_EYE),
-                     noContrastLeftResult, noContrastRightResult);
+                        Util.getSharedPreferences(context).getInt(Util.PREF_LEFT0_START, FIRST_CHART_LEFT_EYE_0),
+                        Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0),
+                        noContrastLeftResult, noContrastRightResult);
+            }else if(contrastActive==1){
+                contrastLeftResult="-2";
+                contrastRightResult="-2";
+                handler0.removeCallbacks(runnableCode0);
+                insertAcuity(0, startTest,
+                        Util.getSharedPreferences(context).getInt(Util.PREF_LEFT1_START, FIRST_CHART_LEFT_EYE_1),
+                        Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT1_START, FIRST_CHART_RIGHT_EYE_1),
+                        contrastLeftResult, contrastRightResult);
+            }else if(contrastActive==2){
+                contrast_1LeftResult="-2";
+                contrast_1RightResult="-2";
+                handler0.removeCallbacks(runnableCode0);
+                insertAcuity(0, startTest,
+                        Util.getSharedPreferences(context).getInt(Util.PREF_LEFT2_START, FIRST_CHART_LEFT_EYE_2),
+                        Util.getSharedPreferences(context).getInt(Util.PREF_RIGHT2_START, FIRST_CHART_RIGHT_EYE_2),
+                        contrast_1LeftResult, contrast_1RightResult);
+            }
             handler0.postDelayed(runnableCode0, 100);
         }
         chart=-1;

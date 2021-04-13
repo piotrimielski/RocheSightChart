@@ -15,25 +15,27 @@ import static java.lang.System.exit;
 public class LearnMachine {
 
     private static final int NBR_OF_CHARACTERS=4;
-    //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm), Image Outer diameter (mm), pixels, E grey, square grey
+    //Visual Angle(min), LogMAR, Approximate M-units, Gap (mm),
+    // Image Outer diameter (mm), pixels, E grey, square grey,Contrast score
     private float[][] OPTO_TYPE={
-            {1f,    0f,   4f,   1.16f, 5.82f,    1f,  250f, 250f},
-            {1.25f, 0.1f, 5f,   1.46f, 7.32f,    2f,  250f, 250f},
-            {1.6f,  0.2f, 6.3f, 1.84f, 9.22f,    3f,  250f, 250f},
-            {2f,    0.3f, 8f,   2.34f, 11.61f,   4f,  250f, 250f},
-            {2.5f,  0.4f, 10f,  2.92f, 14.61f,   5f,  250f, 250f},
-            {3.2f,  0.5f, 12.5f,3.68f, 18.40f,   6f,  250f, 250f},
-            {4f,    0.6f, 16f,  4.63f, 23.16f,   7f,  250f, 250f},
-            {5f,    0.7f, 20f,  5.83f, 29.16f,   8f,  250f, 250f},
-            {6.3f,  0.8f, 25f,  7.34f, 36.71f,   9f,  250f, 250f},
-            {8f,    0.9f, 32f,  9.24f,  46.21f,  10f, 250f, 250f},
-            {10f,   1f,   40f,  11.64f, 58.18f,  11f, 250f, 250f},
-            {12.5f, 1.1f, 50f,  14.69f, 72.24f,  12f, 250f, 250f},
-            {16f,   1.2f, 63f,  18.33f, 92.20f,  13f, 250f, 250f},
-            {20f,   1.3f, 80f,  23.26f, 116.18f, 14f, 250f, 250f},
-            {25f,   1.4f, 100f, 29.08f, 145.40f, 15f, 250f, 250f},
-            {30f,   1.5f, 125f, 34.89f, 174.45f, 16f, 250f, 250f},
-            {40f,   1.6f, 160f, 46.52f, 232.60f, 17f, 250f, 250f}//other form there is not real convertion
+            {1f,    0f,   4f,   1.16f, 5.82f,    1f,  250f, 250f,-1f},
+            {1.25f, 0.1f, 5f,   1.46f, 7.32f,    2f,  250f, 250f,-1f},
+            {1.6f,  0.2f, 6.3f, 1.84f, 9.22f,    3f,  250f, 250f,-1f},
+            {2f,    0.3f, 8f,   2.34f, 11.61f,   4f,  185f, 186f,2.25f},
+            {2.5f,  0.4f, 10f,  2.92f, 14.61f,   5f,  184f, 186f,1.94f},
+            {3.2f,  0.5f, 12.5f,3.68f, 18.40f,   6f,  183f, 186f,1.70f},
+            {4f,    0.6f, 16f,  4.63f, 23.16f,   7f,  181f, 186f,1.50f},
+            {5f,    0.7f, 20f,  5.83f, 29.16f,   8f,  178.5f, 186f,1.36f},
+            {6.3f,  0.8f, 25f,  7.34f, 36.71f,   9f,  176f, 186f,1.21f},
+            {8f,    0.9f, 32f,  9.24f,  46.21f,  10f, 173f, 186f,1.05f},
+            {10f,   1f,   40f,  11.64f, 58.18f,  11f, 168f, 186f,0.91f},
+            {12.5f, 1.1f, 50f,  14.69f, 72.24f,  12f, 160f, 186f,0.75f},
+            {16f,   1.2f, 63f,  18.33f, 92.20f,  13f, 149f, 186f,0.60f},
+            {20f,   1.3f, 80f,  23.26f, 116.18f, 14f, 137f, 186f,0.45f},
+            {25f,   1.4f, 100f, 29.08f, 145.40f, 15f, 118f, 186f,0.30f},
+            {30f,   1.5f, 125f, 34.89f, 174.45f, 16f, 83f, 186f,0.14f},
+            {40f,   1.6f, 160f, 46.52f, 232.60f, 17f, 0f, 186f,0.00f}
+            //other form there is not real convertion
 //            {50f,   1.7f, 180f, 50.52f, 300.60f, 18f, 250f, 250f},
 //            {60f,   1.8f, 200f, 60.52f, 350.60f, 19f, 250f, 250f},
 //            {70f,   1.9f, 230f, 70.52f, 400.60f, 20f, 250f, 250f},
@@ -417,5 +419,50 @@ public class LearnMachine {
         }
 //        return "no reading"; 0=no reading, -1 stop
         return result;
+    }
+
+    public String getEyeContrastResult(int eye) {
+        int resultOkPos=-1;
+        if(eye==0){
+            //find last good series
+            for (int p=0; p<results_left.size(); p++){
+                if(isResultOk(p,eye)){
+                    resultOkPos=p;
+                }
+            }
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_LEARN, "getEyeContrastResult eye= "+ eye+" resultOkPos= "+resultOkPos);
+            }
+            if(resultOkPos>-1 && resultOkPos<results_left.size()){
+                float[] array=  optotypes.get(resultOkPos);
+                if(array[8]-(int)array[8]>0){
+                    return String.format("%.2f", array[8]);
+                }
+                return String.valueOf(array[8]);
+            }else{
+                return "0";
+            }
+        }else if(eye==1){
+            //find last good series
+            for (int p=0; p<results_right.size(); p++){
+                if(isResultOk(p,eye)){
+                    resultOkPos=p;
+                }
+            }
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_LEARN, "getEyeContrastResult eye= "+ eye+" resultOkPos= "+resultOkPos);
+            }
+            if(resultOkPos>-1 && resultOkPos<results_right.size()){
+                float[] array=  optotypes.get(resultOkPos);
+                if(array[8]-(int)array[8]>0){
+                    return String.format("%.2f", array[8]);
+                }
+                return String.valueOf(array[8]);
+            }else{
+                return "0";
+            }
+        }else{
+            return "0";
+        }
     }
 }

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
     android:targetSandboxVersion="2"
-    android:versionCode="620"
-    android:versionName="620" >
+    android:versionCode="621"
+    android:versionName="621" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -135,6 +135,11 @@
             In calibration1 the choice of one eye blind
 
         -
+    -->
+    <!--
+         ver 621
+        - Calibration 2:
+        removed bug size of chart>17
     -->
 
     <uses-feature

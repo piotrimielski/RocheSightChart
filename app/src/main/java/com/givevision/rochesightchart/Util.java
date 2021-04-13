@@ -51,8 +51,12 @@ public class Util {
     protected static final String PREF_RIGHT_CALIBRATION_X = "right eye calibration x";
     protected static final String PREF_LEFT_CALIBRATION_Y = "left eye calibration y";
     protected static final String PREF_RIGHT_CALIBRATION_Y = "right eye calibration y";
-    protected static final String PREF_LEFT_START = "left eye chart start";
-    protected static final String PREF_RIGHT_START = "right eye chart start";
+    protected static final String PREF_LEFT0_START = "left eye chart start 0";
+    protected static final String PREF_LEFT1_START = "left eye chart start 1";
+    protected static final String PREF_LEFT2_START = "left eye chart start 2";
+    protected static final String PREF_RIGHT0_START = "right eye chart start 0";
+    protected static final String PREF_RIGHT1_START = "right eye chart start 1";
+    protected static final String PREF_RIGHT2_START = "right eye chart start 2";
     protected static final String PREF_BLIND_EYE = "blind eye"; //0-left, 1-right, 2-both
     protected static final String MyPREFERENCES = "my preferences";
     protected static final String PREF_M_LEFT = "M-Unit left";
