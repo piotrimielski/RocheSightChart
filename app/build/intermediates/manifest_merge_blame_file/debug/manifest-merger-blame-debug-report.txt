@@ -219,46 +219,45 @@
 183-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:143:13-50
 184        android:supportsRtl="true"
 184-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:149:13-39
-185        android:testOnly="true"
-186        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-186-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:144:13-77
-187        <activity
-187-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:151:13-157:24
-188            android:name="com.givevision.rochesightchart.MainActivity"
-188-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:151:23-51
-189            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation|orientation" >
-189-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:152:17-111
-190            <intent-filter>
-190-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:153:17-156:33
-191                <action android:name="android.intent.action.MAIN" />
-191-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:154:21-73
-191-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:154:29-70
-192
-193                <category android:name="android.intent.category.LAUNCHER" />
-193-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:155:21-81
-193-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:155:31-78
-194            </intent-filter>
-195        </activity>
-196
-197        <service
-197-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:25:9-28:40
-198            android:name="androidx.room.MultiInstanceInvalidationService"
-198-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:26:13-74
-199            android:directBootAware="true"
-199-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:27:13-43
-200            android:exported="false" />
-200-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:28:13-37
-201
-202        <provider
-202-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:23:9-27:43
-203            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-203-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:24:13-79
-204            android:authorities="com.givevision.rochesightchart.lifecycle-process"
-204-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:25:13-69
-205            android:exported="false"
-205-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:26:13-37
-206            android:multiprocess="true" />
-206-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:27:13-40
-207    </application>
-208
-209</manifest>
+185        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+185-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:144:13-77
+186        <activity
+186-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:151:13-157:24
+187            android:name="com.givevision.rochesightchart.MainActivity"
+187-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:151:23-51
+188            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation|orientation" >
+188-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:152:17-111
+189            <intent-filter>
+189-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:153:17-156:33
+190                <action android:name="android.intent.action.MAIN" />
+190-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:154:21-73
+190-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:154:29-70
+191
+192                <category android:name="android.intent.category.LAUNCHER" />
+192-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:155:21-81
+192-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:155:31-78
+193            </intent-filter>
+194        </activity>
+195
+196        <service
+196-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:25:9-28:40
+197            android:name="androidx.room.MultiInstanceInvalidationService"
+197-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:26:13-74
+198            android:directBootAware="true"
+198-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:27:13-43
+199            android:exported="false" />
+199-->[androidx.room:room-runtime:2.2.5] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\cb5fcf39934b0a2306185c136c24ebe7\room-runtime-2.2.5\AndroidManifest.xml:28:13-37
+200
+201        <provider
+201-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:23:9-27:43
+202            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+202-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:24:13-79
+203            android:authorities="com.givevision.rochesightchart.lifecycle-process"
+203-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:25:13-69
+204            android:exported="false"
+204-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:26:13-37
+205            android:multiprocess="true" />
+205-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\2a15967a913a6d9ff9e62b2a74def145\jetified-lifecycle-process-2.0.0\AndroidManifest.xml:27:13-40
+206    </application>
+207
+208</manifest>

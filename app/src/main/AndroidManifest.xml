@@ -114,7 +114,7 @@
      -->
     <!-- ver 622
         remove 2% test, put contrast sensitivity test,
-        change script
+        script modification
      -->
 
     <uses-feature android:glEsVersion="0x00020000"  android:required="true" />

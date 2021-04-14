@@ -524,25 +524,15 @@ public class MainActivity extends Activity {
         setInfo("Preparing the test");
         // Prepare the data for UI
         captions = new HashMap<>();
-        captions.put(KWS_SEARCH, R.string.kws_caption);
         captions.put(CHARTS_SEARCH, R.string.charts);
         captions.put(ACTION_CALIBRATION1, R.string.action_calibration);
-        captions.put(ACTION_CALIBRATION2, R.string.action_controller_size);
         captions.put(ACTION_CONTROLLER_CALIBRATION_INFO1, R.string.action_controller_calibration_info1);
-        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO11, R.string.action_controller_calibration_info11);
-        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO2, R.string.action_controller_size_info2);
-        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO21, R.string.action_controller_size_info21);
-        captions.put(ACTION_TEST, R.string.action_test);
-        captions.put(ACTION_TEST_REMINDER, R.string.action_test_reminder);
         captions.put(ACTION_CONTROLLER_TEST_INFO, R.string.action_controller_test_info);
         captions.put(ACTION_CONTROLLER_TEST_INFO1, R.string.action_controller_test_info1);
-        captions.put(ACTION_CONTROLLER_TEST_INFO11, R.string.action_controller_test_info11);
         captions.put(ACTION_CONTROLLER_TEST_INFO12, R.string.action_controller_test_info12);
-        captions.put(ACTION_CONTROLLER_TEST_INFO2, R.string.action_controller_test_info2);
         captions.put(ACTION_CONTROLLER_TEST_INFO3, R.string.action_controller_test_info3);
         captions.put(ACTION_CONTROLLER_TEST_INFO4, R.string.action_controller_test_info4);
         captions.put(ACTION_CONTROLLER_TEST_INFO5, R.string.action_controller_test_info5);
-        captions.put(ACTION_VOICE_TEST_INFO, R.string.action_voice_test_info);
         captions.put(ACTION_RESET_USER, R.string.action_reset_user);
         captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
         captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
