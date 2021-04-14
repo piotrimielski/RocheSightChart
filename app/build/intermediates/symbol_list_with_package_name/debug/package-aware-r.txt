@@ -957,10 +957,10 @@ string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
 string action_calibration
 string action_controller_calibration_info1
-string action_controller_calibration_info12
 string action_controller_test_info
 string action_controller_test_info1
 string action_controller_test_info12
+string action_controller_test_info13
 string action_controller_test_info3
 string action_controller_test_info4
 string action_controller_test_info5
@@ -971,7 +971,6 @@ string charts
 string end_test
 string exit_test
 string exit_test1
-string no_result
 string result_left_info
 string result_right_info
 string search_menu_title

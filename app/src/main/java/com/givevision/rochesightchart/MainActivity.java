@@ -83,16 +83,19 @@ public class MainActivity extends Activity {
     private static final String ACTION_RESULT_LEFT = "result left";
     private static final String ACTION_RESULT_RIGHT = "result right";
     private static final String ACTION_CONTROLLER_TEST_INFO = "controller test info";
-    private static final String ACTION_VOICE_TEST_INFO = "voice test info";
-    private static final String ACTION_CONTROLLER_CALIBRATION_INFO11 = "controller calibration info11";
     private static final String ACTION_CONTROLLER_CALIBRATION_INFO21 = "controller calibration info21";
     private static final String ACTION_CONTROLLER_TEST_INFO1 = "controller test info1";
-    private static final String ACTION_CONTROLLER_TEST_INFO11 = "controller test info11";
+//    private static final String ACTION_CONTROLLER_TEST_INFO11 = "controller test info11";
     private static final String ACTION_CONTROLLER_TEST_INFO12 = "controller test info12";
-    private static final String ACTION_CONTROLLER_TEST_INFO2 = "controller test info2";
+    private static final String ACTION_CONTROLLER_TEST_INFO13 = "controller test info13";
+//    private static final String ACTION_CONTROLLER_TEST_INFO2 = "controller test info2";
     private static final String ACTION_CONTROLLER_TEST_INFO3 = "controller test info3";
     private static final String ACTION_CONTROLLER_TEST_INFO4 = "controller test info4";
     private static final String ACTION_CONTROLLER_TEST_INFO5 = "controller test info5";
+    private static final String ACTION_EXIT_TEST = "exit test";
+    private static final String ACTION_EXIT_TEST1 = "exit test1";
+    private static final String ACTION_END_TEST = "end test";
+
     private static final String ACTION_CALIBRATION_CHECK = "calibration check";
     private static final String ACTION_CONTROLLER = "controller";
     private static final String ACTION_VOICE = "voice";
@@ -529,6 +532,7 @@ public class MainActivity extends Activity {
         captions.put(ACTION_CONTROLLER_CALIBRATION_INFO1, R.string.action_controller_calibration_info1);
         captions.put(ACTION_CONTROLLER_TEST_INFO, R.string.action_controller_test_info);
         captions.put(ACTION_CONTROLLER_TEST_INFO1, R.string.action_controller_test_info1);
+        captions.put(ACTION_CONTROLLER_TEST_INFO13, R.string.action_controller_test_info13);
         captions.put(ACTION_CONTROLLER_TEST_INFO12, R.string.action_controller_test_info12);
         captions.put(ACTION_CONTROLLER_TEST_INFO3, R.string.action_controller_test_info3);
         captions.put(ACTION_CONTROLLER_TEST_INFO4, R.string.action_controller_test_info4);
@@ -536,6 +540,9 @@ public class MainActivity extends Activity {
         captions.put(ACTION_RESET_USER, R.string.action_reset_user);
         captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
         captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
+        captions.put(ACTION_EXIT_TEST, R.string.exit_test);
+        captions.put(ACTION_EXIT_TEST1, R.string.exit_test1);
+        captions.put(ACTION_END_TEST, R.string.end_test);
         captions.put(ACTION_REPEAT_TEST, R.string.action_repeat_test);
 //        captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
 //        captions.put(ACTION_CONTROLLER, R.string.action_controller);
@@ -923,8 +930,8 @@ public class MainActivity extends Activity {
                 setInfo("Goggle calibration");
                 eyeCalibration = 0;
                 say(getResources().getString(captions.get(ACTION_CALIBRATION1)), false,false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO11)), true,false);
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO1)), true,false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true,false);
                 myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypeOuterDiameter(1));
 //                myGLRenderer.setCharacter(2);
 //                myGLRenderer.setChart(0,eyeCalibration,learn.getChartPosString(0, 0),
@@ -1095,7 +1102,7 @@ public class MainActivity extends Activity {
                 Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_Y,myGLRenderer.getLeftPositionY());
                 eyeCalibration=1;
                 myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypePixels(1));
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO21)), false,false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO13)), false,false);
             }else{
                 step1=false;
                 step2=true;
@@ -1213,14 +1220,12 @@ public class MainActivity extends Activity {
         if(contrastActive ==0){
             if(eyeCalibration==0){
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true,false);
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO12)), true,false);
+                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true,false);
             }else if(eyeCalibration==1 && Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==0) {
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO11)), true,false);
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO12)), true,false);
             }else{
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_CALIBRATION_INFO21)), false,false);
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), true,false);
             }
         }
@@ -1471,7 +1476,7 @@ public class MainActivity extends Activity {
                             eye=1;
                             this.contrastActive = 0;
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0);
-                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO13)), true, false);
                         }else{
                             //go to next contrast
                             eye=0;
@@ -1552,7 +1557,7 @@ public class MainActivity extends Activity {
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0);
                             eye=1;
                             this.contrastActive = 0;
-                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO2)), true, false);
+                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO13)), true, false);
                             totalLengthStringArray = learn.getSizeChartsPos(chart);
                             good=0;
                             err=0;
@@ -2009,8 +2014,6 @@ public class MainActivity extends Activity {
         good=0;
         contrastActive=-1;
         myGLRenderer.setChart(-1, -2, "", 0);
-        setInfo("end of test");
-        say("end of test",false,false);
         if (Util.DEBUG) {
             Log.d(LOG_TAG_MAIN, "endOfTest test= "+test+" ok= "+ok+" eye= "+eye);
             Log.d(LOG_TAG_MAIN, "endOfTest left:"
@@ -2030,6 +2033,7 @@ public class MainActivity extends Activity {
         }
         if(test && ok){
             //insert in database no contrast tests
+            say(getResources().getString(captions.get(ACTION_END_TEST)), true,false);
             if(noContrastLeftResult!="" || noContrastRightResult!=""){
                 insertAcuity(0, startTest,
                         Util.getSharedPreferences(this).getInt(Util.PREF_LEFT0_START, FIRST_CHART_LEFT_EYE_0),
@@ -2153,10 +2157,14 @@ public class MainActivity extends Activity {
         eye=-2;
         if (Util.DEBUG) {
             Log.d(LOG_TAG_MAIN, "endOfTest startedByPackage="+ startedByPackage);}
-
+        
         if(startedByPackage!=null){
             isProcessing=true;
-            say("we will start SightPlus now",true,true);
+            if(ok){
+                say(getResources().getString(captions.get(ACTION_EXIT_TEST1)), true,true);
+            }else{
+                say(getResources().getString(captions.get(ACTION_EXIT_TEST)), true,true);
+            }
 //                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 1);
             new Handler().postDelayed(new Runnable() {
                 @Override

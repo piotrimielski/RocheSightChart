@@ -1,13 +1,11 @@
 <resources>
     <string name="app_name">Roche Sight Chart</string>
-    <string name="charts">""Now we will start the visual acuity test. This is a vision test.
-It will just take a few minutes.
-Click on the power button of your controller  (RC) to start.""</string>
+    <string name="charts">This is a vision test. It will just take a few minutes. Click on the power button of your controller (RC) to start.</string>
     <string name="action_reset_user">"Data has been cleared, calibration reset"</string>
     <string name="action_calibration" >"Calibration phase."</string>
     <string name="action_controller_calibration_info1">"Move the joystick left, right, up or down to position the circle in your field of view. Hold the trigger button and push the joystick up if you can’t see anything or click on the trigger button to validate the position. "</string>
     <string name="action_controller_test_info1" >"First left eye"</string>
-    <string name="action_controller_calibration_info12">"Good, now right eye"</string>
+    <string name="action_controller_test_info13">"Good, now right eye"</string>
     <string name="action_controller_test_info">"calibrate the high contrast test"</string>
     <string name="action_controller_test_info12" >"Push the joystick in the same direction as the E is facing, up, down, left or right. If you can no longer see, just click on the trigger button."</string>
     <string name="action_controller_test_info3" >"well done now calibrate the low contrast test."</string>
@@ -18,6 +16,5 @@ Click on the power button of your controller  (RC) to start.""</string>
     <string name="end_test" >"Good job! Your results have been recorded"</string>
     <string name="result_left_info" >"For the left eye, result is"</string>
     <string name="result_right_info" >"For the right eye, result is"</string>
-    <string name="no_result" >"No reading"</string>
     <string name="action_repeat_test">"your test results are different from the previous tests, please repeat the test in 2 hours."</string>
 </resources>

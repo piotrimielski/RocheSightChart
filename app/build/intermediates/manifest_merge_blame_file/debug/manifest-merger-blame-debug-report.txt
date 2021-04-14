@@ -145,7 +145,7 @@
 143    <!--
 144         ver 622
 145        remove 2% test, put contrast sensitivity test,
-146        change script
+146        script modification
 147    -->
 148
 149    <uses-feature
@@ -191,51 +191,51 @@
 164    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 164-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:133:9-78
 164-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:133:26-76
-165
-166    <!--
-167         @SystemApi @hide Allows an application to modify any wifi configuration, even if created
-168         by another application. Once reconfigured the original creator cannot make any further
-169         modifications.
-170         <p>Not for use by third-party applications.
-171          application needs to be signed by the platform key or be privileged
-172    -->
-173    <!-- <permission android:name="android.permission.OVERRIDE_WIFI_CONFIG" -->
-174    <!-- android:protectionLevel="signature|privileged" /> -->
-175    <application
-175-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:142:9-158:23
-176        android:allowBackup="true"
-176-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:145:13-39
-177        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-177-->[androidx.core:core:1.1.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\baa1ceabdb85c37edf8e128c7929f8d4\core-1.1.0\AndroidManifest.xml:24:18-86
-178        android:debuggable="true"
-179        android:extractNativeLibs="false"
-180        android:icon="@mipmap/ic_launcher"
-180-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:146:13-47
-181        android:label="@string/app_name"
-181-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:147:13-45
-182        android:roundIcon="@mipmap/ic_launcher_round"
-182-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:148:13-58
-183        android:screenOrientation="landscape"
-183-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:143:13-50
-184        android:supportsRtl="true"
-184-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:149:13-39
+165    <!--
+166         @SystemApi @hide Allows an application to modify any wifi configuration, even if created
+167         by another application. Once reconfigured the original creator cannot make any further
+168         modifications.
+169         <p>Not for use by third-party applications.
+170          application needs to be signed by the platform key or be privileged
+171    -->
+172    <!-- <permission android:name="android.permission.OVERRIDE_WIFI_CONFIG" -->
+173    <!-- android:protectionLevel="signature|privileged" /> -->
+174    <application
+174-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:142:9-157:23
+175        android:allowBackup="true"
+175-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:145:13-39
+176        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+176-->[androidx.core:core:1.1.0] C:\Users\Sandra\.gradle\caches\transforms-2\files-2.1\baa1ceabdb85c37edf8e128c7929f8d4\core-1.1.0\AndroidManifest.xml:24:18-86
+177        android:debuggable="true"
+178        android:extractNativeLibs="false"
+179        android:icon="@mipmap/ic_launcher"
+179-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:146:13-47
+180        android:label="@string/app_name"
+180-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:147:13-45
+181        android:roundIcon="@mipmap/ic_launcher_round"
+181-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:148:13-58
+182        android:screenOrientation="landscape"
+182-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:143:13-50
+183        android:supportsRtl="true"
+183-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:149:13-39
+184        android:testOnly="true"
 185        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
 185-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:144:13-77
 186        <activity
-186-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:151:13-157:24
+186-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:150:13-156:24
 187            android:name="com.givevision.rochesightchart.MainActivity"
-187-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:151:23-51
+187-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:150:23-51
 188            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|navigation|orientation" >
-188-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:152:17-111
+188-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:151:17-111
 189            <intent-filter>
-189-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:153:17-156:33
+189-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:152:17-155:33
 190                <action android:name="android.intent.action.MAIN" />
-190-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:154:21-73
-190-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:154:29-70
+190-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:153:21-73
+190-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:153:29-70
 191
 192                <category android:name="android.intent.category.LAUNCHER" />
-192-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:155:21-81
-192-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:155:31-78
+192-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:154:21-81
+192-->C:\projects\RocheSightChart\app\src\main\AndroidManifest.xml:154:31-78
 193            </intent-filter>
 194        </activity>
 195

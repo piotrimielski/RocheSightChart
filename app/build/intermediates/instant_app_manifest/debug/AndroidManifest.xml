@@ -144,7 +144,7 @@
     <!--
          ver 622
         remove 2% test, put contrast sensitivity test,
-        change script
+        script modification
     -->
 
     <uses-feature
@@ -163,7 +163,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <!--
          @SystemApi @hide Allows an application to modify any wifi configuration, even if created
          by another application. Once reconfigured the original creator cannot make any further
@@ -183,6 +182,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="landscape"
         android:supportsRtl="true"
+        android:testOnly="true"
         android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         <activity
             android:name="com.givevision.rochesightchart.MainActivity"
