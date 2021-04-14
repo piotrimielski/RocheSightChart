@@ -556,6 +556,8 @@ public class MainActivity extends Activity {
             return;
         }
 
+
+
         permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -688,12 +690,6 @@ public class MainActivity extends Activity {
         }else{
             newUser=false;
         }
-        Util.upDatePref(this,Util.PREF_LEFT0_START,FIRST_CHART_LEFT_EYE_0);
-        Util.upDatePref(this,Util.PREF_RIGHT0_START,FIRST_CHART_RIGHT_EYE_0);
-        Util.upDatePref(this,Util.PREF_LEFT1_START,FIRST_CHART_LEFT_EYE_1);
-        Util.upDatePref(this,Util.PREF_RIGHT1_START,FIRST_CHART_RIGHT_EYE_1);
-        Util.upDatePref(this,Util.PREF_LEFT2_START,FIRST_CHART_LEFT_EYE_2);
-        Util.upDatePref(this,Util.PREF_RIGHT2_START,FIRST_CHART_RIGHT_EYE_2);
 
         handler0.removeCallbacks(runnableCode0);
         handler0.postDelayed(runnableCode0, KEY_DELAY);
@@ -1073,6 +1069,7 @@ public class MainActivity extends Activity {
             Util.upDatePref(this,Util.PREF_USER_ID,-1);
             Util.upDatePref(this, Util.PREF_BLIND_EYE,-1);
             Util.postData(context, acuityRepository, imei,null);
+            newUser=true;
         }
         noContrastLeftResult="";
         contrastLeftResult="";
@@ -1090,6 +1087,12 @@ public class MainActivity extends Activity {
      * @return
      */
     private void calibration1(int keyCode, int keyAction){
+        Util.upDatePref(this,Util.PREF_LEFT0_START,FIRST_CHART_LEFT_EYE_0);
+        Util.upDatePref(this,Util.PREF_RIGHT0_START,FIRST_CHART_RIGHT_EYE_0);
+        Util.upDatePref(this,Util.PREF_LEFT1_START,FIRST_CHART_LEFT_EYE_1);
+        Util.upDatePref(this,Util.PREF_RIGHT1_START,FIRST_CHART_RIGHT_EYE_1);
+        Util.upDatePref(this,Util.PREF_LEFT2_START,FIRST_CHART_LEFT_EYE_2);
+        Util.upDatePref(this,Util.PREF_RIGHT2_START,FIRST_CHART_RIGHT_EYE_2);
         if(keyCode==Util.KEY_TRIGGER && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");

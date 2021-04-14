@@ -144,6 +144,7 @@
          ver 622
         remove 2% test, put contrast sensitivity test,
         script modification
+        removing bug in calibration2 to test action
     -->
 
     <uses-feature

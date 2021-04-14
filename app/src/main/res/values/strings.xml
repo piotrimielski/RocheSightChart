@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Roche Sight Chart</string>
-    <string name="charts">This is a vision test. It will just take a few minutes. Click on the power button of your controller (RC) to start.</string>
+    <string name="charts">This is a vision test. It will just take a few minutes. Click on the power button of your controller to start.</string>
     <string name="action_reset_user">"Data has been cleared, calibration reset"</string>
     <string name="action_calibration" >"Calibration phase."</string>
     <string name="action_controller_calibration_info1">"Move the joystick left, right, up or down to position the circle in your field of view. Hold the trigger button and push the joystick up if you can’t see anything or click on the trigger button to validate the position. "</string>
