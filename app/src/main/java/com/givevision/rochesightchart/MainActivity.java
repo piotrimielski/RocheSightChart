@@ -207,8 +207,10 @@ public class MainActivity extends Activity {
     private AcuityRepository acuityRepository;
     private RequestQueue requestQueue;
     private String imei;
+    private boolean isEndOfTest;
     private boolean fakeControls=false;
     private boolean isBackTouch=false;
+
 
     //   test reminder
     private Runnable runnableCode1 = new Runnable() {
@@ -308,6 +310,7 @@ public class MainActivity extends Activity {
             }
         }
     };
+
 
 
     /**
@@ -665,6 +668,7 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "onResume");
         }
+        isEndOfTest=false;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_START_APP_ACTION);
         /*
@@ -856,7 +860,7 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_KEY, "mainDispatchKeyEvent keyCode: select: "+keyCode+" action: "+keyAction
                     +" isDoubleTouche: "+isDoubleTouche +" newUser: "+newUser+
-                    " step1= "+step1+" step2= "+step2+" test= "+test);
+                    " step1= "+step1+" step2= "+step2+" test= "+test + " isEndOfTest= "+isEndOfTest);
         }
         //TODO:: removed for test
 ////        if(keyCode==Util.KEY_TRIGGER && keyEvent == KeyEvent.ACTION_UP && (!step1 && !step2 && !test)){
@@ -979,7 +983,7 @@ public class MainActivity extends Activity {
             say("test stopped", false,false);
             endOfTest(false);
             isProcessing=false;
-        }else if(keyCode==Util.KEY_BACK && (test==true)
+        }else if(keyCode==Util.KEY_BACK && test==true
                 && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             //user go next level test
             isProcessing=true;
@@ -991,6 +995,17 @@ public class MainActivity extends Activity {
 //            stopTask(true);
             say("test stopped", false,false);
             nextChart(NEXT_CHART_FOR_MANUAL_STOP, contrastActive);
+            isProcessing=false;
+//            endOfTest(false);
+        }else if(keyCode==Util.KEY_TRIGGER && isEndOfTest
+                && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
+            //user go next level test
+            isProcessing=true;
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
+            }
+//            isProcessing=true;
+            sayResult();
             isProcessing=false;
 //            endOfTest(false);
         }else if(step1 ){
@@ -1035,6 +1050,7 @@ public class MainActivity extends Activity {
             //calibration2 and start test
             isProcessing=true;
             if(isReady){
+                setText(String.valueOf(chart+1), "");
                 calibration2(keyCode, keyAction,contrastActive);
             }
             isProcessing=false;
@@ -1185,6 +1201,7 @@ public class MainActivity extends Activity {
                    " blind eye= "+ Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)+
                     " contrastActive= "+ contrastActive);
         }
+
         if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==0){
             eyeCalibration=1;
         }else if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==2){
@@ -1217,6 +1234,9 @@ public class MainActivity extends Activity {
         step2=true;
         test=false;
         setInfo("Chart calibration");
+        chart=0;
+        setText(String.valueOf(chart+1), "");
+
         if(contrastActive ==0){
             if(eyeCalibration==0){
                 say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
@@ -1249,7 +1269,7 @@ public class MainActivity extends Activity {
      */
     private void calibration2(int keyCode, int keyAction, int contrastActive){
         say("",false,false);
-
+        setText(String.valueOf(chart+1), "");
         if(keyCode==Util.KEY_TRIGGER && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "calibration2 KEY_TRIGGER chart= "+chart+
@@ -1291,8 +1311,8 @@ public class MainActivity extends Activity {
             good=0;
             err=0;
             learn.clearResult();
-            if(chart>1) {
-                chart=chart-2;
+            if(chart>3) {
+                chart=chart-4;
             }else{
                 chart=0;
             }
@@ -1361,6 +1381,9 @@ public class MainActivity extends Activity {
      */
     private void test(int keyCode, int keyEvent){
         say(" ",false,false);
+        setInfo("test running");
+        setText(String.valueOf(chart+1),"");
+
         if(keyCode==Util.KEY_TRIGGER && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
@@ -1473,7 +1496,7 @@ public class MainActivity extends Activity {
         } else {
             chart++;
             //all charts for the contrast's level was done or error
-            if (chart >= totalLengthCharts ||
+            if ((contrastActive<2 && (chart >= totalLengthCharts) || contrastActive==2 && (chart>=14)) ||
                     !learn.isResultOk(chart-1, eye) ||
                     nextChartFor==NEXT_CHART_FOR_NEW_LEVEL) {
                 if (Util.DEBUG) {
@@ -1680,6 +1703,7 @@ public class MainActivity extends Activity {
         }
 
         setInfo("test started");
+        setText(String.valueOf(chart+1),"");
         chartPos=0;
         good=0;
         err=0;
@@ -1693,7 +1717,7 @@ public class MainActivity extends Activity {
             greyE = (int)learn.getOptotypeEgrey(chart);
             greySquare = (int)learn.getOptotypeSquaregrey(chart);;
         }
-        setText("","");
+
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_KEY, "nextChart myGLRenderer eye= " + eye
                     +" chart=" + chart +" chartPos=" + chartPos+ " this.contrastActive= "+this.contrastActive);
@@ -1754,7 +1778,9 @@ public class MainActivity extends Activity {
                     " totalLengthCharts= "+totalLengthCharts+
                     " totalLengthStringArray= "+totalLengthStringArray);
         }
-        if(chart>-1 && chart<=totalLengthCharts-1){
+        if((contrastActive<2 && chart>-1 && chart<=totalLengthCharts-1) ||
+                (contrastActive==2 && chart>-1 && chart<=13)){
+//        if(chart>-1 && chart<=totalLengthCharts-1){
 //            stopTask(true);
             if(chartPos>-1 && chartPos<=totalLengthStringArray-1){
                 //test in the position
@@ -1779,16 +1805,23 @@ public class MainActivity extends Activity {
                 }
                 if(good>=2){//next smaller
                     chart=chart+2;
+                    setText(String.valueOf(chart+1), "");
 //                    totalLengthStringArray = learn.getSizeChartsPos(chart);
                     learn.clearResult();
                     chartPos=0;
                     good=0;
                     err=0;
-                    if(chart>=totalLengthCharts){
+                    if((contrastActive<2 && chart>=totalLengthCharts) ||
+                            (contrastActive==2 && chart>=14)){
+//                    if(chart>=totalLengthCharts){
                         if (Util.DEBUG) {
                             Log.i(Util.LOG_TAG_KEY, "calibrationResultChart good, go to test");
                         }
-                        chart=totalLengthCharts;
+                        if(contrastActive==2){
+                            chart=11;
+                        }else{
+                            chart=totalLengthCharts-3;
+                        }
                         totalLengthStringArray = learn.getSizeChartsPos(chart);
                         say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO5)), true, false);
                         good=0;
@@ -1809,8 +1842,8 @@ public class MainActivity extends Activity {
                     good=0;
                     err=0;
                     learn.clearResult();
-                    if(chart>1) {
-                        chart=chart-2;
+                    if(chart>3) {
+                        chart=chart-4;
                     }else{
                         chart=0;
                     }
@@ -1898,7 +1931,8 @@ public class MainActivity extends Activity {
      */
     private void resultChart(String result) {
 //        setText(result,"");
-        if(chart>-1 && chart<=totalLengthCharts-1){
+        if((contrastActive<2 && chart>-1 && chart<=totalLengthCharts-1) ||
+                (contrastActive==2 && chart>-1 && chart<=13)){
 //            stopTask(true);
             if(chartPos>-1 && chartPos<=totalLengthStringArray-1){
                 //test in the position
@@ -1931,6 +1965,7 @@ public class MainActivity extends Activity {
                     if(err>=2) {
                         nextChart(NEXT_CHART_FOR_ERROR, contrastActive);
                     }else{
+                        toneL.startTone(ToneGenerator.TONE_CDMA_ABBR_REORDER,1000);
                         nextChart(NEXT_CHART_FOR_GOOD, contrastActive);
                     }
                     return;
@@ -2084,12 +2119,8 @@ public class MainActivity extends Activity {
 //                contrast_1RightResult=learn.getEyeContrastResult(1);
             }
 
-            setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult+" / " +contrast_1LeftResult,
-                    "right eye: "+noContrastRightResult +" / " +contrastRightResult+" / " +contrast_1RightResult);
-            say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+" "+noContrastLeftResult +
-                    ", " +contrastLeftResult+", " +contrast_1LeftResult, true,false);
-            say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+" "+noContrastRightResult +
-                    ", " +contrastRightResult +", " +contrast_1RightResult, true,false);
+            sayResult();
+
             AsyncTask.execute( new Runnable() {
                 @Override
                 public void run() {
@@ -2184,13 +2215,25 @@ public class MainActivity extends Activity {
             step1=false;
             test=false;
             contrastActive=-1;
+            isEndOfTest=false;
             return;
+        }else{
+            isEndOfTest=true;
         }
         isAppStarted=false;
         step2=false;
         step1=false;
         test=false;
         contrastActive=-1;
+    }
+
+    private void sayResult() {
+        setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult+" / " +contrast_1LeftResult,
+                "right eye: "+noContrastRightResult +" / " +contrastRightResult+" / " +contrast_1RightResult);
+        say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+", no contrast "+noContrastLeftResult +
+                " pixels, contrast " +contrastLeftResult+" pixels, contrast sensitivity " +contrast_1LeftResult+ "log", true,true);
+        say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+", no contrast "+noContrastRightResult +
+                " pixels, contrast " +contrastRightResult +" pixels, contrast sensitivity " +contrast_1RightResult + "log", true,true);
     }
 
 //    private void insertAcuity(int nextChartFor, int i, String contrastLeftResult, String contrastRightResult) {

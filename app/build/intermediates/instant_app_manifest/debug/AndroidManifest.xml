@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
     android:targetSandboxVersion="2"
-    android:versionCode="622"
-    android:versionName="622" >
+    android:versionCode="623"
+    android:versionName="623" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -146,6 +146,10 @@
         remove 2% test, put contrast sensitivity test,
         script modification
         removing bug in calibration2 to test action
+    -->
+    <!--
+         ver 623
+        bug right eye resolution
     -->
 
     <uses-feature
