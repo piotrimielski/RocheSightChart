@@ -668,7 +668,7 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "onResume");
         }
-        isEndOfTest=false;
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_START_APP_ACTION);
         /*
@@ -872,7 +872,7 @@ public class MainActivity extends Activity {
             //start app
             isProcessing = true;
             say("",false,false);
-
+            isEndOfTest=false;
             startTest=Calendar.getInstance().getTimeInMillis();
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_POWER");
@@ -966,6 +966,18 @@ public class MainActivity extends Activity {
                 isProcessing=false;
                 isDoubleTouche=false;
             }
+        }if(keyCode==Util.KEY_DOWN  && (keyAction == KeyEvent.ACTION_UP || fakeControls)
+                && (step1==false && step2==false && test==false)){
+            //reset app for new user
+            if(isDoubleTouche){
+                isProcessing = true;
+                if (Util.DEBUG) {
+                    Log.i(Util.LOG_TAG_KEY, "KEY_DOWN");
+                }
+                sayResult();
+                isProcessing=false;
+                isDoubleTouche=false;
+            }
         }else if(keyCode==Util.KEY_BACK  && (keyAction == KeyEvent.ACTION_UP || fakeControls)
                 && (step1==false && step2==false && test==false)){
                 isProcessing = true;
@@ -995,17 +1007,6 @@ public class MainActivity extends Activity {
 //            stopTask(true);
             say("test stopped", false,false);
             nextChart(NEXT_CHART_FOR_MANUAL_STOP, contrastActive);
-            isProcessing=false;
-//            endOfTest(false);
-        }else if(keyCode==Util.KEY_TRIGGER && isEndOfTest
-                && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
-            //user go next level test
-            isProcessing=true;
-            if (Util.DEBUG) {
-                Log.i(Util.LOG_TAG_KEY, "KEY_TRIGGER");
-            }
-//            isProcessing=true;
-            sayResult();
             isProcessing=false;
 //            endOfTest(false);
         }else if(step1 ){
@@ -1050,7 +1051,11 @@ public class MainActivity extends Activity {
             //calibration2 and start test
             isProcessing=true;
             if(isReady){
-                setText(String.valueOf(chart+1), "");
+                if(contrastActive==0 || contrastActive==1){
+                    setText(String.valueOf((int)learn.getOptotypePixels(chart)), "");
+                }else if(contrastActive==2){
+                    setText(String.valueOf(chart+1), "");
+                }
                 calibration2(keyCode, keyAction,contrastActive);
             }
             isProcessing=false;
@@ -1235,7 +1240,11 @@ public class MainActivity extends Activity {
         test=false;
         setInfo("Chart calibration");
         chart=0;
-        setText(String.valueOf(chart+1), "");
+        if(contrastActive==0 || contrastActive==1){
+            setText(String.valueOf((int)learn.getOptotypePixels(chart)), "");
+        }else if(contrastActive==2){
+            setText(String.valueOf(chart+1), "");
+        }
 
         if(contrastActive ==0){
             if(eyeCalibration==0){
@@ -1268,9 +1277,13 @@ public class MainActivity extends Activity {
      * @return
      */
     private void calibration2(int keyCode, int keyAction, int contrastActive){
-        say("",false,false);
-        setText(String.valueOf(chart+1), "");
+        if(contrastActive==0 || contrastActive==1){
+            setText(String.valueOf((int)learn.getOptotypePixels(chart)), "");
+        }else if(contrastActive==2){
+            setText(String.valueOf(chart+1), "");
+        }
         if(keyCode==Util.KEY_TRIGGER && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
+            say("",false,false);
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "calibration2 KEY_TRIGGER chart= "+chart+
                         " eyeCalibration= "+ eyeCalibration+" contrastActive= "+ contrastActive);
@@ -1318,6 +1331,7 @@ public class MainActivity extends Activity {
             }
             goToTest(chart, contrastActive);
         }else if(keyCode==Util.KEY_UP && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
+            say("",false,false);
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, " calibration2 KEY_UP chart= "+chart+
                         " OptotypePixels= "+ learn.getOptotypePixels(chart)+
@@ -1330,6 +1344,7 @@ public class MainActivity extends Activity {
                     isReady=true;
                 }}, KEY_DELAY);
         }else if(keyCode==Util.KEY_DOWN && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
+            say("",false,false);
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "calibration2 KEY_DOWN chart= "+chart +
                         " OptotypePixels= "+ learn.getOptotypePixels(chart)+
@@ -1342,6 +1357,7 @@ public class MainActivity extends Activity {
                     isReady=true;
                 }}, KEY_DELAY);
         }else if(keyCode==Util.KEY_LEFT  && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
+            say("",false,false);
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "calibration2 KEY_LEFT chart= "+chart +
                         " OptotypePixels= "+ learn.getOptotypePixels(chart)+
@@ -1354,6 +1370,7 @@ public class MainActivity extends Activity {
                     isReady=true;
                 }}, KEY_DELAY);
         }else if(keyCode==Util.KEY_RIGHT && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
+            say("",false,false);
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "calibration2 KEY_RIGHT chart= "+chart +
                         " OptotypePixels= "+ learn.getOptotypePixels(chart)+
@@ -1366,6 +1383,7 @@ public class MainActivity extends Activity {
                     isReady=true;
                 }}, KEY_DELAY);
         }else if(keyCode==Util.KEY_BACK  && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
+            say("",false,false);
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "calibration2 KEY_BACK");
             }
@@ -1382,7 +1400,11 @@ public class MainActivity extends Activity {
     private void test(int keyCode, int keyEvent){
         say(" ",false,false);
         setInfo("test running");
-        setText(String.valueOf(chart+1),"");
+        if(contrastActive==0 || contrastActive==1){
+            setText(String.valueOf((int)learn.getOptotypePixels(chart)), "");
+        }else if(contrastActive==2){
+            setText(String.valueOf(chart+1), "");
+        }
 
         if(keyCode==Util.KEY_TRIGGER && (keyEvent == KeyEvent.ACTION_UP || fakeControls)){
             if (Util.DEBUG) {
@@ -1665,11 +1687,6 @@ public class MainActivity extends Activity {
                             this.contrastActive = 2;
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT2_START, FIRST_CHART_RIGHT_EYE_2);
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
-                            good=0;
-                            err=0;
-                            learn.clearResult();
-                            startCalibration2(eye, this.contrastActive);
-                            return;
                         }else{
 //                            learn.clearResult();
 //                            this.contrastActive = -1;
@@ -1678,8 +1695,12 @@ public class MainActivity extends Activity {
                             say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
                             eye=1;
                             this.contrastActive = 2;
-                            return;
                         }
+                        good=0;
+                        err=0;
+                        learn.clearResult();
+                        startCalibration2(eye, this.contrastActive);
+                        return;
                     }else if (contrastActive ==2){
                         if(nextChartFor==NEXT_CHART_FOR_MANUAL_STOP){
                             contrast_1RightResult = "-1" ;
@@ -1703,7 +1724,11 @@ public class MainActivity extends Activity {
         }
 
         setInfo("test started");
-        setText(String.valueOf(chart+1),"");
+        if(contrastActive==0 || contrastActive==1){
+            setText(String.valueOf((int)learn.getOptotypePixels(chart)), "");
+        }else if(contrastActive==2){
+            setText(String.valueOf(chart+1), "");
+        }
         chartPos=0;
         good=0;
         err=0;
@@ -1805,7 +1830,11 @@ public class MainActivity extends Activity {
                 }
                 if(good>=2){//next smaller
                     chart=chart+2;
-                    setText(String.valueOf(chart+1), "");
+                    if(contrastActive==0 || contrastActive==1){
+                        setText(String.valueOf((int)learn.getOptotypePixels(chart)), "");
+                    }else if(contrastActive==2){
+                        setText(String.valueOf(chart+1), "");
+                    }
 //                    totalLengthStringArray = learn.getSizeChartsPos(chart);
                     learn.clearResult();
                     chartPos=0;
