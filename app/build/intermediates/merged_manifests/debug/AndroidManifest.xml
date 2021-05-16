@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
-    android:versionCode="625"
-    android:versionName="625" >
+    android:versionCode="627"
+    android:versionName="627" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -159,6 +159,14 @@
    v625
    bug last test right eye don't start with wrong response
    script modification: message on start test
+    -->
+    <!--
+   v626
+   showing the pixels in row
+    -->
+    <!--
+   v627
+   adding voice info on joystick movement
     -->
 
     <uses-feature

@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
@@ -1338,6 +1339,7 @@ public class MainActivity extends Activity {
                         " contrastActive= "+ contrastActive);
             }
             isReady=false;
+            say("up",false,false);
             calibrationResultChart("up",contrastActive);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
@@ -1351,6 +1353,7 @@ public class MainActivity extends Activity {
                         " contrastActive= "+ contrastActive);
             }
             isReady=false;
+            say("down",false,false);
             calibrationResultChart("down", contrastActive);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
@@ -1364,6 +1367,7 @@ public class MainActivity extends Activity {
                         " contrastActive= "+ contrastActive);
             }
             isReady=false;
+            say("left",false,false);
             calibrationResultChart("left", contrastActive);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
@@ -1377,6 +1381,7 @@ public class MainActivity extends Activity {
                         " contrastActive= "+ contrastActive);
             }
             isReady=false;
+            say("right",false,false);
             calibrationResultChart("right", contrastActive);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
@@ -1419,6 +1424,7 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_UP");
             }
+            say("up",false,false);
             resultChart("up");
             new Handler().postDelayed(new Runnable() {
                 public void run() {
@@ -1430,6 +1436,7 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_DOWN");
             }
+            say("down",false,false);
             resultChart("down");
             new Handler().postDelayed(new Runnable() {
                 public void run() {
@@ -1440,6 +1447,7 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_LEFT");
             }
+            say("left",false,false);
             resultChart("left");
             new Handler().postDelayed(new Runnable() {
                 public void run() {
@@ -1450,6 +1458,7 @@ public class MainActivity extends Activity {
             if (Util.DEBUG) {
                 Log.i(Util.LOG_TAG_KEY, "KEY_RIGHT");
             }
+            say("right",false,false);
             resultChart("right");
             new Handler().postDelayed(new Runnable() {
                 public void run() {
@@ -1818,11 +1827,23 @@ public class MainActivity extends Activity {
                 if(r<1){
                     //if error (-1 if !eye(0,1) or 0)
                     err=err+1;
-                    toneL.startTone(ToneGenerator.TONE_DTMF_0,200);
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toneL.startTone(ToneGenerator.TONE_DTMF_0,200);
+                        }
+                    }, 500);
+
                 }else{
                     //if good answer
                     good=good+1;
-                    toneH.startTone(ToneGenerator.TONE_DTMF_1,200);
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toneH.startTone(ToneGenerator.TONE_DTMF_1,200);
+                        }
+                    }, 500);
+
                 }
                 if (Util.DEBUG) {
                     Log.i(Util.LOG_TAG_KEY, "calibrationResultChart response= "+r+
@@ -1974,11 +1995,23 @@ public class MainActivity extends Activity {
                 if(learn.setResult(chart, chartPos, result,eye)<1){
                     //if error (-1 if !eye(0,1) or 0)
                     err=err+1;
-                    toneL.startTone(ToneGenerator.TONE_DTMF_0,200);
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toneL.startTone(ToneGenerator.TONE_DTMF_0,200);
+                        }
+                    }, 500);
+
                 }else{
                     //if good answer
                     good=good+1;
-                    toneH.startTone(ToneGenerator.TONE_DTMF_1,200);
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toneH.startTone(ToneGenerator.TONE_DTMF_1,200);
+                        }
+                    }, 500);
+
                 }
                 if (Util.DEBUG) {
                     Log.i(Util.LOG_TAG_KEY, "resultChart good= "+good+" err= "+
@@ -1994,7 +2027,12 @@ public class MainActivity extends Activity {
                     if(err>=2) {
                         nextChart(NEXT_CHART_FOR_ERROR, contrastActive);
                     }else{
-                        toneL.startTone(ToneGenerator.TONE_CDMA_ABBR_REORDER,1000);
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toneL.startTone(ToneGenerator.TONE_CDMA_ABBR_REORDER,1000);
+                            }
+                        }, 500);
                         nextChart(NEXT_CHART_FOR_GOOD, contrastActive);
                     }
                     return;
