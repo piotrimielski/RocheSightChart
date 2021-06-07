@@ -372,6 +372,17 @@ public class LearnMachine {
 
     /**
      * @param optotype
+     * @return Contrast Score
+     */
+    public float getContrastScore(int optotype) {
+        if(optotypes.size()>optotype) {
+            return optotypes.get(optotype)[8];
+        }
+        return -1;
+    }
+
+    /**
+     * @param optotype
      * @return grey level of E charatcer
      */
     public float getOptotypeEgrey(int optotype) {

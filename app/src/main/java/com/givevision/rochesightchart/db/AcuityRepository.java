@@ -12,7 +12,8 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 
-public class AcuityRepository {
+public class
+AcuityRepository {
     public final static String TAG = "AcuityRepository";
 
     private String DB_NAME = "db_givevision";
@@ -28,7 +29,10 @@ public class AcuityRepository {
     }
 
     public void insertAcuity(int userId, int contrast, int duration,
-                             String leftEyeFirst, String rightEyeFirst, String leftEye, String rightEye) {
+                             String leftEyeFirst, String rightEyeFirst,
+                             String leftEye, String rightEye,
+                             int leftLogCal, int leftLogTest,
+                             int rightLogCal, int rightLogTest, int logRes) {
         Date currentTime = new Date(Calendar.getInstance().getTimeInMillis());
 
         final Acuity acuity = new Acuity();
@@ -40,11 +44,20 @@ public class AcuityRepository {
         acuity.setLeftEye(leftEye);
         acuity.setRightEye(rightEye);
         acuity.setInServer(false);
+        acuity.setInServer(false);
+        acuity.setLeftLogCal(leftLogCal);
+        acuity.setLeftLogTest(leftLogTest);
+        acuity.setRightLogCal(rightLogCal);
+        acuity.setRightLogTest(rightLogTest);
+        acuity.setLog(logRes);
         acuity.setCreatedAt(currentTime);
         acuity.setModifiedAt(currentTime);
         if (Util.DEBUG) {
             Log.i(Util.LOG_TAG_DB, "insert acuity: userId:"+userId+" contrast:"+contrast
-                     +" leftEye:"+leftEye+" rightEye:"+rightEye);
+                     +" leftEye:"+leftEye+" rightEye:"+rightEye
+                    +" leftLogCal:"+leftLogCal+" leftLogTest:"+leftLogTest
+                    +" rightLogCal:"+rightLogCal+" rightLogTest:"+rightLogTest
+                    +" log (result):"+logRes);
         }
         AsyncTask.execute(new Runnable() {
             @Override

@@ -77,6 +77,7 @@ public class Util {
     public static final String SSIDPW = "!GV-vat-00";
     public static final String URL = "http://givevision.net/helpdesk/acuity";
 
+
     /**
      * check info from server.
      *
@@ -179,6 +180,11 @@ public class Util {
                 object.put("rightFirst", acuity.getRightEyeFirst());
                 object.put("left", acuity.getLeftEye());
                 object.put("right", acuity.getRightEye());
+                object.put("log", acuity.getLog());
+                object.put("leftLogCal", acuity.getLeftLogCal());
+                object.put("leftLogTest", acuity.getLeftLogTest());
+                object.put("rightLogCal", acuity.getRightLogCal());
+                object.put("rightLogTest", acuity.getRightLogTest());
                 object.put("createdAt", getDateTime(acuity.getCreatedAt()));
                 object.put("imei",imei);
                 str = Integer.toString(acuity.getId()) + Integer.toString(acuity.getUserId()) +

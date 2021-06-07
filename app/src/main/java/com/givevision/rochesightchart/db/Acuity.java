@@ -37,6 +37,33 @@ public class Acuity {
     @ColumnInfo(name = "in_server")
     private boolean inServer;
 
+    @ColumnInfo(name = "log")
+    private int log; //added in version 4.
+
+    @ColumnInfo(name = "log_calibration")
+    private int logCal; //added in version 5.
+
+    @ColumnInfo(name = "log_test")
+    private int logTest; //added in version 5.
+
+    @ColumnInfo(name = "left_log")
+    private int leftLog; //added in version 6.
+
+    @ColumnInfo(name = "left_log_calibration")
+    private int leftLogCal; //added in version 6.
+
+    @ColumnInfo(name = "left_log_test")
+    private int leftLogTest; //added in version 6.
+
+    @ColumnInfo(name = "right_log")
+    private int rightLog; //added in version 6.
+
+    @ColumnInfo(name = "right_log_calibration")
+    private int rightLogCal; //added in version 6.
+
+    @ColumnInfo(name = "right_log_test")
+    private int rightLogTest; //added in version 6.
+
     @ColumnInfo(name = "created_at")
     @TypeConverters({TimestampConverter.class})
     private Date createdAt;
@@ -118,5 +145,42 @@ public class Acuity {
     }
     public void setModifiedAt(Date modifiedAt) {
         this.modifiedAt = modifiedAt;
+    }
+
+    public int getLog() {return log;}
+    public void setLog(int log) {
+        this.log = log;
+    }
+    public int getLogCal() {return logCal;}
+    public void setLogCal(int logCal) {
+        this.logCal = logCal;
+    }
+    public int getLogTest() {return logTest;}
+    public void setLogTest(int logCalTest) {
+        this.logTest = logCalTest;
+    }
+    public int getLeftLog() {return leftLog;}
+    public void setLeftLog(int leftLog) {
+        this.leftLog = leftLog;
+    }
+    public int getLeftLogCal() {return leftLogCal;}
+    public void setLeftLogCal(int leftLogCal) {
+        this.leftLogCal = leftLogCal;
+    }
+    public int getLeftLogTest() {return leftLogTest;}
+    public void setLeftLogTest(int leftLogTest) {
+        this.leftLogTest = leftLogTest;
+    }
+    public int getRightLog() {return rightLog;}
+    public void setRightLog(int rightLog) {
+        this.rightLog = rightLog;
+    }
+    public int getRightLogCal() {return rightLogCal;}
+    public void setRightLogCal(int rightLogCal) {
+        this.leftLogCal = rightLogCal;
+    }
+    public int getRightLogTest() {return rightLogTest;}
+    public void setRightLogTest(int rightLogTest) {
+        this.rightLogTest = rightLogTest;
     }
 }
