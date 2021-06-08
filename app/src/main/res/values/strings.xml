@@ -20,8 +20,9 @@
 <!--    <string name="exit_test1" >End of test. We will start SightPlus now</string>-->
 <!--    <string name="end_test" >"Good job! Your results have been recorded"</string>-->
     <string name="end_test" >End of test. If you had no issues completing the test, do you want to submit these results? Press the trigger button for yes, or press the power button for no</string>
-    <string name="exit_test1">Thank you for completing the test, your results have been submitted. SightPlus will now start.</string>
-    <string name="exit_test">Thank you for completing the test. SightPlus will now start</string>
+    <string name="exit_test1">Thank you for completing the test, your results have been submitted.</string>
+    <string name="exit_test">Thank you for completing the test.</string>
+    <string name="exit_start_app">SightPlus will now start</string>
     <string name="result_left_info" >For the left eye, result is</string>
     <string name="result_right_info" >For the right eye, result is</string>
     <string name="action_repeat_test">your test results are different from the previous tests, please repeat the test in 2 hours."</string>

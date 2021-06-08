@@ -177,7 +177,7 @@ public class Acuity {
     }
     public int getRightLogCal() {return rightLogCal;}
     public void setRightLogCal(int rightLogCal) {
-        this.leftLogCal = rightLogCal;
+        this.rightLogCal = rightLogCal;
     }
     public int getRightLogTest() {return rightLogTest;}
     public void setRightLogTest(int rightLogTest) {

@@ -44,7 +44,6 @@ AcuityRepository {
         acuity.setLeftEye(leftEye);
         acuity.setRightEye(rightEye);
         acuity.setInServer(false);
-        acuity.setInServer(false);
         acuity.setLeftLogCal(leftLogCal);
         acuity.setLeftLogTest(leftLogTest);
         acuity.setRightLogCal(rightLogCal);

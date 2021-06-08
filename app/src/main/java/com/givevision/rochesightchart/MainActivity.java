@@ -98,6 +98,7 @@ public class MainActivity extends Activity {
     private static final String ACTION_CONTROLLER_TEST_INFO5 = "controller test info5";
     private static final String ACTION_EXIT_TEST = "exit test";
     private static final String ACTION_EXIT_TEST1 = "exit test1";
+    private static final String  ACTION_EXIT_START_APP="start app in exit";
     private static final String ACTION_END_TEST = "end test";
     private static final String ACTION_LAST_TEST = "last test";
 
@@ -212,7 +213,7 @@ public class MainActivity extends Activity {
     private int eyeCalibration;
     private boolean isJoystick;
     private boolean isNegCalDone;
-
+    private boolean isNegTestDone;
     private ToneGenerator toneH = new ToneGenerator(AudioManager.STREAM_DTMF, 100);
     private ToneGenerator toneL = new ToneGenerator(AudioManager.STREAM_DTMF, 80);
     private PowerManager pm;
@@ -580,6 +581,7 @@ public class MainActivity extends Activity {
         captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
         captions.put(ACTION_EXIT_TEST, R.string.exit_test);
         captions.put(ACTION_EXIT_TEST1, R.string.exit_test1);
+        captions.put(ACTION_EXIT_START_APP, R.string.exit_start_app);
         captions.put(ACTION_END_TEST, R.string.end_test);
         captions.put(ACTION_LAST_TEST, R.string.action_last_test);
         captions.put(ACTION_REPEAT_TEST, R.string.action_repeat_test);
@@ -1337,6 +1339,7 @@ public class MainActivity extends Activity {
                     " contrastActive= "+ contrastActive);
         }
         isJoystick=false;
+        isNegTestDone=false;
         if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==0){
             eyeCalibration=1;
         }else if(Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==2){
@@ -1529,7 +1532,49 @@ public class MainActivity extends Activity {
                         " contrastActive= " +contrastActive+
                         " eyeCalibration= "+ eyeCalibration+  " chartPos= "+ chartPos+ " chart= "+chart+
                         " err= "+err +" good= "+good +
-                        " isJoystick= "+isJoystick);
+                        " isJoystick= "+isJoystick + " isNegTestDone= "+isNegTestDone);
+            }
+            if(!isNegTestDone){
+                isNegTestDone=true;
+                if(eyeCalibration==0){
+                    if(contrastActive==0){
+                        //from test contrast eye=1
+                        contrastLeftLogTest++;
+                        contrastLeftLogTest=-1*contrastLeftLogTest;
+                    }else if(contrastActive==1){
+                        //from test contrast_1
+                        contrast_1LeftLogTest++;
+                        contrast_1LeftLogTest=-1*contrast_1LeftLogTest;
+                    }else if(contrastActive==2){
+                        //from test no contrast
+                        noContrastLeftLogTest++;
+                        noContrastLeftLogTest=-1*noContrastLeftLogTest;
+                    }
+                }else if(eyeCalibration==1){
+                    if(contrastActive==0){
+                        //from test contrast eye=0
+                        contrastLeftLogTest++;
+                        contrastLeftLogTest=-1*contrastLeftLogTest;
+                    }else if(contrastActive==1){
+                        //from test contrast_1
+                        contrast_1LeftLogTest++;
+                        contrast_1LeftLogTest=-1*contrast_1LeftLogTest;
+                    }else if(contrastActive==2){
+                        //from test no contrast
+                        noContrastLeftLogTest++;
+                        noContrastLeftLogTest=-1*noContrastLeftLogTest;
+                    }
+                }
+                if (Util.DEBUG) {
+                    Log.i(Util.LOG_TAG_KEY, "test KEY_POWER "+
+                            " isNegCalDone= "+isNegCalDone+
+                            " noContrastLeftLogCal= " +noContrastLeftLogCal+
+                            " contrastLeftLogCal= "+ contrastLeftLogCal+
+                            " contrast_1LeftLogCal= "+ contrast_1LeftLogCal+
+                            " noContrastRightLogCal= "+noContrastRightLogCal+
+                            " contrastRightLogCal= "+contrastRightLogCal +
+                            " contrast_1RightLogCal= "+contrast_1RightLogCal);
+                }
             }
             if(isJoystick){
                 if(eyeCalibration==0){
@@ -1688,18 +1733,24 @@ public class MainActivity extends Activity {
                 isNegCalDone=true;
                 if(eye==0){
                     if(contrastActive==0){
+                        noContrastLeftLogCal++;
                         noContrastLeftLogCal=-1*noContrastLeftLogCal;
                     }else if(contrastActive==1){
+                        contrastLeftLogCal++;
                         contrastLeftLogCal=-1*contrastLeftLogCal;
                     }else if(contrastActive==2){
+                        contrast_1LeftLogCal++;
                         contrast_1LeftLogCal=-1*contrast_1LeftLogCal;
                     }
                 }else if(eye==1){
                     if(contrastActive==0){
+                        noContrastRightLogCal++;
                         noContrastRightLogCal=-1*noContrastRightLogCal;
                     }else if(contrastActive==1){
+                        contrastRightLogCal++;
                         contrastRightLogCal=-1*contrastRightLogCal;
                     }else if(contrastActive==2){
+                        contrast_1RightLogCal++;
                         contrast_1RightLogCal=-1*contrast_1RightLogCal;
                     }
                 }
@@ -2348,6 +2399,13 @@ public class MainActivity extends Activity {
             step1=false;
             step2=false;
         }else if(end && ok){
+            if(contrastLeftResult=="" ){
+                contrastLeftResult="0";
+            }
+            if(contrastRightResult=="" ){
+                contrastRightResult="0";
+            }
+
             Log.d(LOG_TAG_MAIN, "endOfTest left:"
                     + " noContrastLeftStart= "+ Util.getSharedPreferences(this).getInt(Util.PREF_LEFT0_START, FIRST_CHART_LEFT_EYE_0)
                     +" noContrastLeftResult= "+ noContrastLeftResult
@@ -2508,15 +2566,15 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.d(LOG_TAG_MAIN, "endOfTest startedByPackage="+ startedByPackage);}
 
-
+        if(ok){
+            say(getResources().getString(captions.get(ACTION_EXIT_TEST1)), true,false);
+        }else{
+            say(getResources().getString(captions.get(ACTION_EXIT_TEST)), true,false);
+        }
         if(startedByPackage!=null){
-            if(ok){
-                say(getResources().getString(captions.get(ACTION_EXIT_TEST1)), false,false);
-            }else{
-                say(getResources().getString(captions.get(ACTION_EXIT_TEST)), false,false);
-            }
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volumeOrig, 0);
             isProcessing=true;
+            say(getResources().getString(captions.get(ACTION_EXIT_START_APP)), true,true);
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volumeOrig, 0);
 //                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 1);
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
@@ -2769,9 +2827,17 @@ public class MainActivity extends Activity {
     private void startExternalApp(String app ) {
 
         if(toRepeatTest){
-            sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 3);
+            if(logRes==-1){
+                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 4);
+            }else{
+                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 3);
+            }
         }else{
-            sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 2);
+            if(logRes==-1){
+                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 5);
+            }else{
+                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 2);
+            }
         }
 
 
