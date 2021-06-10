@@ -1072,17 +1072,18 @@ public class MainActivity extends Activity {
             }
         }if(keyCode==Util.KEY_DOWN  && (keyAction == KeyEvent.ACTION_UP || fakeControls)
                 && (step1==false && step2==false && test==false && end==false)){
+            if (Util.DEBUG) {
+                Log.i(Util.LOG_TAG_KEY, "KEY_DOWN");
+            }
             //reset app for new user
             if(isDoubleTouche){
                 isProcessing = true;
-                if (Util.DEBUG) {
-                    Log.i(Util.LOG_TAG_KEY, "KEY_DOWN");
-                }
-                sayResult();
+                batteryLevel();
                 isProcessing=false;
                 isDoubleTouche=false;
             }else{
-                batteryLevel();
+                isProcessing = true;
+                sayResult();
                 isProcessing=false;
             }
         }else  if(keyCode==Util.KEY_BACK  && (keyAction == KeyEvent.ACTION_UP || fakeControls)
@@ -1179,14 +1180,14 @@ public class MainActivity extends Activity {
                 //error
                 endOfTest(true,false);
 //                exitFromTest(false);
-            }else if(keyCode==Util.KEY_TRIGGER &&!isDoubleTouche
+            }else if(keyCode==Util.KEY_TRIGGER
                     && (keyAction == KeyEvent.ACTION_UP || fakeControls)) {
                 //test ok
                 endOfTest(true,true);
 //                exitFromTest(true);
-            }else if(keyCode==Util.KEY_TRIGGER && isDoubleTouche){
+            }else if(keyCode==Util.KEY_DOWN
+                    && (keyAction == KeyEvent.ACTION_UP || fakeControls)){
                 sayResult();
-                isDoubleTouche=false;
             }
             isProcessing=false;
         }
@@ -2616,14 +2617,18 @@ public class MainActivity extends Activity {
         end=false;
         contrastActive=-1;
     }
-
+//private boolean isSayResult;
     private void sayResult() {
+//        isSayResult=true;
         setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult+" / " +contrast_1LeftResult,
                 "right eye: "+noContrastRightResult +" / " +contrastRightResult+" / " +contrast_1RightResult);
         say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+", no contrast "+noContrastLeftResult +
-                " pixels, contrast " +contrastLeftResult+" pixels, contrast sensitivity " +contrast_1LeftResult+ "log", true,false);
-        say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+", no contrast "+noContrastRightResult +
-                " pixels, contrast " +contrastRightResult +" pixels, contrast sensitivity " +contrast_1RightResult + "log", true,false);
+                " pixels, contrast " +contrastLeftResult+" pixels, contrast sensitivity " +contrast_1LeftResult+ "log. "+
+                getResources().getString(captions.get(ACTION_RESULT_RIGHT))+", no contrast "+noContrastRightResult +
+                " pixels, contrast " +contrastRightResult +" pixels, contrast sensitivity " +contrast_1RightResult + "log.", false,false);
+//        say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+", no contrast "+noContrastRightResult +
+//                " pixels, contrast " +contrastRightResult +" pixels, contrast sensitivity " +contrast_1RightResult + "log", true,false);
+//        isSayResult=false;
     }
 
 //    private void insertAcuity(int nextChartFor, int i, String contrastLeftResult, String contrastRightResult) {
