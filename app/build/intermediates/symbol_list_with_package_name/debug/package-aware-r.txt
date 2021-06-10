@@ -990,6 +990,7 @@ string app_name
 string battery_is_en
 string charts
 string end_test
+string exit_start_app
 string exit_test
 string exit_test1
 string p_charged_en

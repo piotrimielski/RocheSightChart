@@ -251,7 +251,9 @@ public class MainActivity extends Activity {
         public void run() {
 //            if(isTimerStart) {
 //                isTimerStart=false;
+            if(!mTTS.isSpeaking()){
                 say(getResources().getString(captions.get(ACTION_TEST_REMINDER)), false,false);
+            }
 //                handler2.removeCallbacks(runnableCode2);
 //                handler2.postDelayed(runnableCode2, SHORT_DELAY);
 //                isSecondPeriod=true;
