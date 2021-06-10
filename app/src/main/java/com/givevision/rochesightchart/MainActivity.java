@@ -117,6 +117,7 @@ public class MainActivity extends Activity {
     private boolean step2=false;
     private boolean test=false;
     private boolean end=false;
+    private boolean testDone;
     private boolean isDoubleTouche;
     private RelativeLayout   relativeLayout  ;
     private boolean isReadyForSpeech;
@@ -161,10 +162,10 @@ public class MainActivity extends Activity {
     private  static int GREY_ORG_E=125;
     private  static int GREY_ORG_SQUARE=126;
     private static int CHART_OFFSET=0;
-    private static float LEFT_EYE_POS_X= (float) 555.0;
-    private static float LEFT_EYE_POSY=(float) 540.0;
-    private static float RIGHT_EYE_POS_X= (float) 1665.0;
-    private static float RIGHT_EYE_POSY=(float) 540.0;
+    private static float LEFT_EYE_POS_X= (float) 560;//555.0;
+    private static float LEFT_EYE_POS_Y=(float) 540.0;
+    private static float RIGHT_EYE_POS_X= (float) 1600;//1665.0;
+    private static float RIGHT_EYE_POS_Y=(float) 540.0;
     private static final String BROADCAST_START_APP_ACTION="start app action";
     private static final String START_APP_RESULT = "app response" ;
 
@@ -279,7 +280,9 @@ public class MainActivity extends Activity {
         @Override
         public void run() {
             if(!isAppStarted){
-                say(getResources().getString(captions.get(CHARTS_SEARCH)), false,false);
+                if(!mTTS.isSpeaking()) {
+                    say(getResources().getString(captions.get(CHARTS_SEARCH)), false, false);
+                }
                 handler.removeCallbacks(runnableCode);
                 handler.postDelayed(runnableCode, 2*LONG_DELAY);
             }else{
@@ -718,7 +721,7 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "onResume");
         }
-
+        testDone=false;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_START_APP_ACTION);
         /*
@@ -934,6 +937,11 @@ public class MainActivity extends Activity {
         if(keyCode==Util.KEY_POWER  &&  (keyAction == KeyEvent.ACTION_UP || fakeControls)
                 && (!step1 && !step2 && !test  && !end) ) {
             //start app
+            Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_X,LEFT_EYE_POS_X);
+            Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_Y,LEFT_EYE_POS_Y);
+            Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_X,RIGHT_EYE_POS_X);
+            Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,RIGHT_EYE_POS_Y);
+
             isProcessing = true;
             say("",false,false);
             isEndOfTest=false;
@@ -965,11 +973,11 @@ public class MainActivity extends Activity {
                 myGLRenderer.setChart(-1, -2, "", 0);
                 myGLRenderer.setCharacter(2); //E character
                 float x = Util.getSharedPreferences(this).getFloat(Util.PREF_LEFT_CALIBRATION_X, LEFT_EYE_POS_X);
-                float y = Util.getSharedPreferences(this).getFloat(Util.PREF_LEFT_CALIBRATION_Y, LEFT_EYE_POSY);
+                float y = Util.getSharedPreferences(this).getFloat(Util.PREF_LEFT_CALIBRATION_Y, LEFT_EYE_POS_Y);
                 myGLRenderer.setLeftCenterX(x);
                 myGLRenderer.setLeftCenterY(y);
                 x = Util.getSharedPreferences(this).getFloat(Util.PREF_RIGHT_CALIBRATION_X, RIGHT_EYE_POS_X);
-                y = Util.getSharedPreferences(this).getFloat(Util.PREF_RIGHT_CALIBRATION_Y, RIGHT_EYE_POSY);
+                y = Util.getSharedPreferences(this).getFloat(Util.PREF_RIGHT_CALIBRATION_Y, RIGHT_EYE_POS_Y);
                 myGLRenderer.setRightCenterX(x);
                 myGLRenderer.setRightCenterY(y);
                 eye = -1;
@@ -988,9 +996,9 @@ public class MainActivity extends Activity {
             } else {
                 //fixe the position calibration1
                 Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_X,LEFT_EYE_POS_X);
-                Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_Y,LEFT_EYE_POSY);
+                Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_Y,LEFT_EYE_POS_Y);
                 Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_X,RIGHT_EYE_POS_X);
-                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,RIGHT_EYE_POSY);
+                Util.upDatePref(this,Util.PREF_RIGHT_CALIBRATION_Y,RIGHT_EYE_POS_Y);
                 Util.upDatePref(this,Util.PREF_LEFT0_START,FIRST_CHART_LEFT_EYE_0);
                 Util.upDatePref(this,Util.PREF_RIGHT0_START,FIRST_CHART_RIGHT_EYE_0);
                 Util.upDatePref(this,Util.PREF_LEFT1_START,FIRST_CHART_LEFT_EYE_1);
@@ -2386,6 +2394,7 @@ public class MainActivity extends Activity {
         err=0;
         good=0;
         contrastActive=-1;
+        testDone=true;
         myGLRenderer.setChart(-1, -2, "", 0);
         if(exitOK){
             logRes=1;
@@ -2620,6 +2629,9 @@ public class MainActivity extends Activity {
 //private boolean isSayResult;
     private void sayResult() {
 //        isSayResult=true;
+        if(!testDone){
+            return;
+        }
         setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult+" / " +contrast_1LeftResult,
                 "right eye: "+noContrastRightResult +" / " +contrastRightResult+" / " +contrast_1RightResult);
         say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+", no contrast "+noContrastLeftResult +
