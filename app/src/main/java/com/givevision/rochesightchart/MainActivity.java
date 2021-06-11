@@ -2566,6 +2566,36 @@ public class MainActivity extends Activity {
                         noContrastLeftLogCal,noContrastLeftLogTest,
                         noContrastRightLogCal,noContrastRightLogTest, logRes);
             }
+            if(noContrastLeftResult=="" || noContrastLeftResult=="0" || noContrastLeftResult=="-1" || noContrastLeftResult=="-2" ){
+//                noContrastLeftResult="no reading";
+            }else{
+                noContrastLeftResult=learn.getPixelsFromMunit(noContrastLeftResult);
+            }
+            if(noContrastRightResult==""  || noContrastRightResult=="0" || noContrastRightResult=="-1" || noContrastRightResult=="-2" ){
+//                noContrastRightResult="no reading";
+            }else{
+                noContrastRightResult=learn.getPixelsFromMunit(noContrastRightResult);
+            }
+            if(contrastLeftResult=="" || contrastLeftResult=="0" || contrastLeftResult=="-1" || contrastLeftResult=="-2"){
+//                contrastLeftResult="no reading";
+            }else{
+                contrastLeftResult=learn.getPixelsFromMunit(contrastLeftResult);
+            }
+            if(contrastRightResult=="" || contrastRightResult=="0" || contrastRightResult=="-1" || contrastRightResult=="-2"){
+//                contrastRightResult="no reading";
+            }else{
+                contrastRightResult=learn.getPixelsFromMunit(contrastRightResult);
+            }
+            if(contrast_1LeftResult=="" || contrast_1LeftResult=="0" || contrast_1LeftResult=="-1" || contrast_1LeftResult=="-2"){
+//                contrastLeftResult="no reading";
+            }else{
+//                contrast_1LeftResult=learn.getEyeContrastResult(0);
+            }
+            if(contrast_1RightResult=="" || contrast_1RightResult=="0" || contrast_1RightResult=="-1" || contrast_1RightResult=="-2"){
+//                contrastRightResult="no reading";
+            }else{
+//                contrast_1RightResult=learn.getEyeContrastResult(1);
+            }
             handler0.postDelayed(runnableCode0, 100);
             exitFromTest(false);
         }
