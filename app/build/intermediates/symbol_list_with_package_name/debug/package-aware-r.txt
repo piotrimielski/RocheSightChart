@@ -993,11 +993,14 @@ string end_test
 string exit_start_app
 string exit_test
 string exit_test1
+string exit_test2
 string p_charged_en
 string result_left_info
 string result_right_info
 string search_menu_title
 string status_bar_notification_info_overflow
+string tempo1min
+string tempo30sec
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light
 style Animation_AppCompat_Dialog

@@ -14,7 +14,7 @@
 <!--    <string name="action_controller_test_info3" >well done now the low contrast test.</string>-->
     <string name="action_controller_test_info3" >Now you will begin the Low Contrast Test. This will be slightly harder, but give it your best attempt</string>
 <!--    <string name="action_controller_test_info4" >Almost done, now calibrate the contrast sensitivity test</string>-->
-    <string name="action_controller_test_info4" >Almost done, now the contrast sensitivity test</string>
+    <string name="action_controller_test_info4" >Now the contrast sensitivity test</string>
     <string name="action_controller_test_info5" >The test is starting</string>
 <!--    <string name="exit_test" >Exiting eye chart. SightPlus is starting.</string>-->
 <!--    <string name="exit_test1" >End of test. We will start SightPlus now</string>-->
@@ -22,6 +22,9 @@
     <string name="end_test" >End of test. If you had no issues completing the test, do you want to submit these results? Press the trigger button for yes, or press the power button for no</string>
     <string name="exit_test1">Thank you for completing the test, your results have been submitted.</string>
     <string name="exit_test">Thank you for completing the test.</string>
+    <string name="exit_test2">Unfortunately you have not finished your test.</string>
+    <string name="tempo30sec">Please do your best and guess the direction of E</string>
+    <string name="tempo1min">If you still cannot guess the direction of E, please press the trigger button.</string>
     <string name="exit_start_app">SightPlus will now start</string>
     <string name="result_left_info" >For the left eye, result is</string>
     <string name="result_right_info" >For the right eye, result is</string>

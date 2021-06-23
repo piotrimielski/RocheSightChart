@@ -3,6 +3,7 @@ package com.givevision.rochesightchart;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,20 +45,24 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.android.volley.RequestQueue;
+import com.givevision.rochesightchart.bluetooth.BluetoothChecker;
+import com.givevision.rochesightchart.bluetooth.BluetoothEvent;
 import com.givevision.rochesightchart.db.Acuity;
 import com.givevision.rochesightchart.db.AcuityRepository;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import static android.os.SystemClock.sleep;
 import static com.givevision.rochesightchart.Util.LOG_TAG_KEY;
 import static com.givevision.rochesightchart.Util.LOG_TAG_MAIN;
 import static com.givevision.rochesightchart.Util.TAG;
-
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 //https://cmusphinx.github.io/wiki/tutorialandroid/
 
@@ -129,7 +134,7 @@ public class MainActivity extends Activity {
     private static final int SHORT_DELAY = 5000;
     private static final int KEY_DELAY = 200;
     private SpeechRecognizer recognizer;
-    private HashMap<String, Integer> captions;
+//    private HashMap<String, Integer> captions;
 
     private GLSurfaceView mGLView;
     private TextView mTextInfo1;
@@ -217,6 +222,7 @@ public class MainActivity extends Activity {
     private boolean isNegTestDone;
     private ToneGenerator toneH = new ToneGenerator(AudioManager.STREAM_DTMF, 100);
     private ToneGenerator toneL = new ToneGenerator(AudioManager.STREAM_DTMF, 80);
+    private ToneGenerator toneF = new ToneGenerator(AudioManager.STREAM_ALARM, 80);
     private PowerManager pm;
     private PowerManager.WakeLock wl;
     private boolean newUser=true;
@@ -245,43 +251,37 @@ public class MainActivity extends Activity {
 
     private BroadcastReceiver mBatteryReceiver;
     private Battery batteryController;
+    public BluetoothAdapter mBluetoothAdapter;
 
     //   test reminder
     private Runnable runnableCode1 = new Runnable() {
         @Override
         public void run() {
-//            if(isTimerStart) {
-//                isTimerStart=false;
-            if(!mTTS.isSpeaking()){
-                say(getResources().getString(captions.get(ACTION_TEST_REMINDER)), false,false);
+            if(!mTTS.isSpeaking() && isTimerStart){
+                say(getResources().getString(R.string.tempo30sec), false,false);
+                handler2.removeCallbacks(runnableCode2);
+                handler2.postDelayed(runnableCode2, 6*LONG_DELAY);
             }
-//                handler2.removeCallbacks(runnableCode2);
-//                handler2.postDelayed(runnableCode2, SHORT_DELAY);
-//                isSecondPeriod=true;
-//            }
-            handler1.postDelayed(runnableCode1, LONG_DELAY);
         }
     };
     //   test go next
-//    private Runnable runnableCode2 = new Runnable() {
-//        @Override
-//        public void run() {
-//            if(isSecondPeriod){
-////                stopTask(false);
-//                good=0;
-//                err=0;
-//                nextChart(NEXT_CHART_FOR_ERROR);
-////                resultChart("error");
-//            }
-//        }
-//    };
+    private Runnable runnableCode2 = new Runnable() {
+        @Override
+        public void run() {
+            if(!mTTS.isSpeaking() && isTimerStart){
+                say(getResources().getString(R.string.tempo1min), false,false);
+                handler2.postDelayed(runnableCode2, 6*LONG_DELAY);
+            }
+        }
+    };
     //   first massage reminder
     private Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
             if(!isAppStarted){
                 if(!mTTS.isSpeaking()) {
-                    say(getResources().getString(captions.get(CHARTS_SEARCH)), false, false);
+                    say(getResources().getString(R.string.charts), false, false);
+//                    say(getResources().getString(captions.get(CHARTS_SEARCH)), false, false);
                 }
                 handler.removeCallbacks(runnableCode);
                 handler.postDelayed(runnableCode, 2*LONG_DELAY);
@@ -366,8 +366,8 @@ public class MainActivity extends Activity {
         }
         isTimerStart=false;
         handler1.removeCallbacks(runnableCode1);
-        isSecondPeriod=false;
-//        handler2.removeCallbacks(runnableCode2);
+        handler2.removeCallbacks(runnableCode2);
+        isSecondPeriod=false;;
     }
 
     /**
@@ -376,10 +376,10 @@ public class MainActivity extends Activity {
      * @return
      */
     void restartTask(int delay) {
-        handler.removeCallbacks(runnableCode);
-        handler0.removeCallbacks(runnableCode0);
-        isTimerStart=false;
-        isSecondPeriod=false;
+//        handler.removeCallbacks(runnableCode);
+//        handler0.removeCallbacks(runnableCode0);
+//        isTimerStart=false;
+//        isSecondPeriod=false;
         handler1.removeCallbacks(runnableCode1);
         handler1.postDelayed(runnableCode1, delay);
         isTimerStart=true;
@@ -431,7 +431,7 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "onCreate startedByPackage "+startedByPackage);
         }
-
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //full screen definition
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -570,26 +570,26 @@ public class MainActivity extends Activity {
 
         setInfo("Preparing the test");
         // Prepare the data for UI
-        captions = new HashMap<>();
-        captions.put(CHARTS_SEARCH, R.string.charts);
-        captions.put(ACTION_CALIBRATION1, R.string.action_calibration);
-        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO1, R.string.action_controller_calibration_info1);
-        captions.put(ACTION_CONTROLLER_TEST_INFO, R.string.action_controller_test_info);
-        captions.put(ACTION_CONTROLLER_TEST_INFO1, R.string.action_controller_test_info1);
-        captions.put(ACTION_CONTROLLER_TEST_INFO13, R.string.action_controller_test_info13);
-        captions.put(ACTION_CONTROLLER_TEST_INFO12, R.string.action_controller_test_info12);
-        captions.put(ACTION_CONTROLLER_TEST_INFO3, R.string.action_controller_test_info3);
-        captions.put(ACTION_CONTROLLER_TEST_INFO4, R.string.action_controller_test_info4);
-        captions.put(ACTION_CONTROLLER_TEST_INFO5, R.string.action_controller_test_info5);
-        captions.put(ACTION_RESET_USER, R.string.action_reset_user);
-        captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
-        captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
-        captions.put(ACTION_EXIT_TEST, R.string.exit_test);
-        captions.put(ACTION_EXIT_TEST1, R.string.exit_test1);
-        captions.put(ACTION_EXIT_START_APP, R.string.exit_start_app);
-        captions.put(ACTION_END_TEST, R.string.end_test);
-        captions.put(ACTION_LAST_TEST, R.string.action_last_test);
-        captions.put(ACTION_REPEAT_TEST, R.string.action_repeat_test);
+//        captions = new HashMap<>();
+//        captions.put(CHARTS_SEARCH, R.string.charts);
+//        captions.put(ACTION_CALIBRATION1, R.string.action_calibration);
+//        captions.put(ACTION_CONTROLLER_CALIBRATION_INFO1, R.string.action_controller_calibration_info1);
+//        captions.put(ACTION_CONTROLLER_TEST_INFO, R.string.action_controller_test_info);
+//        captions.put(ACTION_CONTROLLER_TEST_INFO1, R.string.action_controller_test_info1);
+//        captions.put(ACTION_CONTROLLER_TEST_INFO13, R.string.action_controller_test_info13);
+//        captions.put(ACTION_CONTROLLER_TEST_INFO12, R.string.action_controller_test_info12);
+//        captions.put(ACTION_CONTROLLER_TEST_INFO3, R.string.action_controller_test_info3);
+//        captions.put(ACTION_CONTROLLER_TEST_INFO4, R.string.action_controller_test_info4);
+//        captions.put(ACTION_CONTROLLER_TEST_INFO5, R.string.action_controller_test_info5);
+//        captions.put(ACTION_RESET_USER, R.string.action_reset_user);
+//        captions.put(ACTION_RESULT_LEFT, R.string.result_left_info);
+//        captions.put(ACTION_RESULT_RIGHT, R.string.result_right_info);
+//        captions.put(ACTION_EXIT_TEST, R.string.exit_test);
+//        captions.put(ACTION_EXIT_TEST1, R.string.exit_test1);
+//        captions.put(ACTION_EXIT_START_APP, R.string.exit_start_app);
+//        captions.put(ACTION_END_TEST, R.string.end_test);
+//        captions.put(ACTION_LAST_TEST, R.string.action_last_test);
+//        captions.put(ACTION_REPEAT_TEST, R.string.action_repeat_test);
 //        captions.put(ACTION_CALIBRATION_CHECK, R.string.action_calibration_check);
 //        captions.put(ACTION_CONTROLLER, R.string.action_controller);
 //        captions.put(ACTION_VOICE, R.string.action_voice);
@@ -641,6 +641,12 @@ public class MainActivity extends Activity {
         if (Util.DEBUG) {
             Log.i(LOG_TAG_MAIN, "onStart");
         }
+        mBluetoothAdapter= BluetoothChecker.enableBluetooth();
+        if(mBluetoothAdapter==null){
+            Log.e(TAG, "MainActivity:: onStart mBluetoothAdapter is null");
+        }
+        EventBus.getDefault().register(this);
+
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         volumeOrig = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -666,17 +672,19 @@ public class MainActivity extends Activity {
                             }
                             if (status != TextToSpeech.ERROR) {
                                 mTTS.setLanguage(Locale.UK);
-                                say(getResources().getString(captions.get(CHARTS_SEARCH)), false,false);
+                                say(getResources().getString(R.string.charts), false,false);
                                 handler.removeCallbacks(runnableCode);
                                 handler.postDelayed(runnableCode, 2*LONG_DELAY);
                                 isAppStarted=false;
                                 if(newUser){
-                                    AsyncTask.execute( new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            acuityRepository.newInstallation();
-                                        }
-                                    });
+                                    if(acuityRepository!=null){
+                                        AsyncTask.execute( new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                acuityRepository.newInstallation();
+                                            }
+                                        });
+                                    }
                                 }else{
                                     AsyncTask.execute( new Runnable() {
                                         @Override
@@ -846,6 +854,19 @@ public class MainActivity extends Activity {
             Log.i(LOG_TAG_MAIN, "onDestroy");
         }
 
+    }
+
+    ArrayList<String> bluetooth_msg;
+    @Subscribe
+    public void onEvent(BluetoothEvent event) {
+        bluetooth_msg= event.getBluetooth_msg();
+        if (Util.DEBUG) {
+            Log.i(LOG_TAG_MAIN, "bluetooth_msg=" +bluetooth_msg.get(1));
+        }
+        if(bluetooth_msg.get(1).equals("disconnected")){
+            //stop app
+            exitFromTest(3);
+        }
     }
 
     List<Integer> listOfTouchs = new ArrayList<Integer>();
@@ -1052,6 +1073,7 @@ public class MainActivity extends Activity {
             contrast_1RightLogTest=0;
             startCalibration2(0, contrastActive);
             isProcessing = false;
+            return true;
         }else if(keyCode==Util.KEY_UP  && (keyAction == KeyEvent.ACTION_UP || fakeControls)
                 && (step1==false && step2==false && test==false && end==false)){
             //reset app for new user
@@ -1066,7 +1088,7 @@ public class MainActivity extends Activity {
                 isProcessing=true;
                 newUser=true;
                 acuityRepository.newInstallation();
-                say(getResources().getString(captions.get(ACTION_RESET_USER)), false,false);
+                say(getResources().getString(R.string.action_reset_user), false,false);
                 myGLRenderer.setChart(-1, -2, "", 0);
                 resetPreferences(newUser);
                 step1=false;
@@ -1265,7 +1287,7 @@ public class MainActivity extends Activity {
                 Util.upDatePref(this,Util.PREF_LEFT_CALIBRATION_Y,myGLRenderer.getLeftPositionY());
                 eyeCalibration=1;
                 myGLRenderer.setChart(-1, eyeCalibration, "", learn.getOptotypePixels(1));
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO13)), false,false);
+                say(getResources().getString(R.string.action_controller_test_info13), false,false);
             }else{
                 step1=false;
                 step2=true;
@@ -1393,14 +1415,15 @@ public class MainActivity extends Activity {
 
         if(contrastActive ==0){
             if(eyeCalibration==0){
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO12)), true,false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO1)), true,false);
+                say(getResources().getString(R.string.action_controller_test_info), false,false);
+//                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
+                say(getResources().getString(R.string.action_controller_test_info12), true,false);
+                say(getResources().getString(R.string.action_controller_test_info1), true,false);
             }else if(eyeCalibration==1 && Util.getSharedPreferences(this).getInt(Util.PREF_BLIND_EYE, -1)==0) {
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), false,false);
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO12)), true,false);
+                say(getResources().getString(R.string.action_controller_test_info), false,false);
+                say(getResources().getString(R.string.action_controller_test_info12), true,false);
             }else{
-                say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO)), true,false);
+                say(getResources().getString(R.string.action_controller_test_info), true,false);
             }
         }
 
@@ -1412,6 +1435,8 @@ public class MainActivity extends Activity {
         totalLengthStringArray = learn.getSizeChartsPos(chart);
         myGLRenderer.setChart(chart,eyeCalibration,learn.getChartPosString(chart, chartPos),
                 learn.getOptotypePixels(chart) );
+
+        restartTask(3*LONG_DELAY);
     }
 
     /**
@@ -1422,6 +1447,7 @@ public class MainActivity extends Activity {
      * @return
      */
     private void calibration2(int keyCode, int keyAction, int contrastActive){
+        stopTask(false);
         if(contrastActive==0 || contrastActive==1){
             setText(String.valueOf((int)learn.getOptotypePixels(chart)), "");
         }else if(contrastActive==2){
@@ -1545,6 +1571,12 @@ public class MainActivity extends Activity {
                         " err= "+err +" good= "+good +
                         " isJoystick= "+isJoystick + " isNegTestDone= "+isNegTestDone);
             }
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toneF.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,200);
+                    }
+                }, 200);
             if(!isNegTestDone){
                 isNegTestDone=true;
                 if(eyeCalibration==0){
@@ -1621,6 +1653,7 @@ public class MainActivity extends Activity {
                     isReady=true;
                 }}, KEY_DELAY);
         }
+        restartTask(3*LONG_DELAY);
     }
 
     /**
@@ -1663,6 +1696,7 @@ public class MainActivity extends Activity {
         newUser=false;
         myGLRenderer.setCalibrationImage(3);
         nextChart(NEXT_CHART_FOR_NEW_TEST,contrastActive);
+        restartTask(3*LONG_DELAY);
     }
 
     /**
@@ -1672,6 +1706,7 @@ public class MainActivity extends Activity {
      * @return
      */
     private void test(int keyCode, int keyEvent){
+        stopTask(false);
         say(" ",false,false);
         setInfo("test running");
         if(contrastActive==0 || contrastActive==1){
@@ -1740,6 +1775,13 @@ public class MainActivity extends Activity {
                         " err= "+err +" good= "+good +
                         " isJoystick= "+isJoystick+ " isNegCalDone= "+isNegCalDone);
             }
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toneF.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,200);
+                }
+            }, 200);
+
             if(!isNegCalDone){
                 isNegCalDone=true;
                 if(eye==0){
@@ -1810,6 +1852,7 @@ public class MainActivity extends Activity {
                     isReady=true;
                 }}, KEY_DELAY);
         }
+        restartTask(3*LONG_DELAY);
     }
     /**
      * new chart sizes or stop test
@@ -1900,7 +1943,7 @@ public class MainActivity extends Activity {
                         eye=0;
                         this.contrastActive = 2;
                         chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT2_START, FIRST_CHART_LEFT_EYE_2);
-                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
+                        say(getResources().getString(R.string.action_controller_test_info4), true, false);
                         good=0;
                         err=0;
                         totalLengthStringArray = learn.getSizeChartsPos(chart);
@@ -1926,12 +1969,12 @@ public class MainActivity extends Activity {
                             eye=0;
                             this.contrastActive = 1;
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_LEFT1_START, FIRST_CHART_LEFT_EYE_1);
-                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO3)), true, false);
+                            say(getResources().getString(R.string.action_controller_test_info3), true, false);
                         }else{
                             eye=1;
                             this.contrastActive = 0;
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0);
-                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO13)), true, false);
+                            say(getResources().getString(R.string.action_controller_test_info13), true, false);
 
                         }
                         good=0;
@@ -1962,7 +2005,7 @@ public class MainActivity extends Activity {
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT0_START, FIRST_CHART_RIGHT_EYE_0);
                             eye=1;
                             this.contrastActive = 0;
-                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO13)), true, false);
+                            say(getResources().getString(R.string.action_controller_test_info13), true, false);
                             totalLengthStringArray = learn.getSizeChartsPos(chart);
                             good=0;
                             err=0;
@@ -1988,7 +2031,7 @@ public class MainActivity extends Activity {
                         eye=1;
                         this.contrastActive = 2;
                         chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT2_START, FIRST_CHART_RIGHT_EYE_2);;
-                        say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO4)), true, false);
+                        say(getResources().getString(R.string.action_controller_test_info4), true, false);
                         good=0;
                         err=0;
                         totalLengthStringArray = learn.getSizeChartsPos(chart);
@@ -2009,7 +2052,7 @@ public class MainActivity extends Activity {
                         }
                         if(chart>LIMIT_GREY){
                             chart = Util.getSharedPreferences(this).getInt(Util.PREF_RIGHT1_START, FIRST_CHART_RIGHT_EYE_1);
-                            say(getResources().getString(captions.get(ACTION_CONTROLLER_TEST_INFO3)), true, false);
+                            say(getResources().getString(R.string.action_controller_test_info3), true, false);
                             eye=1;
                             this.contrastActive = 1;
                         }else{
@@ -2381,9 +2424,9 @@ public class MainActivity extends Activity {
     }
     /**
      * end of test
+     * @param ok //test finished ok
+     * @param exitOK //problem with test
      * @param
-     * @param
-     * @param ok
      * @return
      */
     private void endOfTest(boolean ok, boolean exitOK) {
@@ -2405,7 +2448,7 @@ public class MainActivity extends Activity {
             Log.d(LOG_TAG_MAIN, "endOfTest test= "+test+" ok= "+ok+" exitOK= "+exitOK+" eye= "+eye);
         }
         if(test & ok){
-            say(getResources().getString(captions.get(ACTION_END_TEST)), false,false);
+            say(getResources().getString(R.string.end_test), false,false);
             end=true;
             test=false;
             step1=false;
@@ -2471,37 +2514,6 @@ public class MainActivity extends Activity {
                         contrast_1RightLogCal,contrast_1RightLogTest,logRes);
             }
 
-            if(noContrastLeftResult=="" || noContrastLeftResult=="0" || noContrastLeftResult=="-1" || noContrastLeftResult=="-2" ){
-//                noContrastLeftResult="no reading";
-            }else{
-                noContrastLeftResult=learn.getPixelsFromMunit(noContrastLeftResult);
-            }
-            if(noContrastRightResult==""  || noContrastRightResult=="0" || noContrastRightResult=="-1" || noContrastRightResult=="-2" ){
-//                noContrastRightResult="no reading";
-            }else{
-                noContrastRightResult=learn.getPixelsFromMunit(noContrastRightResult);
-            }
-            if(contrastLeftResult=="" || contrastLeftResult=="0" || contrastLeftResult=="-1" || contrastLeftResult=="-2"){
-//                contrastLeftResult="no reading";
-            }else{
-                contrastLeftResult=learn.getPixelsFromMunit(contrastLeftResult);
-            }
-            if(contrastRightResult=="" || contrastRightResult=="0" || contrastRightResult=="-1" || contrastRightResult=="-2"){
-//                contrastRightResult="no reading";
-            }else{
-                contrastRightResult=learn.getPixelsFromMunit(contrastRightResult);
-            }
-            if(contrast_1LeftResult=="" || contrast_1LeftResult=="0" || contrast_1LeftResult=="-1" || contrast_1LeftResult=="-2"){
-//                contrastLeftResult="no reading";
-            }else{
-//                contrast_1LeftResult=learn.getEyeContrastResult(0);
-            }
-            if(contrast_1RightResult=="" || contrast_1RightResult=="0" || contrast_1RightResult=="-1" || contrast_1RightResult=="-2"){
-//                contrastRightResult="no reading";
-            }else{
-//                contrast_1RightResult=learn.getEyeContrastResult(1);
-            }
-
             AsyncTask.execute( new Runnable() {
                 @Override
                 public void run() {
@@ -2517,7 +2529,11 @@ public class MainActivity extends Activity {
                             toRepeatTest=false;
                         }
                     }
-                    exitFromTest(exitOK);
+                    if(exitOK){
+                        exitFromTest(0);
+                    }else{
+                        exitFromTest(1);
+                    }
                 }
             });
 
@@ -2566,56 +2582,38 @@ public class MainActivity extends Activity {
                         noContrastLeftLogCal,noContrastLeftLogTest,
                         noContrastRightLogCal,noContrastRightLogTest, logRes);
             }
-            if(noContrastLeftResult=="" || noContrastLeftResult=="0" || noContrastLeftResult=="-1" || noContrastLeftResult=="-2" ){
-//                noContrastLeftResult="no reading";
-            }else{
-                noContrastLeftResult=learn.getPixelsFromMunit(noContrastLeftResult);
-            }
-            if(noContrastRightResult==""  || noContrastRightResult=="0" || noContrastRightResult=="-1" || noContrastRightResult=="-2" ){
-//                noContrastRightResult="no reading";
-            }else{
-                noContrastRightResult=learn.getPixelsFromMunit(noContrastRightResult);
-            }
-            if(contrastLeftResult=="" || contrastLeftResult=="0" || contrastLeftResult=="-1" || contrastLeftResult=="-2"){
-//                contrastLeftResult="no reading";
-            }else{
-                contrastLeftResult=learn.getPixelsFromMunit(contrastLeftResult);
-            }
-            if(contrastRightResult=="" || contrastRightResult=="0" || contrastRightResult=="-1" || contrastRightResult=="-2"){
-//                contrastRightResult="no reading";
-            }else{
-                contrastRightResult=learn.getPixelsFromMunit(contrastRightResult);
-            }
-            if(contrast_1LeftResult=="" || contrast_1LeftResult=="0" || contrast_1LeftResult=="-1" || contrast_1LeftResult=="-2"){
-//                contrastLeftResult="no reading";
-            }else{
-//                contrast_1LeftResult=learn.getEyeContrastResult(0);
-            }
-            if(contrast_1RightResult=="" || contrast_1RightResult=="0" || contrast_1RightResult=="-1" || contrast_1RightResult=="-2"){
-//                contrastRightResult="no reading";
-            }else{
-//                contrast_1RightResult=learn.getEyeContrastResult(1);
-            }
+
             handler0.postDelayed(runnableCode0, 100);
-            exitFromTest(false);
+            exitFromTest(2);
         }
     }
 
-    private void exitFromTest(boolean ok){
-
+    /**
+     * end of test
+     * @param exit //0 - test finnished ok, 1 - test had the problem, 2 - stopped by user
+     * @param
+     * @return
+     */
+    private void exitFromTest(int exit){
         chart=-1;
         eye=-2;
         if (Util.DEBUG) {
             Log.d(LOG_TAG_MAIN, "endOfTest startedByPackage="+ startedByPackage);}
 
-        if(ok){
-            say(getResources().getString(captions.get(ACTION_EXIT_TEST1)), true,false);
+        if(exit==0){
+            say(getResources().getString(R.string.exit_test1), true,false);
+        }else if(exit==1){
+            say(getResources().getString(R.string.exit_test), true,false);
+        }else if(exit==2){
+            say(getResources().getString(R.string.exit_test2), true,false);
         }else{
-            say(getResources().getString(captions.get(ACTION_EXIT_TEST)), true,false);
+            toRepeatTest=false;
+            logRes=-2;
+            say(getResources().getString(R.string.exit_test2), true,false);
         }
         if(startedByPackage!=null){
             isProcessing=true;
-            say(getResources().getString(captions.get(ACTION_EXIT_START_APP)), true,true);
+            say(getResources().getString(R.string.exit_start_app), true,true);
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volumeOrig, 0);
 //                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 1);
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -2662,12 +2660,46 @@ public class MainActivity extends Activity {
         if(!testDone){
             return;
         }
-        setText("left eye: "+noContrastLeftResult +" / " +contrastLeftResult+" / " +contrast_1LeftResult,
-                "right eye: "+noContrastRightResult +" / " +contrastRightResult+" / " +contrast_1RightResult);
-        say(getResources().getString(captions.get(ACTION_RESULT_LEFT))+", no contrast "+noContrastLeftResult +
-                " pixels, contrast " +contrastLeftResult+" pixels, contrast sensitivity " +contrast_1LeftResult+ "log. "+
-                getResources().getString(captions.get(ACTION_RESULT_RIGHT))+", no contrast "+noContrastRightResult +
-                " pixels, contrast " +contrastRightResult +" pixels, contrast sensitivity " +contrast_1RightResult + "log.", false,false);
+        String noContrastLeft="";
+        String noContrastRight="";
+        String contrastLeft="";
+        String contrastRight="";
+        if(noContrastLeftResult=="" || noContrastLeftResult=="0" || noContrastLeftResult=="-1" || noContrastLeftResult=="-2" ){
+//                noContrastLeftResult="no reading";
+        }else{
+            noContrastLeft=learn.getPixelsFromMunit(noContrastLeftResult);
+        }
+        if(noContrastRightResult==""  || noContrastRightResult=="0" || noContrastRightResult=="-1" || noContrastRightResult=="-2" ){
+//                noContrastRightResult="no reading";
+        }else{
+            noContrastRight=learn.getPixelsFromMunit(noContrastRightResult);
+        }
+        if(contrastLeftResult=="" || contrastLeftResult=="0" || contrastLeftResult=="-1" || contrastLeftResult=="-2"){
+//                contrastLeftResult="no reading";
+        }else{
+            contrastLeft=learn.getPixelsFromMunit(contrastLeftResult);
+        }
+        if(contrastRightResult=="" || contrastRightResult=="0" || contrastRightResult=="-1" || contrastRightResult=="-2"){
+//                contrastRightResult="no reading";
+        }else{
+            contrastRight=learn.getPixelsFromMunit(contrastRightResult);
+        }
+        if(contrast_1LeftResult=="" || contrast_1LeftResult=="0" || contrast_1LeftResult=="-1" || contrast_1LeftResult=="-2"){
+//                contrastLeftResult="no reading";
+        }else{
+//                contrast_1LeftResult=learn.getEyeContrastResult(0);
+        }
+        if(contrast_1RightResult=="" || contrast_1RightResult=="0" || contrast_1RightResult=="-1" || contrast_1RightResult=="-2"){
+//                contrastRightResult="no reading";
+        }else{
+//                contrast_1RightResult=learn.getEyeContrastResult(1);
+        }
+        setText("left eye: "+noContrastLeft +" / " +contrastLeft+" / " +contrast_1LeftResult,
+                "right eye: "+noContrastRight +" / " +contrastRight+" / " +contrast_1RightResult);
+        say(getResources().getString(R.string.result_left_info)+", no contrast "+noContrastLeft +
+                " pixels, contrast " +contrastLeft+" pixels, contrast sensitivity " +contrast_1LeftResult+ "log. "+
+                getResources().getString(R.string.result_right_info)+", no contrast "+noContrastRight +
+                " pixels, contrast " +contrastRight +" pixels, contrast sensitivity " +contrast_1RightResult + "log.", false,false);
 //        say(getResources().getString(captions.get(ACTION_RESULT_RIGHT))+", no contrast "+noContrastRightResult +
 //                " pixels, contrast " +contrastRightResult +" pixels, contrast sensitivity " +contrast_1RightResult + "log", true,false);
 //        isSayResult=false;
@@ -2878,12 +2910,16 @@ public class MainActivity extends Activity {
         if(toRepeatTest){
             if(logRes==-1){
                 sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 4);
+            }else if(logRes==-2){
+                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 6);
             }else{
                 sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 3);
             }
         }else{
             if(logRes==-1){
                 sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 5);
+            }else if(logRes==-2){
+                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 6);
             }else{
                 sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 2);
             }
