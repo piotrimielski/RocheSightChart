@@ -2613,7 +2613,9 @@ public class MainActivity extends Activity {
         }
         if(startedByPackage!=null){
             isProcessing=true;
-            say(getResources().getString(R.string.exit_start_app), true,true);
+            if(logRes!=-2){
+                say(getResources().getString(R.string.exit_start_app), true,true);
+            }
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volumeOrig, 0);
 //                sendBroadcastToActivity(BROADCAST_START_APP_ACTION, START_APP_RESULT, 1);
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
