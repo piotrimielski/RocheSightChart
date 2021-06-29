@@ -215,7 +215,6 @@ public class MainActivity extends Activity {
     private boolean isReady=true;
     private boolean isAppStarted=false;
     private boolean isTimerStart;
-    private boolean isSecondPeriod;
     private int eyeCalibration;
     private boolean isJoystick;
     private boolean isNegCalDone;
@@ -367,7 +366,6 @@ public class MainActivity extends Activity {
         isTimerStart=false;
         handler1.removeCallbacks(runnableCode1);
         handler2.removeCallbacks(runnableCode2);
-        isSecondPeriod=false;;
     }
 
     /**
@@ -1204,6 +1202,7 @@ public class MainActivity extends Activity {
             }
             isProcessing=false;
         }else if(end){
+            stopTask(false);
             isProcessing=true;
             if(keyCode==Util.KEY_POWER
                     && (keyAction == KeyEvent.ACTION_UP || fakeControls)) {
@@ -2448,11 +2447,11 @@ public class MainActivity extends Activity {
             Log.d(LOG_TAG_MAIN, "endOfTest test= "+test+" ok= "+ok+" exitOK= "+exitOK+" eye= "+eye);
         }
         if(test & ok){
-            say(getResources().getString(R.string.end_test), false,false);
             end=true;
             test=false;
             step1=false;
             step2=false;
+            say(getResources().getString(R.string.end_test), false,false);
         }else if(end && ok){
             if(contrastLeftResult=="" ){
                 contrastLeftResult="0";
