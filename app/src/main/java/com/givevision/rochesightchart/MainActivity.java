@@ -2429,7 +2429,6 @@ public class MainActivity extends Activity {
      * @return
      */
     private void endOfTest(boolean ok, boolean exitOK) {
-        stopTask(false);
         setText("","");
         isTimerStart=false;
         chartPos=-1;
@@ -2452,6 +2451,7 @@ public class MainActivity extends Activity {
             step1=false;
             step2=false;
             say(getResources().getString(R.string.end_test), false,false);
+            stopTask(false);
         }else if(end && ok){
             if(contrastLeftResult=="" ){
                 contrastLeftResult="0";
@@ -2594,6 +2594,7 @@ public class MainActivity extends Activity {
      * @return
      */
     private void exitFromTest(int exit){
+        stopTask(false);
         chart=-1;
         eye=-2;
         if (Util.DEBUG) {
