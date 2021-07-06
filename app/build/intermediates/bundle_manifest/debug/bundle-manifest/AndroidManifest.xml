@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.givevision.rochesightchart"
-    android:versionCode="633"
-    android:versionName="633" >
+    android:versionCode="634"
+    android:versionName="634" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -176,17 +176,20 @@
    messages on the end and user's responses
     -->
     <!--
-   v631 & 633
+   v631 & 632
    bug in error logs
-    -->
     -->
     <!--
    v633
-   timer for no activity,
-   message for exit
+   timers for no activity 0.5min, 1min
+   messages for exit
    exit with bluetooth off
+   bip for power button errors
     -->
-
+    <!--
+   v634
+   bug message waiting for touch on the end
+    -->
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />

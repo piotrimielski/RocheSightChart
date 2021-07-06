@@ -256,7 +256,7 @@ public class MainActivity extends Activity {
     private Runnable runnableCode1 = new Runnable() {
         @Override
         public void run() {
-            if(!mTTS.isSpeaking() && isTimerStart){
+            if(!mTTS.isSpeaking() && isTimerStart && (step2||test)){
                 say(getResources().getString(R.string.tempo30sec), false,false);
                 handler2.removeCallbacks(runnableCode2);
                 handler2.postDelayed(runnableCode2, 6*LONG_DELAY);
@@ -267,7 +267,7 @@ public class MainActivity extends Activity {
     private Runnable runnableCode2 = new Runnable() {
         @Override
         public void run() {
-            if(!mTTS.isSpeaking() && isTimerStart){
+            if(!mTTS.isSpeaking() && isTimerStart  && (step2||test)){
                 say(getResources().getString(R.string.tempo1min), false,false);
                 handler2.postDelayed(runnableCode2, 6*LONG_DELAY);
             }
@@ -1575,7 +1575,7 @@ public class MainActivity extends Activity {
                     public void run() {
                         toneF.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,200);
                     }
-                }, 200);
+                }, 100);
             if(!isNegTestDone){
                 isNegTestDone=true;
                 if(eyeCalibration==0){
@@ -1779,7 +1779,7 @@ public class MainActivity extends Activity {
                 public void run() {
                     toneF.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,200);
                 }
-            }, 200);
+            }, 100);
 
             if(!isNegCalDone){
                 isNegCalDone=true;
@@ -2192,7 +2192,7 @@ public class MainActivity extends Activity {
                         public void run() {
                             toneL.startTone(ToneGenerator.TONE_DTMF_0,200);
                         }
-                    }, 500);
+                    }, 100);
 
                 }else{
                     //if good answer
@@ -2202,7 +2202,7 @@ public class MainActivity extends Activity {
                         public void run() {
                             toneH.startTone(ToneGenerator.TONE_DTMF_1,200);
                         }
-                    }, 500);
+                    }, 100);
 
                 }
                 if (Util.DEBUG) {
@@ -2322,7 +2322,7 @@ public class MainActivity extends Activity {
                         public void run() {
                             toneL.startTone(ToneGenerator.TONE_DTMF_0,200);
                         }
-                    }, 500);
+                    }, 100);
 
                 }else{
                     //if good answer
@@ -2332,7 +2332,7 @@ public class MainActivity extends Activity {
                         public void run() {
                             toneH.startTone(ToneGenerator.TONE_DTMF_1,200);
                         }
-                    }, 500);
+                    }, 100);
 
                 }
                 if (Util.DEBUG) {
@@ -2354,7 +2354,7 @@ public class MainActivity extends Activity {
                             public void run() {
                                 toneL.startTone(ToneGenerator.TONE_CDMA_ABBR_REORDER,1000);
                             }
-                        }, 500);
+                        }, 100);
                         nextChart(NEXT_CHART_FOR_GOOD, contrastActive);
                     }
                     return;
@@ -2452,6 +2452,9 @@ public class MainActivity extends Activity {
             step2=false;
             say(getResources().getString(R.string.end_test), false,false);
             stopTask(false);
+            if (Util.DEBUG) {
+                Log.d(LOG_TAG_MAIN, "endOfTest test= "+test+" ok= "+ok+" exitOK= "+exitOK+" end= "+end);
+            }
         }else if(end && ok){
             if(contrastLeftResult=="" ){
                 contrastLeftResult="0";
